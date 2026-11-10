@@ -302,7 +302,8 @@ def main():
         check(page.is_hidden('#stand'), "Escape should close the stand")
         page.click('[data-act=fsnew][data-v=sr]')
         code2 = page.evaluate("() => S.mock.sight.sr")
-        check(code2 != code and code2[:3] == code[:3], f"New etude should keep level/length: {code} -> {code2}")
+        # "Surprise me" picks a new key each time (First Sight's Mix); level (char 0) and length (char 2) stay
+        check(code2 != code and code2[0] == code[0] and code2[2] == code[2], f"New etude should keep level/length: {code} -> {code2}")
         # the code survives share links and appears on results + print
         page.evaluate("() => { S.mock.scores.teacher['sr.c0'] = 4; S.view = 'results'; render(); }")
         check(page.locator('[data-act=fspractice][data-v=sr]').count() == 1, "results missing etude block")
