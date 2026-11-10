@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0 — 2026-11-10
+- New look in the Raven Band style: navy and gold, with Oswald headings bundled with the site so they load on school networks.
+- New splash page:
+  - Full-width navy hero with a sample filled-in judge sheet.
+  - Bold grade cards that show what's on each audition.
+  - A "How it works" strip.
+- New "Pick up where you left off" row: resume an unfinished mock or jump to a recent student's history.
+- Navy top bar with a gold total. Section titles, student names, and totals use the new heading style.
+- Footer credit: Built by Mat Graham · Raven Band, STEM Academy @ Bartlett. The tool itself stays neutrally named for colleagues.
+
 ## 1.0.2 — 2026-11-10
 - Wind scale boxes now start at 0 points. One tap marks ✓; tap again to set it back to 0. No more double-tapping for a zero, and no red ✗ marks.
 - Unmarked scale boxes count as earned zeros and are no longer flagged. The results page flags a scale section only if nothing in it was tapped (it was probably skipped).

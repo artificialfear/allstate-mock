@@ -1,7 +1,7 @@
 /* ============================================================
    All-State Mock Audition — app
    ============================================================ */
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.1.0';
 const LS = { draft: 'asm.draft.v1', hist: 'asm.history.v1', theme: 'asm.theme', prefs: 'asm.prefs.v1', exported: 'asm.lastExport' };
 
 /* ---------- utils ---------- */
@@ -257,38 +257,99 @@ function steps(n) {
 }
 
 /* ---------- home ---------- */
+const GRADE_INFO = {
+  ms:        ['4 major scales + chromatic, scales at QN = 120', 'Lyrical etude and sight reading', 'Final Round: prepared piece + 2 sight readings'],
+  concert:   ['8 major scales + chromatic, scales at QN = 132', 'Lyrical etude and sight reading', 'Final Round: 2 etudes + 2 sight readings'],
+  symphonic: ['12 major scales + chromatic, scales at QN = 144', 'Lyrical etude and sight reading', 'Final Round: 2 etudes + 2 sight readings'],
+};
+const ICONS = {
+  score: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M8.5 11l2 2 4-4M8.5 17h7"/></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 18H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg>',
+  track: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/><circle cx="19" cy="8" r="1.5" fill="currentColor"/></svg>',
+};
+function miniSheet() {
+  return `<div class="mini" aria-hidden="true">
+    <div class="mini-t">All State Middle School Band (Grades 6-8)</div>
+    <div class="mini-s">Wind Instrument District Audition Form</div>
+    <div class="mini-info"><span>Student: <b>Jordan R.</b></span><span>Instrument: <b>Clarinet</b></span></div>
+    <table><tr><th>Scale</th><th>Asc.</th><th>Desc.</th><th>Arp.</th><th>Total</th></tr>
+      <tr><td>F (G)</td><td><span class="ck">✓✓</span></td><td><span class="ck">✓✓</span></td><td><span class="ck">✓</span></td><td>5</td></tr>
+      <tr><td>Bb (C)</td><td><span class="ck">✓✓</span></td><td><span class="ck">✓</span><span class="xx">✗</span></td><td><span class="ck">✓</span></td><td>4</td></tr>
+      <tr><td>Eb (F)</td><td><span class="ck">✓✓</span></td><td><span class="ck">✓✓</span></td><td><span class="ck">✓</span></td><td>5</td></tr></table>
+    <div class="mini-rub">
+      <span>Tone Quality</span><span>3 . . 3.5 . . 4 . . <i>4.5</i> . . 5</span>
+      <span>Technique</span><span>3 . . <i>3.5</i> . . 4 . . 4.5 . . 5</span>
+      <span>Rhythmic Accuracy</span><span>3 . . 3.5 . . <i>4</i> . . 4.5 . . 5</span>
+    </div>
+    <div class="mini-tot"><span>AUDITION TOTAL</span><b>87.5</b></div>
+    <div class="stamp">MOCK</div>
+  </div>`;
+}
 function viewHome() {
   const draft = store.get(LS.draft, null);
   const h = getHistory();
   const lastExp = store.get(LS.exported, 0);
   const stale = h.length >= 3 && Date.now() - lastExp > 21 * 864e5;
-  let resume = '';
-  if (draft && draft.level && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
-    const inst = INSTRUMENTS.find((i) => i.id === draft.inst);
-    resume = `<button class="resume" data-act="resume"><span class="resume-k">Resume unfinished mock</span>
-      <span class="resume-v">${esc(draft.student.name || 'Unnamed student')} · ${esc(inst ? inst.name : '')} · ${draft.round === 'district' ? 'First Round' : 'Final Round'}</span></button>`;
+  const nStudents = new Set(h.map(studentKey)).size;
+  const roundName = (r) => (r === 'district' ? 'First Round' : 'Final Round');
+  const instName = (id) => (INSTRUMENTS.find((i) => i.id === id) || {}).name || '';
+
+  /* pick up where you left off: unfinished draft + most recent students */
+  const cont = [];
+  if (draft && draft.level && LEVELS[draft.level] && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
+    const f = buildForm(draft.level, draft.round, draft.inst, draft.variant);
+    const r = scoreForm(f, draft.scores.teacher);
+    cont.push(`<button class="cont resume" data-act="resume"><span class="cont-k">Resume unfinished mock</span>
+      <span class="cont-n">${esc(draft.student.name || 'Unnamed student')}</span>
+      <span class="cont-v">${esc(instName(draft.inst))} · ${roundName(draft.round)} · ${Math.round(pct(r.done, r.cells))}% scored</span></button>`);
   }
+  const latest = {};
+  h.forEach((m) => { const k = studentKey(m); if (!latest[k] || m.updated > latest[k].updated) latest[k] = m; });
+  Object.entries(latest).sort((a, b) => b[1].updated - a[1].updated).slice(0, cont.length ? 3 : 4).forEach(([k, m]) => {
+    const sm = m.summary || summarize(m);
+    cont.push(`<button class="cont" data-act="hopenStudent" data-v="${esc(k)}"><span class="cont-k">Recent student</span>
+      <span class="cont-n">${esc(m.student.name || 'Unnamed')}</span>
+      <span class="cont-v">${fmt(sm.total, 1)} / ${fmt(sm.max, 0)} · ${esc(instName(m.inst))} · ${roundName(m.round)}${m.date ? ' · ' + esc(fmtDate(m.date).replace(/, \d{4}$/, '')) : ''}</span></button>`);
+  });
+
   return `
-  <section class="hero">
-    <h1>Mock All-State auditions, on the real judge sheet.</h1>
-    <p>Score a practice audition on the GMEA district or state form. Then print the sheet, share it with your student, and track progress until audition day.</p>
+  <section class="hero-band">
+    <div class="hero-in">
+      <div>
+        <div class="eyebrow">GMEA All-State Band · 2025–26 forms</div>
+        <h1>Mock auditions on the <em>real judge sheet</em></h1>
+        <p>Score a practice audition on the actual district or state form. Then print it, share it with your student, and track their progress right up to audition day.</p>
+        <div class="hero-cta">
+          <button class="btn gold big" data-act="scrollgrades">Start a mock audition</button>
+          <button class="btn on-navy big" data-act="history">Student history${nStudents ? ` (${nStudents})` : ''}</button>
+        </div>
+      </div>
+      ${miniSheet()}
+    </div>
   </section>
   ${stale ? exportNag() : ''}
-  ${resume}
-  ${steps(1)}
-  <h2 class="pick-h">Which band is the student auditioning for?</h2>
-  <div class="cards three">
-    ${Object.values(LEVELS).map((L) => `
-      <button class="card pick" data-act="level" data-v="${L.id}">
-        <span class="pick-g">Grades ${L.grades}</span>
-        <span class="pick-t">${L.short}</span>
-        <span class="pick-s">${L.id === 'ms' ? '4 scales · scales at QN=120' : L.id === 'concert' ? '8 scales · QN=132' : '12 scales · QN=144'}</span>
-      </button>`).join('')}
-  </div>
-  <div class="home-links">
-    <button class="btn ghost" data-act="history">Student history${h.length ? ` (${new Set(h.map(studentKey)).size})` : ''}</button>
-    <button class="btn ghost" data-act="help">How to run a great mock audition</button>
-  </div>`;
+  ${cont.length ? `<section class="home-sec"><h2 class="sec-label">Pick up where you left off</h2><div class="continue">${cont.join('')}</div></section>` : ''}
+  <section class="home-sec" id="grades">
+    ${steps(1)}
+    <h2 class="pick-h">Which band is the student auditioning for?</h2>
+    <div class="grade-cards">
+      ${Object.values(LEVELS).map((L) => `
+        <button class="gcard" data-act="level" data-v="${L.id}">
+          <div class="gcard-top"><div class="gnum"><small>GRADES</small>${L.grades}</div><div class="gname">${L.short}</div></div>
+          <ul>${GRADE_INFO[L.id].map((x) => `<li><span>${x}</span></li>`).join('')}</ul>
+          <span class="go">Choose instrument →</span>
+        </button>`).join('')}
+    </div>
+  </section>
+  <section class="home-sec">
+    <h2 class="sec-label">How it works</h2>
+    <div class="how">
+      <div>${ICONS.score}<div><h3>Score it</h3><p>Tap through the real GMEA sheet. Scale math, adjustment factors, and totals are done for you.</p></div></div>
+      <div>${ICONS.share}<div><h3>Print or share</h3><p>Hand the student the filled-in sheet and a practice plan, or send a link or QR code.</p></div></div>
+      <div>${ICONS.track}<div><h3>Track growth</h3><p>Run mocks again and watch the score chart climb toward the recommendation line.</p></div></div>
+    </div>
+    <div class="home-help"><button class="btn ghost" data-act="help">How to run a great mock audition</button></div>
+  </section>`;
 }
 function exportNag() {
   return `<div class="nag"><strong>Back up your history.</strong> Saved mocks live only in this browser on this device. Export a backup file now and then.
@@ -953,6 +1014,8 @@ document.addEventListener('click', async (e) => {
     case 'start': readSetup(); S.who = S.mock.flow === 'teacher' ? 'teacher' : 'self'; touch(); go('sheet'); break;
     case 'resume': { const d = store.get(LS.draft, null); if (d) { setMock(d); S.who = d.flow === 'self' ? 'self' : 'teacher'; S.readOnly = false; go('sheet'); } break; }
     case 'history': S.histKey = null; S.histFilter = null; go('history'); break;
+    case 'hopenStudent': S.histKey = v; S.histFilter = null; go('history'); break;
+    case 'scrollgrades': { const g = $('#grades'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); break; }
     case 'help': openHelp(); break;
     case 'who': S.who = v; render(); break;
     case 'handoff': S.who = 'teacher'; render(); toast('Teacher scoring — the student’s scores are hidden'); break;

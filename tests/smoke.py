@@ -192,7 +192,7 @@ def main():
         page.click("[data-act=results]")
         page.wait_for_timeout(150)
         txt = page.inner_text("#main")
-        check("Self-assessment vs. teacher" in txt, "compare block missing")
+        check("self-assessment vs. teacher" in txt.lower(), "compare block missing")
         check("10 points higher" in txt, "compare summary should use shared categories only")
         shot(page, "results_compare")
 
@@ -274,6 +274,15 @@ def main():
         page.evaluate("""() => { S.pick = { level: 'ms', inst: 'flute', round: 'state', variant: null }; setMock(newMock());
           S.mock.scores.teacher['prep.c0'] = 8; S.view = 'results'; render(); }""")
         check("Prepared Selection · Technique" in page.inner_text(".banner.blanks"), "rubric blank not named")
+
+        # ---------- 9c. splash page ----------
+        page.evaluate("() => { S.view = 'home'; render(); }")
+        check(page.locator(".hero-band").count() == 1 and page.locator(".gcard").count() == 3, "splash hero / grade cards")
+        check(page.locator(".cont").count() >= 1, "pick-up-where-you-left-off row")
+        page.click(".cont[data-act=hopenStudent] >> nth=0")
+        check(page.evaluate("() => S.view") == "history", "recent student opens history")
+        page.evaluate("() => { S.view = 'home'; render(); }")
+        check(page.evaluate("() => document.fonts.check('600 16px Oswald')"), "Oswald font did not load")
 
         # ---------- 10. dark mode + phone sheet ----------
         page.evaluate("() => { document.documentElement.dataset.theme = 'dark'; S.pick = { level: 'symphonic', inst: 'basstrombone', round: 'district', variant: null }; setMock(newMock()); S.view='sheet'; render(); }")

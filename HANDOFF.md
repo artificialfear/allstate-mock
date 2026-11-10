@@ -56,6 +56,12 @@ A single-page tool for running mock GMEA All-State Band auditions. The teacher p
   - A QR code is shown when the URL is under 2300 chars.
   - Nothing is uploaded.
 
+## Look and branding (v1.1.0)
+- Raven Band *style* (navy #1f2a44, gold #c9a227, Oswald 600), the same palette as Agenda Board and the Raven Band Hub. No raven logo and no "Raven Band" in the name, because colleagues at other schools use this (Mat's choice); the footer credits Mat / Raven Band.
+- Oswald is served from `assets/oswald-latin-600-normal.woff2` (copied from agenda-board, OFL license alongside). It is **not** inlined, so `assets/` must deploy with `index.html`. Only weight 600 exists, so headings use font-weight 600 (no faux bold).
+- Dark mode swaps `--brand` to gold, so primary buttons, chips, and totals turn gold on navy.
+- `inner_text` in Playwright returns CSS-uppercased text. Compare headings case-insensitively in tests.
+
 ## Updating for a new year
 1. Run `python3 tools/gen_hs_district.py "<new first-round PDF>"` to regenerate `src/hs_district.js`. It prints a math check and flags any printed factor that does not give 30.
 2. Re-read the MS scale sheets and update `MS_DISTRICT` octaves, factors, and cuts. Run the smoke test; it asserts every scale section sums to 30 except the keys in `KNOWN`. Update `FORM_NOTICES` and `KNOWN` if GMEA fixes or changes anything.

@@ -5,23 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>All-State Mock Audition</title>
 <meta name="description" content="Score practice All-State Band auditions on the GMEA district and state judge sheets, then print or share the results with students.">
-<meta name="theme-color" content="#1f3a5f">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3a5f'/%3E%3Cpath d='M18 46V20l14 8 14-8v26' stroke='%23fff' stroke-width='6' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#1f2a44">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f2a44'/%3E%3Cpath d='M18 46V20l14 8 14-8v26' stroke='%23c9a227' stroke-width='6' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
+@font-face { font-family: "Oswald"; font-weight: 600; font-style: normal; font-display: swap;
+  src: url("assets/oswald-latin-600-normal.woff2?v=1") format("woff2"); }
+/* Raven Band palette: navy + gold (matches Agenda Board / Raven Band Hub) */
 :root {
   color-scheme: light;
-  --bg: #f4f2ee;
-  --surface: #fffefb;
-  --surface-2: #f0ede6;
-  --line: #ddd8cd;
-  --ink: #1b1a18;
-  --ink-2: #57544d;
-  --ink-3: #8a867c;
-  --brand: #1f3a5f;
-  --brand-2: #2a5a92;
+  --navy: #1f2a44; --navy-deep: #141c30; --gold: #c9a227; --gold-soft: #f6efd8;
+  --bg: #f4f5f8;
+  --surface: #ffffff;
+  --surface-2: #eef0f5;
+  --line: #e1e4ec;
+  --ink: #1b2233;
+  --ink-2: #4f586b;
+  --ink-3: #7c8496;
+  --brand: #1f2a44;
+  --brand-2: #34477a;
   --on-brand: #ffffff;
-  --accent: #2a78d6;
-  --accent-soft: #e3eefb;
+  --gold-ink: #8a6d12;
+  --accent: #1f2a44;
+  --accent-soft: #e8ecf5;
   --good: #1d7a4a;
   --good-soft: #e3f3ea;
   --bad: #b3372f;
@@ -30,18 +35,20 @@
   --warn-soft: #fdf3dc;
   --self: #eb6834;
   --tch: #2a78d6;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 2px rgb(20 28 48 / 0.06), 0 4px 16px rgb(20 28 48 / 0.06);
   --r: 14px;
-  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
-  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --display: "Oswald", "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+  --serif: var(--display);
+  --sans: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #141413; --surface: #1d1d1b; --surface-2: #262623; --line: #36352f;
-    --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8e8c82;
-    --brand: #8fb4e6; --brand-2: #a9c6ee; --on-brand: #10233b;
-    --accent: #3987e5; --accent-soft: #1b2b40;
+    --navy: #141c30; --navy-deep: #0e1424; --gold-soft: #2c2816;
+    --bg: #111827; --surface: #1b2335; --surface-2: #232d45; --line: #34405e;
+    --ink: #f2f4f8; --ink-2: #b7bfd0; --ink-3: #8590a8;
+    --brand: #c9a227; --brand-2: #e0bf55; --on-brand: #141c30; --gold-ink: #e0bf55;
+    --accent: #c9a227; --accent-soft: #27304a;
     --good: #5cc28d; --good-soft: #17301f; --bad: #f08a80; --bad-soft: #3a1d1a; --warn: #f0c060; --warn-soft: #33290f;
     --self: #d95926; --tch: #3987e5;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
@@ -49,10 +56,11 @@
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #141413; --surface: #1d1d1b; --surface-2: #262623; --line: #36352f;
-  --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8e8c82;
-  --brand: #8fb4e6; --brand-2: #a9c6ee; --on-brand: #10233b;
-  --accent: #3987e5; --accent-soft: #1b2b40;
+  --navy: #141c30; --navy-deep: #0e1424; --gold-soft: #2c2816;
+  --bg: #111827; --surface: #1b2335; --surface-2: #232d45; --line: #34405e;
+  --ink: #f2f4f8; --ink-2: #b7bfd0; --ink-3: #8590a8;
+  --brand: #c9a227; --brand-2: #e0bf55; --on-brand: #141c30; --gold-ink: #e0bf55;
+  --accent: #c9a227; --accent-soft: #27304a;
   --good: #5cc28d; --good-soft: #17301f; --bad: #f08a80; --bad-soft: #3a1d1a; --warn: #f0c060; --warn-soft: #33290f;
   --self: #d95926; --tch: #3987e5;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
@@ -61,7 +69,7 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 var(--sans); min-height: 100vh; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 var(--sans); min-height: 100vh; overflow-x: clip; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
@@ -69,23 +77,24 @@ button { cursor: pointer; }
 .small { font-size: 0.86rem; }
 .tiny { font-size: 0.78rem; }
 .center { text-align: center; }
-h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.2; margin: 0; }
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; line-height: 1.15; margin: 0; letter-spacing: 0.01em; }
 
-/* topbar */
+/* topbar — navy with a gold rule, like the Raven Band pages */
 .topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 10px; padding: 8px 12px; padding-top: max(8px, env(safe-area-inset-top));
-  background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-.tb-home { border: 0; background: none; padding: 0; color: var(--brand); width: 36px; height: 36px; flex: none; }
+  background: var(--navy); color: #fff; border-bottom: 3px solid var(--gold); }
+.tb-home { border: 0; background: none; padding: 0; color: var(--gold); width: 36px; height: 36px; flex: none; }
 .tb-home svg { width: 36px; height: 36px; display: block; }
 .tb-mid { flex: 1; min-width: 0; }
-.tb-brand { font-family: var(--serif); font-weight: 700; font-size: 1.1rem; }
-.tb-student { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tb-meta { font-size: 0.8rem; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-brand { font-family: var(--display); font-weight: 600; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.tb-student { font-family: var(--display); font-weight: 600; font-size: 1.1rem; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-meta { font-size: 0.8rem; color: rgb(255 255 255 / 0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tb-total { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.tb-score { font-size: 1.4rem; font-weight: 800; color: var(--brand); }
-.tb-max { color: var(--ink-3); margin-left: 3px; }
-.tb-icon { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; flex: none; color: var(--ink-2); }
+.tb-score { font-family: var(--display); font-size: 1.6rem; font-weight: 600; color: var(--gold); }
+.tb-max { color: rgb(255 255 255 / 0.6); margin-left: 3px; }
+.tb-icon { width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgb(255 255 255 / 0.22); background: rgb(255 255 255 / 0.06); display: grid; place-items: center; flex: none; color: #fff; }
+.tb-icon:hover { border-color: var(--gold); }
 .tb-icon svg { width: 20px; height: 20px; }
-.tb-icon.live { color: var(--on-brand); background: var(--brand); border-color: var(--brand); }
+.tb-icon.live { color: var(--navy); background: var(--gold); border-color: var(--gold); }
 
 main { padding-top: 20px; padding-bottom: 40px; }
 .foot { color: var(--ink-3); font-size: 0.78rem; text-align: center; padding-bottom: 28px; }
@@ -102,9 +111,79 @@ main { padding-top: 20px; padding-bottom: 40px; }
 .chip-btn { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 5px 12px; font-size: 0.85rem; font-weight: 600; min-height: 34px; }
 
 /* home */
-.hero { padding: 8px 0 12px; }
-.hero h1 { font-size: clamp(1.7rem, 4.5vw, 2.5rem); max-width: 18ch; letter-spacing: -0.01em; }
-.hero p { color: var(--ink-2); max-width: 60ch; margin: 10px 0 0; }
+.hero-band { position: relative; width: 100vw; margin: -20px calc(50% - 50vw) 0; background: var(--navy); color: #fff; overflow: hidden; }
+.hero-band::before { content: ""; position: absolute; inset: 0; background:
+  radial-gradient(900px 400px at 85% 10%, rgb(201 162 39 / 0.18), transparent 60%),
+  repeating-linear-gradient(0deg, transparent 0 23px, rgb(255 255 255 / 0.035) 23px 24px); pointer-events: none; }
+.hero-in { position: relative; max-width: 980px; margin: 0 auto; padding: 44px 16px 52px; display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: center; }
+.eyebrow { font-family: var(--display); color: var(--gold); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.9rem; margin-bottom: 10px; }
+.hero-band h1 { font-size: clamp(2.3rem, 5.4vw, 4rem); text-transform: uppercase; line-height: 1.02; letter-spacing: 0.01em; }
+.hero-band h1 em { font-style: normal; color: var(--gold); }
+.hero-band p { color: rgb(255 255 255 / 0.82); max-width: 52ch; margin: 16px 0 22px; font-size: 1.05rem; }
+.hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn.gold { background: var(--gold); border-color: var(--gold); color: #141c30; font-weight: 700; }
+.btn.gold:hover { filter: brightness(1.06); }
+.btn.on-navy { background: transparent; color: #fff; border-color: rgb(255 255 255 / 0.35); }
+.btn.on-navy:hover { border-color: var(--gold); }
+/* mini judge sheet */
+.mini { justify-self: center; width: min(360px, 100%); background: #fdfcf8; color: #1b1a18; border-radius: 6px; padding: 18px 18px 14px; transform: rotate(2.5deg);
+  box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(0 0 0 / 0.04); font: 12px/1.35 "Times New Roman", Times, serif; position: relative; }
+.mini::after { content: ""; position: absolute; left: 10%; right: 10%; bottom: -10px; height: 10px; background: #e9e6dd; border-radius: 0 0 6px 6px; z-index: -1; transform: rotate(-3deg); }
+.mini-t { text-align: center; font-weight: 700; font-size: 13px; }
+.mini-s { text-align: center; font-size: 11px; margin-bottom: 8px; }
+.mini-info { display: flex; justify-content: space-between; border-bottom: 1px solid #000; padding-bottom: 3px; margin-bottom: 8px; font-size: 11px; }
+.mini-info b { font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive; color: #1f3a8a; font-weight: 400; font-size: 13px; }
+.mini table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+.mini td, .mini th { border: 1px solid #333; text-align: center; padding: 2px 3px; font-size: 11px; }
+.mini th { background: #eee; font-weight: 700; }
+.mini .ck { color: #1d7a4a; font-weight: 700; font-family: var(--sans); }
+.mini .xx { color: #b3372f; font-weight: 700; font-family: var(--sans); }
+.mini-rub { display: grid; grid-template-columns: 92px 1fr; gap: 3px 6px; font-size: 11px; margin-bottom: 8px; }
+.mini-rub span:nth-child(even) { color: #777; letter-spacing: 0.5px; white-space: nowrap; }
+.mini-rub i { font-style: normal; color: #000; border: 1.5px solid #1f3a8a; border-radius: 50%; padding: 0 3px; }
+.mini-tot { border-top: 2px solid #000; padding-top: 5px; display: flex; justify-content: space-between; align-items: baseline; font-weight: 700; }
+.mini-tot b { font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive; color: #1f3a8a; font-size: 20px; font-weight: 400; }
+.stamp { position: absolute; top: -16px; right: -18px; transform: rotate(12deg); border: 3px solid var(--gold); color: var(--gold); font-family: var(--display); font-size: 22px; letter-spacing: 0.12em; padding: 2px 10px; border-radius: 6px; background: rgb(253 252 248 / 0.75); }
+/* home sections */
+.home-sec { margin-top: 30px; }
+.sec-label { font-family: var(--display); text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.95rem; color: var(--gold-ink); margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+.sec-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.continue { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.cont { text-align: left; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); display: flex; flex-direction: column; gap: 2px; box-shadow: var(--shadow); }
+.cont:hover { border-color: var(--gold); }
+.cont.resume { border-left: 4px solid var(--gold); }
+.cont-k { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold-ink); font-weight: 700; }
+.cont-n { font-family: var(--display); font-size: 1.15rem; letter-spacing: 0.02em; }
+.cont-v { color: var(--ink-2); font-size: 0.86rem; }
+.grade-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.gcard { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 0; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; transition: transform .15s, border-color .15s, box-shadow .15s; }
+.gcard:hover { transform: translateY(-3px); border-color: var(--gold); box-shadow: 0 14px 30px -14px rgb(20 28 48 / 0.35); }
+.gcard-top { background: var(--navy); color: #fff; padding: 16px 18px 14px; border-bottom: 3px solid var(--gold); }
+.gnum { font-family: var(--display); font-size: 3.2rem; line-height: 0.95; color: var(--gold); letter-spacing: 0.01em; }
+.gnum small { font-size: 0.9rem; letter-spacing: 0.14em; color: rgb(255 255 255 / 0.7); display: block; margin-bottom: 4px; }
+.gname { font-family: var(--display); font-size: 1.35rem; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 6px; }
+.gcard ul { list-style: none; margin: 0; padding: 14px 18px 16px; display: grid; gap: 6px; font-size: 0.92rem; color: var(--ink-2); }
+.gcard li { display: flex; gap: 8px; }
+.gcard .nw { white-space: nowrap; }
+.gcard li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); margin-top: 0.55em; }
+.gcard .go { margin-top: auto; padding: 10px 18px 14px; font-weight: 700; color: var(--brand-2); }
+.how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: how; }
+.how > div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: start; }
+.how svg { width: 44px; height: 44px; padding: 9px; border-radius: 12px; background: var(--navy); color: var(--gold); }
+.how h3 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.how h3::before { counter-increment: how; content: counter(how) ". "; color: var(--gold-ink); }
+.how p { margin: 4px 0 0; color: var(--ink-2); font-size: 0.9rem; }
+.home-help { margin-top: 18px; text-align: center; }
+.credit { color: var(--ink-3); }
+.credit b { color: var(--gold-ink); font-weight: 600; }
+@media (max-width: 860px) {
+  .hero-in { grid-template-columns: 1fr; padding: 32px 20px 36px; gap: 0; }
+  .mini { display: none; }
+  .grade-cards, .how { grid-template-columns: 1fr; }
+  .gcard-top { display: flex; align-items: flex-end; gap: 14px; }
+  .gnum { font-size: 2.6rem; }
+  .gname { margin: 0 0 4px; }
+}
 .steps { list-style: none; display: flex; gap: 6px; padding: 0; margin: 18px 0 14px; flex-wrap: wrap; }
 .steps li { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--ink-3); padding-right: 10px; }
 .steps li span { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-weight: 700; font-size: 0.75rem; }
@@ -112,7 +191,7 @@ main { padding-top: 20px; padding-bottom: 40px; }
 .steps li.done span { background: var(--surface-2); }
 .steps li.cur { color: var(--ink); font-weight: 700; }
 .steps li.cur span { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
-.pick-h { font-size: 1.35rem; margin: 6px 0 14px; }
+.pick-h { font-size: 1.55rem; margin: 6px 0 14px; text-transform: uppercase; letter-spacing: 0.03em; }
 .fam { font-family: var(--sans); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 18px 0 8px; }
 .cards { display: grid; gap: 12px; }
 .cards.three { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
@@ -120,17 +199,13 @@ main { padding-top: 20px; padding-bottom: 40px; }
 .cards.inst { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
 .pick { text-align: left; padding: 18px; display: flex; flex-direction: column; gap: 4px; transition: border-color .15s, transform .15s; }
-.pick:hover { border-color: var(--brand-2); transform: translateY(-1px); }
+.pick:hover { border-color: var(--gold); transform: translateY(-1px); }
 .pick.sm { padding: 14px; min-height: 56px; justify-content: center; }
-.pick-g { font-size: 0.8rem; font-weight: 700; color: var(--brand-2); text-transform: uppercase; letter-spacing: 0.06em; }
-.pick-t { font-family: var(--serif); font-size: 1.35rem; font-weight: 700; }
+.pick-g { font-size: 0.8rem; font-weight: 700; color: var(--gold-ink); text-transform: uppercase; letter-spacing: 0.06em; }
+.pick-t { font-family: var(--display); font-size: 1.4rem; font-weight: 600; letter-spacing: 0.02em; }
 .pick.sm .pick-t { font-size: 1.05rem; font-family: var(--sans); font-weight: 600; }
 .pick-s { font-size: 0.86rem; color: var(--ink-2); }
 .pick.round ul { margin: 6px 0 8px; padding-left: 18px; color: var(--ink-2); font-size: 0.92rem; }
-.home-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
-.resume { width: 100%; display: flex; flex-direction: column; text-align: left; gap: 2px; padding: 14px 16px; border-radius: var(--r); border: 1px solid var(--brand-2); background: var(--accent-soft); margin: 8px 0; }
-.resume-k { font-weight: 700; color: var(--brand); }
-.resume-v { color: var(--ink-2); font-size: 0.92rem; }
 .nag { background: var(--warn-soft); border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); padding: 12px 14px; border-radius: 12px; margin: 10px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 0.92rem; }
 .variant { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; color: var(--ink-2); font-size: 0.92rem; }
 
@@ -143,7 +218,7 @@ main { padding-top: 20px; padding-bottom: 40px; }
 /* setup */
 .formcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; box-shadow: var(--shadow); }
 .sheet-id { display: flex; flex-direction: column; margin-bottom: 14px; }
-.sheet-id strong { font-family: var(--serif); font-size: 1.1rem; }
+.sheet-id strong { font-family: var(--display); font-weight: 600; font-size: 1.2rem; letter-spacing: 0.02em; }
 .sheet-id span { color: var(--ink-2); font-size: 0.9rem; }
 .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 .fld { display: flex; flex-direction: column; gap: 4px; font-size: 0.86rem; color: var(--ink-2); font-weight: 600; }
@@ -168,12 +243,12 @@ details.tips li, .modal li { margin: 6px 0; }
 .banner { background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: 12px; padding: 12px 14px; margin: 10px 0; font-size: 0.93rem; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 .banner.self { background: color-mix(in srgb, var(--self) 14%, var(--surface)); border-color: color-mix(in srgb, var(--self) 40%, transparent); }
 .banner.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
-.group-h { font-size: 1.25rem; margin: 26px 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.group-h { font-size: 1.4rem; margin: 26px 0 8px; padding-bottom: 6px; border-bottom: 3px solid var(--gold); text-transform: uppercase; letter-spacing: 0.05em; }
 .sec { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; margin: 12px 0; box-shadow: var(--shadow); }
 .sec-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
-.sec-h h3 { font-size: 1.15rem; }
+.sec-h h3 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.04em; padding-left: 10px; border-left: 4px solid var(--gold); }
 .sec-score { font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; }
-.sec-score span { font-weight: 800; color: var(--ink); font-size: 1.15rem; }
+.sec-score span { font-family: var(--display); font-weight: 600; color: var(--ink); font-size: 1.4rem; }
 .progress { height: 3px; background: var(--surface-2); border-radius: 3px; margin: 8px 0 10px; overflow: hidden; }
 .progress i { display: block; height: 100%; background: var(--accent); transition: width .2s; }
 .help { color: var(--ink-2); font-size: 0.88rem; margin: 0 0 10px; }
@@ -199,7 +274,7 @@ details.tips li, .modal li { margin: 6px 0; }
 .srow { display: grid; grid-template-columns: minmax(72px, 0.9fr) auto auto auto 52px auto; gap: 8px; align-items: center; padding: 8px 0; border-top: 1px dashed var(--line); }
 .srow:first-child { border-top: 0; }
 .skey { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 5px; }
-.skey b { font-family: var(--serif); font-size: 1.25rem; }
+.skey b { font-family: var(--display); font-weight: 600; font-size: 1.35rem; }
 .skey small { color: var(--ink-2); }
 .oct { font-size: 0.72rem; color: var(--ink-3); width: 100%; }
 .cg { display: flex; align-items: center; gap: 4px; }
@@ -224,11 +299,11 @@ textarea.cmt { width: 100%; border: 1px solid var(--line); border-radius: 10px; 
 .sheet-foot { display: flex; justify-content: flex-end; margin-top: 18px; }
 
 /* results */
-.res-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 6px 0 14px; border-bottom: 2px solid var(--ink); margin-bottom: 14px; }
-.res-name { font-family: var(--serif); font-size: 2rem; font-weight: 700; line-height: 1.1; }
+.res-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 6px 0 14px; border-bottom: 3px solid var(--gold); margin-bottom: 14px; }
+.res-name { font-family: var(--display); font-size: 2.3rem; font-weight: 600; line-height: 1.05; text-transform: uppercase; letter-spacing: 0.02em; }
 .res-meta { color: var(--ink-2); font-size: 0.92rem; margin-top: 4px; }
 .res-total { display: flex; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; }
-.res-total .big { font-size: 3rem; font-weight: 800; line-height: 1; color: var(--brand); }
+.res-total .big { font-family: var(--display); font-size: 3.6rem; font-weight: 600; line-height: 1; color: var(--brand); }
 .res-total .of { color: var(--ink-3); font-size: 1.2rem; }
 .res-total .pc { margin-left: 8px; background: var(--surface-2); border-radius: 999px; padding: 2px 10px; font-weight: 700; color: var(--ink-2); }
 .res-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
@@ -236,7 +311,7 @@ textarea.cmt { width: 100%; border: 1px solid var(--line); border-radius: 10px; 
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; margin: 12px 0; box-shadow: var(--shadow); }
 .res-grid .panel { margin: 0; }
 .res-grid + .res-grid { margin-top: 12px; }
-.panel h3 { font-size: 1.1rem; margin-bottom: 10px; }
+.panel h3 { font-size: 1.15rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
 .panel h4 { font-family: var(--sans); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); margin: 14px 0 6px; }
 .panel.good { border-top: 4px solid var(--good); }
 .panel.focus { border-top: 4px solid var(--warn); }
@@ -433,7 +508,7 @@ textarea.cmt { width: 100%; border: 1px solid var(--line); border-radius: 10px; 
 <body>
 <header class="topbar">
   <button class="tb-home" data-act="home" aria-label="Home">
-    <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="currentColor"/><path d="M18 46V20l14 8 14-8v26" stroke="var(--on-brand)" stroke-width="6" fill="none" stroke-linejoin="round"/></svg>
+    <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="currentColor"/><path d="M18 46V20l14 8 14-8v26" stroke="#1f2a44" stroke-width="6" fill="none" stroke-linejoin="round"/></svg>
   </button>
   <div id="topbar-mid" class="tb-mid"></div>
   <div id="tb-total" class="tb-total"></div>
@@ -478,7 +553,7 @@ textarea.cmt { width: 100%; border: 1px solid var(--line); border-radius: 10px; 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <div id="print" class="print"></div>
 
-<footer class="foot wrap">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms · not affiliated with GMEA · data stays on your device</footer>
+<footer class="foot wrap">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms · not affiliated with GMEA · data stays on your device<br><span class="credit">Built by <b>Mat Graham</b> · Raven Band, STEM Academy @ Bartlett</span></footer>
 
 <script>
 //---------------------------------------------------------------------
@@ -3126,7 +3201,7 @@ const CALIBRATION = [
 /* ============================================================
    All-State Mock Audition — app
    ============================================================ */
-const APP_VERSION = '1.0.2';
+const APP_VERSION = '1.1.0';
 const LS = { draft: 'asm.draft.v1', hist: 'asm.history.v1', theme: 'asm.theme', prefs: 'asm.prefs.v1', exported: 'asm.lastExport' };
 
 /* ---------- utils ---------- */
@@ -3382,38 +3457,99 @@ function steps(n) {
 }
 
 /* ---------- home ---------- */
+const GRADE_INFO = {
+  ms:        ['4 major scales + chromatic, scales at QN = 120', 'Lyrical etude and sight reading', 'Final Round: prepared piece + 2 sight readings'],
+  concert:   ['8 major scales + chromatic, scales at QN = 132', 'Lyrical etude and sight reading', 'Final Round: 2 etudes + 2 sight readings'],
+  symphonic: ['12 major scales + chromatic, scales at QN = 144', 'Lyrical etude and sight reading', 'Final Round: 2 etudes + 2 sight readings'],
+};
+const ICONS = {
+  score: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M8.5 11l2 2 4-4M8.5 17h7"/></svg>',
+  share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 18H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg>',
+  track: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/><circle cx="19" cy="8" r="1.5" fill="currentColor"/></svg>',
+};
+function miniSheet() {
+  return `<div class="mini" aria-hidden="true">
+    <div class="mini-t">All State Middle School Band (Grades 6-8)</div>
+    <div class="mini-s">Wind Instrument District Audition Form</div>
+    <div class="mini-info"><span>Student: <b>Jordan R.</b></span><span>Instrument: <b>Clarinet</b></span></div>
+    <table><tr><th>Scale</th><th>Asc.</th><th>Desc.</th><th>Arp.</th><th>Total</th></tr>
+      <tr><td>F (G)</td><td><span class="ck">✓✓</span></td><td><span class="ck">✓✓</span></td><td><span class="ck">✓</span></td><td>5</td></tr>
+      <tr><td>Bb (C)</td><td><span class="ck">✓✓</span></td><td><span class="ck">✓</span><span class="xx">✗</span></td><td><span class="ck">✓</span></td><td>4</td></tr>
+      <tr><td>Eb (F)</td><td><span class="ck">✓✓</span></td><td><span class="ck">✓✓</span></td><td><span class="ck">✓</span></td><td>5</td></tr></table>
+    <div class="mini-rub">
+      <span>Tone Quality</span><span>3 . . 3.5 . . 4 . . <i>4.5</i> . . 5</span>
+      <span>Technique</span><span>3 . . <i>3.5</i> . . 4 . . 4.5 . . 5</span>
+      <span>Rhythmic Accuracy</span><span>3 . . 3.5 . . <i>4</i> . . 4.5 . . 5</span>
+    </div>
+    <div class="mini-tot"><span>AUDITION TOTAL</span><b>87.5</b></div>
+    <div class="stamp">MOCK</div>
+  </div>`;
+}
 function viewHome() {
   const draft = store.get(LS.draft, null);
   const h = getHistory();
   const lastExp = store.get(LS.exported, 0);
   const stale = h.length >= 3 && Date.now() - lastExp > 21 * 864e5;
-  let resume = '';
-  if (draft && draft.level && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
-    const inst = INSTRUMENTS.find((i) => i.id === draft.inst);
-    resume = `<button class="resume" data-act="resume"><span class="resume-k">Resume unfinished mock</span>
-      <span class="resume-v">${esc(draft.student.name || 'Unnamed student')} · ${esc(inst ? inst.name : '')} · ${draft.round === 'district' ? 'First Round' : 'Final Round'}</span></button>`;
+  const nStudents = new Set(h.map(studentKey)).size;
+  const roundName = (r) => (r === 'district' ? 'First Round' : 'Final Round');
+  const instName = (id) => (INSTRUMENTS.find((i) => i.id === id) || {}).name || '';
+
+  /* pick up where you left off: unfinished draft + most recent students */
+  const cont = [];
+  if (draft && draft.level && LEVELS[draft.level] && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
+    const f = buildForm(draft.level, draft.round, draft.inst, draft.variant);
+    const r = scoreForm(f, draft.scores.teacher);
+    cont.push(`<button class="cont resume" data-act="resume"><span class="cont-k">Resume unfinished mock</span>
+      <span class="cont-n">${esc(draft.student.name || 'Unnamed student')}</span>
+      <span class="cont-v">${esc(instName(draft.inst))} · ${roundName(draft.round)} · ${Math.round(pct(r.done, r.cells))}% scored</span></button>`);
   }
+  const latest = {};
+  h.forEach((m) => { const k = studentKey(m); if (!latest[k] || m.updated > latest[k].updated) latest[k] = m; });
+  Object.entries(latest).sort((a, b) => b[1].updated - a[1].updated).slice(0, cont.length ? 3 : 4).forEach(([k, m]) => {
+    const sm = m.summary || summarize(m);
+    cont.push(`<button class="cont" data-act="hopenStudent" data-v="${esc(k)}"><span class="cont-k">Recent student</span>
+      <span class="cont-n">${esc(m.student.name || 'Unnamed')}</span>
+      <span class="cont-v">${fmt(sm.total, 1)} / ${fmt(sm.max, 0)} · ${esc(instName(m.inst))} · ${roundName(m.round)}${m.date ? ' · ' + esc(fmtDate(m.date).replace(/, \d{4}$/, '')) : ''}</span></button>`);
+  });
+
   return `
-  <section class="hero">
-    <h1>Mock All-State auditions, on the real judge sheet.</h1>
-    <p>Score a practice audition on the GMEA district or state form. Then print the sheet, share it with your student, and track progress until audition day.</p>
+  <section class="hero-band">
+    <div class="hero-in">
+      <div>
+        <div class="eyebrow">GMEA All-State Band · 2025–26 forms</div>
+        <h1>Mock auditions on the <em>real judge sheet</em></h1>
+        <p>Score a practice audition on the actual district or state form. Then print it, share it with your student, and track their progress right up to audition day.</p>
+        <div class="hero-cta">
+          <button class="btn gold big" data-act="scrollgrades">Start a mock audition</button>
+          <button class="btn on-navy big" data-act="history">Student history${nStudents ? ` (${nStudents})` : ''}</button>
+        </div>
+      </div>
+      ${miniSheet()}
+    </div>
   </section>
   ${stale ? exportNag() : ''}
-  ${resume}
-  ${steps(1)}
-  <h2 class="pick-h">Which band is the student auditioning for?</h2>
-  <div class="cards three">
-    ${Object.values(LEVELS).map((L) => `
-      <button class="card pick" data-act="level" data-v="${L.id}">
-        <span class="pick-g">Grades ${L.grades}</span>
-        <span class="pick-t">${L.short}</span>
-        <span class="pick-s">${L.id === 'ms' ? '4 scales · scales at QN=120' : L.id === 'concert' ? '8 scales · QN=132' : '12 scales · QN=144'}</span>
-      </button>`).join('')}
-  </div>
-  <div class="home-links">
-    <button class="btn ghost" data-act="history">Student history${h.length ? ` (${new Set(h.map(studentKey)).size})` : ''}</button>
-    <button class="btn ghost" data-act="help">How to run a great mock audition</button>
-  </div>`;
+  ${cont.length ? `<section class="home-sec"><h2 class="sec-label">Pick up where you left off</h2><div class="continue">${cont.join('')}</div></section>` : ''}
+  <section class="home-sec" id="grades">
+    ${steps(1)}
+    <h2 class="pick-h">Which band is the student auditioning for?</h2>
+    <div class="grade-cards">
+      ${Object.values(LEVELS).map((L) => `
+        <button class="gcard" data-act="level" data-v="${L.id}">
+          <div class="gcard-top"><div class="gnum"><small>GRADES</small>${L.grades}</div><div class="gname">${L.short}</div></div>
+          <ul>${GRADE_INFO[L.id].map((x) => `<li><span>${x}</span></li>`).join('')}</ul>
+          <span class="go">Choose instrument →</span>
+        </button>`).join('')}
+    </div>
+  </section>
+  <section class="home-sec">
+    <h2 class="sec-label">How it works</h2>
+    <div class="how">
+      <div>${ICONS.score}<div><h3>Score it</h3><p>Tap through the real GMEA sheet. Scale math, adjustment factors, and totals are done for you.</p></div></div>
+      <div>${ICONS.share}<div><h3>Print or share</h3><p>Hand the student the filled-in sheet and a practice plan, or send a link or QR code.</p></div></div>
+      <div>${ICONS.track}<div><h3>Track growth</h3><p>Run mocks again and watch the score chart climb toward the recommendation line.</p></div></div>
+    </div>
+    <div class="home-help"><button class="btn ghost" data-act="help">How to run a great mock audition</button></div>
+  </section>`;
 }
 function exportNag() {
   return `<div class="nag"><strong>Back up your history.</strong> Saved mocks live only in this browser on this device. Export a backup file now and then.
@@ -4078,6 +4214,8 @@ document.addEventListener('click', async (e) => {
     case 'start': readSetup(); S.who = S.mock.flow === 'teacher' ? 'teacher' : 'self'; touch(); go('sheet'); break;
     case 'resume': { const d = store.get(LS.draft, null); if (d) { setMock(d); S.who = d.flow === 'self' ? 'self' : 'teacher'; S.readOnly = false; go('sheet'); } break; }
     case 'history': S.histKey = null; S.histFilter = null; go('history'); break;
+    case 'hopenStudent': S.histKey = v; S.histFilter = null; go('history'); break;
+    case 'scrollgrades': { const g = $('#grades'); if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' }); break; }
     case 'help': openHelp(); break;
     case 'who': S.who = v; render(); break;
     case 'handoff': S.who = 'teacher'; render(); toast('Teacher scoring — the student’s scores are hidden'); break;
