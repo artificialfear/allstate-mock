@@ -229,42 +229,51 @@ def main():
         page.wait_for_timeout(300)
         check(page.evaluate("() => getHistory().length") >= 4, "import restored history")
 
-        # ---------- 9b. blank scale boxes: named in banner, one-tap ✗, section button ----------
+        # ---------- 9b. wind scale boxes default to 0; only an untouched scale section is flagged ----------
         page.evaluate("""() => { S.pick = { level: 'ms', inst: 'trumpet', round: 'district', variant: null };
-          const m = newMock(); m.student.name = 'Blank Test'; setMock(m); S.who = 'teacher'; S.view = 'sheet'; render(); }""")
-        page.click('[data-act=allperfect][data-v=scales]')
-        page.evaluate("() => { delete S.mock.scores.teacher['scales.r1.arp']; delete S.mock.scores.teacher['scales.r3.a1']; refreshSection('scales'); }")
+          const m = newMock(); m.student.name = 'Zero Test'; setMock(m); S.who = 'teacher'; S.view = 'sheet'; render(); }""")
         for sec in ["lyr", "sr"]:
             for i in range(6):
                 page.click(f'[data-act=set][data-k="{sec}.c{i}"][data-v="4"]')
         page.click('[data-act=set][data-k="chrom.c0"][data-v="8"]')
-        check(page.locator('[data-act=blankzero][data-v=scales]').count() == 1, "Mark blanks button missing on sheet")
+        check(page.locator('[data-act=blankzero][data-v=scales]').count() == 0, "wind scales should not show Mark blanks")
+        # untouched scale section -> flagged, with no "count as ✗" button
         page.click("[data-act=results]")
         page.wait_for_timeout(150)
         btxt = page.inner_text(".banner.blanks")
-        check("2 boxes were left blank" in btxt and "Bb (C) arpeggio" in btxt and "Ab (Bb) up" in btxt, f"blank banner text: {btxt}")
-        before = page.evaluate("() => scoreForm(FORM, S.mock.scores.teacher).total")
+        check("Major Scales and Arpeggios (nothing marked)" in btxt, f"untouched scales not flagged: {btxt}")
+        check(page.locator("[data-act=blankzero][data-v=all]").count() == 0, "no scale-zero button for wind scales")
         page.click("[data-act=gofix]")
         page.wait_for_timeout(100)
-        check(page.evaluate("() => S.view") == "sheet", "Go to first blank did not open sheet")
-        check(page.locator(".srow.flash").count() == 1, "first blank not highlighted")
+        check(page.evaluate("() => S.view") == "sheet" and page.locator(".srow.flash").count() == 1, "Go to first blank")
+        # one tap = ✓, second tap = back to 0; unmarked boxes are scored 0 and not flagged
+        k = "scales.r0.a1"
+        page.click(f'[data-act=cell][data-k="{k}"]')
+        check(page.evaluate(f"() => S.mock.scores.teacher['{k}']") == 1, "first tap should be ✓")
+        page.click(f'[data-act=cell][data-k="{k}"]')
+        check(page.evaluate(f"() => S.mock.scores.teacher['{k}']") == 0, "second tap should be 0")
+        page.click(f'[data-act=cell][data-k="{k}"]')
+        check(page.locator(".cell.no").count() == 0, "no red ✗ cells should render")
+        page.click('[data-act=rowall][data-row=r2]')
+        r = page.evaluate("() => scoreSection(FORM.sections[0], S.mock.scores.teacher)")
+        check(r["raw"] == 4 and r["done"] == r["cells"], f"scale section after taps: {r}")  # 1 + Eb row (3)
+        page.click('[data-act=rowall][data-row=r2]')
+        check(page.evaluate("() => scoreSection(FORM.sections[0], S.mock.scores.teacher).raw") == 1, "✓ all toggles row back to 0")
         page.click("[data-act=results]")
         page.wait_for_timeout(150)
-        page.click("[data-act=blankzero][data-v=all]")
-        page.wait_for_timeout(150)
-        check(page.locator(".banner.blanks").count() == 0, "banner still shown after marking blanks ✗")
-        after = page.evaluate("() => scoreForm(FORM, S.mock.scores.teacher).total")
-        check(abs(before - after) < 1e-9, "marking blanks ✗ changed the total")
-        check(page.evaluate("() => S.mock.scores.teacher['scales.r1.arp']") == 0, "blank not stored as 0")
-        # section button on the sheet
-        page.evaluate("() => { delete S.mock.scores.teacher['scales.r0.d1']; S.view='sheet'; render(); }")
-        page.click('[data-act=blankzero][data-v=scales]')
-        check(page.evaluate("() => S.mock.scores.teacher['scales.r0.d1']") == 0, "section Mark blanks ✗")
-        check(page.locator('[data-act=blankzero][data-v=scales]').count() == 0, "Mark blanks button should hide when none blank")
-        # rubric blanks are never auto-zeroed
-        page.evaluate("() => { delete S.mock.scores.teacher['lyr.c0']; S.view='results'; render(); }")
-        check(page.locator("[data-act=blankzero][data-v=all]").count() == 0, "rubric-only blanks should not offer scale ✗ button")
-        check("Lyrical Etude · Tone Quality" in page.inner_text(".banner.blanks"), "rubric blank not named")
+        check(page.locator(".banner.blanks").count() == 0, "banner should not show once scales are touched")
+        misses = page.inner_text(".miss")
+        check("Bb (C)" in misses and "F (G)" in misses, "unmarked boxes listed as scale misses")
+        # mallet scales keep the Mark blanks button (chips, blank = not yet judged)
+        page.evaluate("""() => { S.pick = { level: 'ms', inst: 'percussion', round: 'district', variant: null };
+          setMock(newMock()); S.view = 'sheet'; render(); }""")
+        page.click('[data-act=set][data-k="ma_sc.r0.s"][data-v="8"]')
+        page.click('[data-act=blankzero][data-v=ma_sc]')
+        check(page.evaluate("() => S.mock.scores.teacher['ma_sc.r1.a']") == 0, "mallet Mark blanks ✗")
+        # rubric blanks stay flagged
+        page.evaluate("""() => { S.pick = { level: 'ms', inst: 'flute', round: 'state', variant: null }; setMock(newMock());
+          S.mock.scores.teacher['prep.c0'] = 8; S.view = 'results'; render(); }""")
+        check("Prepared Selection · Technique" in page.inner_text(".banner.blanks"), "rubric blank not named")
 
         # ---------- 10. dark mode + phone sheet ----------
         page.evaluate("() => { document.documentElement.dataset.theme = 'dark'; S.pick = { level: 'symphonic', inst: 'basstrombone', round: 'district', variant: null }; setMock(newMock()); S.view='sheet'; render(); }")

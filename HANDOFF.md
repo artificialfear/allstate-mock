@@ -43,7 +43,8 @@ A single-page tool for running mock GMEA All-State Band auditions. The teacher p
   - District rubric: 0–5 by 0.5.
   - State forms: integer printed scales; fractional marks are allowed ("approximate spot"), so the tool uses 0.5 steps.
   - Wind scales: per-octave ✓/✗ cells (integer points, per the form instructions).
-- **Unscored items count as 0** (like the real sheet). The results page warns how many are blank.
+- **Wind scale boxes default to 0** (Mat's request, v1.0.2). One tap = ✓, tap again = 0. Once any box in a scale section is tapped, the whole section counts as scored; only an untouched scale section is flagged as blank. Unmarked boxes show under "Scale spots to fix".
+- **Other unscored items (rubric categories, mallet chips) count as 0** like the real sheet. The results page names them; "Go to first blank" jumps to the first one. Mallet sections keep "Mark blanks ✗".
 - **Self vs. teacher compare** uses only the categories both people scored.
 - **Storage:**
   - Everything is device-local (localStorage). The draft autosaves.

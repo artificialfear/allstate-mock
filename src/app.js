@@ -1,7 +1,7 @@
 /* ============================================================
    All-State Mock Audition — app
    ============================================================ */
-const APP_VERSION = '1.0.1';
+const APP_VERSION = '1.0.2';
 const LS = { draft: 'asm.draft.v1', hist: 'asm.history.v1', theme: 'asm.theme', prefs: 'asm.prefs.v1', exported: 'asm.lastExport' };
 
 /* ---------- utils ---------- */
@@ -45,7 +45,9 @@ function sectionKeys(sec) {
 }
 function scoreSection(sec, s) {
   const keys = sectionKeys(sec);
-  const done = keys.filter((k) => s[k] != null).length;
+  let done = keys.filter((k) => s[k] != null).length;
+  /* wind scale boxes default to 0: once any box in the section is tapped, every box counts as scored */
+  if (sec.kind === 'windScales' && done) done = keys.length;
   const raw = keys.reduce((a, k) => a + (s[k] || 0), 0);
   const total = sec.kind === 'windScales' ? raw * sec.factor : raw;
   return { sec, raw, total, max: sec.max, done, cells: keys.length };
@@ -86,12 +88,9 @@ function blankItems(form, s) {
   form.sections.forEach((sec) => {
     const short = sec.title.replace(/^.*— /, '');
     if (sec.kind === 'windScales') {
-      sec.rows.forEach((row) => cellKeys(sec, row).forEach((k) => {
-        if (s[k] != null) return;
-        const part = k.split('.').pop();
-        const what = part === 'arp' ? 'arpeggio' : (part[0] === 'a' ? 'up' : 'down') + (row.oct > 1 ? ' oct ' + part.slice(1) : '');
-        out.push({ k, secId: sec.id, scaleCell: true, label: `${keyLabel(row)} ${what}` });
-      }));
+      /* unmarked boxes are 0 points; only flag a scale section where nothing at all was tapped */
+      const keys = sectionKeys(sec);
+      if (!keys.some((k) => s[k] != null)) out.push({ k: keys[0], secId: sec.id, scaleCell: false, label: `${sec.title} (nothing marked)` });
     } else if (sec.kind === 'malletScales') {
       sec.rows.forEach((row) => [['s', 'scale'], ['a', 'arpeggio']].forEach(([p, what]) => {
         const k = `${sec.id}.${row.id}.${p}`;
@@ -119,11 +118,12 @@ function scaleMisses(form, s) {
   const out = [];
   form.sections.forEach((sec) => {
     if (sec.kind === 'windScales') {
+      if (!sectionKeys(sec).some((k) => s[k] != null)) return; // section not scored yet
       sec.rows.forEach((r) => {
         const miss = [];
-        for (let i = 1; i <= r.oct; i++) if (s[`${sec.id}.${r.id}.a${i}`] === 0) miss.push(r.oct > 1 ? `up oct ${i}` : 'ascending');
-        for (let i = 1; i <= r.oct; i++) if (s[`${sec.id}.${r.id}.d${i}`] === 0) miss.push(r.oct > 1 ? `down oct ${i}` : 'descending');
-        if (s[`${sec.id}.${r.id}.arp`] === 0) miss.push('arpeggio');
+        for (let i = 1; i <= r.oct; i++) if (s[`${sec.id}.${r.id}.a${i}`] !== 1) miss.push(r.oct > 1 ? `up oct ${i}` : 'ascending');
+        for (let i = 1; i <= r.oct; i++) if (s[`${sec.id}.${r.id}.d${i}`] !== 1) miss.push(r.oct > 1 ? `down oct ${i}` : 'descending');
+        if (s[`${sec.id}.${r.id}.arp`] !== 1) miss.push('arpeggio');
         if (miss.length) out.push({ key: keyLabel(r), miss });
       });
     } else if (sec.kind === 'malletScales') {
@@ -418,7 +418,7 @@ function sectionInner(sec) {
   if (sec.tempo) tools.push(`<button class="chip-btn" data-act="metro" data-v="${sec.tempo}">♩ = ${sec.tempo}</button>`);
   if (sec.kind === 'windScales' || sec.kind === 'malletScales') {
     tools.push(`<button class="chip-btn" data-act="allperfect" data-v="${sec.id}">Start from perfect</button>`);
-    if (r.done < r.cells) tools.push(`<button class="chip-btn" data-act="blankzero" data-v="${sec.id}" title="Every blank box in this section becomes ✗ (0 points)">Mark blanks ✗</button>`);
+    if (sec.kind === 'malletScales' && r.done < r.cells) tools.push(`<button class="chip-btn" data-act="blankzero" data-v="${sec.id}" title="Every blank box in this section becomes ✗ (0 points)">Mark blanks ✗</button>`);
   }
   return `
     <div class="sec-h">
@@ -439,7 +439,7 @@ function windScalesBody(sec, s, r) {
   const rows = sec.rows.map((row) => {
     const ks = cellKeys(sec, row);
     const rr = ks.reduce((a, k) => a + (s[k] || 0), 0);
-    const cell = (k, label) => { const v = s[k]; return `<button class="cell ${v === 1 ? 'ok' : v === 0 ? 'no' : ''}" data-act="cell" data-k="${k}" aria-label="${label}">${v === 1 ? '✓' : v === 0 ? '✗' : label}</button>`; };
+    const cell = (k, label) => { const v = s[k]; return `<button class="cell ${v === 1 ? 'ok' : ''}" data-act="cell" data-k="${k}" aria-label="${label}${v === 1 ? ' — correct' : ' — 0 points'}" aria-pressed="${v === 1}">${v === 1 ? '✓' : label}</button>`; };
     const up = []; const dn = [];
     for (let i = 1; i <= row.oct; i++) { up.push(cell(`${sec.id}.${row.id}.a${i}`, row.oct > 1 ? String(i) : '↑')); dn.push(cell(`${sec.id}.${row.id}.d${i}`, row.oct > 1 ? String(i) : '↓')); }
     return `<div class="srow">
@@ -448,11 +448,11 @@ function windScalesBody(sec, s, r) {
       <div class="cg"><span>Down</span>${dn.join('')}</div>
       <div class="cg"><span>Arp</span>${cell(`${sec.id}.${row.id}.arp`, '•')}</div>
       <div class="stot">${rr}<small>/${2 * row.oct + 1}</small></div>
-      <button class="rowbtn" data-act="rowall" data-sec="${sec.id}" data-row="${row.id}" title="Mark this scale perfect">✓ all</button>
+      <button class="rowbtn" data-act="rowall" data-sec="${sec.id}" data-row="${row.id}" title="Mark this whole scale correct (tap again to clear)">✓ all</button>
     </div>`;
   }).join('');
   return `${rows}<div class="factor">Raw ${r.raw} / ${sec.rawMax} × ${sec.factor.toFixed(4)} = <strong>${fmt(r.total, 2)}</strong></div>
-    <p class="help tiny">Tap a cell once for <b>✓</b> (1 point), twice for <b>✗</b> (0 points). Only marking what was played correctly? Use <b>Mark blanks ✗</b> when you’re done. Written keys (in parentheses) are for transposing instruments.</p>`;
+    <p class="help tiny">Every box starts at 0 points. Tap a box for <b>✓</b> when that octave or arpeggio was played correctly; tap again to take it back. Written keys (in parentheses) are for transposing instruments.</p>`;
 }
 function malletBody(sec, s) {
   return sec.rows.map((row) => `<div class="mrow"><div class="skey"><b>${row.concert}</b></div>
@@ -968,7 +968,7 @@ document.addEventListener('click', async (e) => {
     case 'rowall': {
       const sec = FORM.sections.find((x) => x.id === b.dataset.sec); const row = sec.rows.find((x) => x.id === b.dataset.row);
       const ks = cellKeys(sec, row); const all = ks.every((k) => sc()[k] === 1);
-      ks.forEach((k) => { if (all) delete sc()[k]; else sc()[k] = 1; });
+      ks.forEach((k) => (sc()[k] = all ? 0 : 1));
       touch(); refreshSection(sec.id); break;
     }
     case 'allperfect': {

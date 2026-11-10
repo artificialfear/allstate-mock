@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.2 — 2026-11-10
+- Wind scale boxes now start at 0 points. One tap marks ✓; tap again to set it back to 0. No more double-tapping for a zero, and no red ✗ marks.
+- Unmarked scale boxes count as earned zeros and are no longer flagged. The results page flags a scale section only if nothing in it was tapped (it was probably skipped).
+- "✓ all" toggles a whole scale between all correct and all 0.
+- Unmarked boxes appear under "Scale spots to fix" on the results page and the printout.
+- Percussion mallet scales are unchanged: they use point chips (0 is one tap) and keep "Mark blanks ✗".
+
 ## 1.0.1 — 2026-11-10
 - The blank-box warning on the results page now names each blank box (e.g., "Bb (C) arpeggio").
 - New **Count blank scale boxes as ✗** button on the results page turns blank scale boxes into 0-point ✗ marks in one tap. Blank rubric categories still stay flagged, because those are usually forgotten, not zero.
