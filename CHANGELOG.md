@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 — 2026-11-10
+- **Sight-reading etudes from First Sight (Band Arcade), built into every sight-reading section.**
+  - Generate an original etude for the student's instrument. Default is Level 5 · District Ready, 6 bars, any concert key; level, key, and length are adjustable. Or type in an etude code.
+  - **Put it on the stand:** a full-screen music stand with a study countdown (30 s by default; 60 s or off), then a one-bar count-in. The click and **Hear It** are available but stay out of the way in a mock: the click is off by default, and Hear It asks before playing until the student has played.
+  - State rounds get separate etudes for Sight Reading #1 and #2. Percussion gets a snare etude (rhythm) and a bells etude for mallets/xylophone. Timpani isn't supported yet.
+  - Grades 9–12 can use it too, labeled as middle-school-level reading practice.
+  - The etude code is saved with the mock. Results show a **Practice it** button (also in share links). Print / Save PDF adds a page with the etude.
+
 ## 1.1.0 — 2026-11-10
 - New look in the Raven Band style: navy and gold, with Oswald headings bundled with the site so they load on school networks.
 - New splash page:

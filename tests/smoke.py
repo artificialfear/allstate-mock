@@ -284,6 +284,54 @@ def main():
         page.evaluate("() => { S.view = 'home'; render(); }")
         check(page.evaluate("() => document.fonts.check('600 16px Oswald')"), "Oswald font did not load")
 
+        # ---------- 9d. sight reading (First Sight) ----------
+        page.evaluate("""() => { S.pick = { level: 'ms', inst: 'trumpet', round: 'district', variant: null };
+          const m = newMock(); m.student.name = 'Sight Test'; setMock(m); S.who = 'teacher'; S.view = 'sheet'; render(); }""")
+        page.click('[data-act=fsgen][data-v=sr]')
+        code = page.evaluate("() => S.mock.sight.sr")
+        check(code and code.startswith("5") and "6-" in code, f"default etude should be level 5, 6 bars: {code}")
+        check(page.locator('[data-fs-preview=sr] svg').count() >= 2, "etude preview not engraved")
+        page.click('[data-act=fsstand][data-v=sr]')
+        check(page.is_visible('#stand') and page.locator('#fs-rows svg').count() >= 2, "stand did not open with music")
+        check(page.is_visible('#fs-study'), "study countdown not shown")
+        page.click('[data-act=fsready]')
+        check(page.evaluate("() => FSS.click") is False, "click should be off by default in a mock")
+        page.click('#fs-hear')
+        check("after the student has played" in page.inner_text('#fs-say'), "Hear It should ask before playing in a mock")
+        page.keyboard.press('Escape')
+        check(page.is_hidden('#stand'), "Escape should close the stand")
+        page.click('[data-act=fsnew][data-v=sr]')
+        code2 = page.evaluate("() => S.mock.sight.sr")
+        check(code2 != code and code2[:3] == code[:3], f"New etude should keep level/length: {code} -> {code2}")
+        # the code survives share links and appears on results + print
+        page.evaluate("() => { S.mock.scores.teacher['sr.c0'] = 4; S.view = 'results'; render(); }")
+        check(page.locator('[data-act=fspractice][data-v=sr]').count() == 1, "results missing etude block")
+        page.evaluate("() => buildPrint('teacher')")
+        check(page.locator('#print .fs-print svg').count() >= 2, "print missing etude page")
+        packed = page.evaluate("async () => (await decodeShare((await encodeShare(S.mock, {firstName: true, self: true})))).sight.sr")
+        check(packed == code2, "share link lost the etude code")
+        # every sight-reading section maps to a First Sight instrument (timpani: none) and engraves
+        bad = page.evaluate("""() => {
+          const out = [];
+          for (const L of Object.keys(LEVELS)) for (const I of INSTRUMENTS) for (const R of ['district', 'state']) {
+            if (I.hsOnly && L === 'ms') continue;
+            const f = buildForm(L, R, I.id, null); const m = { variant: null, level: L, sight: {} };
+            f.sections.filter(s => s.sightReading).forEach(s => {
+              const info = fsMember(f, s, m);
+              if (!info) { if (!s.id.startsWith('ti')) out.push('no member ' + f.key + ' ' + s.id); return; }
+              if (!info.member) { out.push('missing member ' + f.key + ' ' + s.id); return; }
+              for (let lv = 1; lv <= 6; lv++) {
+                const code = FS.code({ level: lv, key: 'Ab', bars: 8, seed: 'K7QX' });
+                const b = fsBuild(code, info); const rows = fsEngrave(b.et, b.real, 700, 't-');
+                if (!rows.length || !rows[0].E.svg.includes('<svg')) out.push('engrave ' + f.key + ' L' + lv);
+              }
+            });
+          }
+          return out; }""")
+        check(not bad, f"sight-reading coverage: {bad[:5]}")
+        page.evaluate("() => { S.pick = { level: 'concert', inst: 'trumpet', round: 'state', variant: null }; setMock(newMock()); S.view = 'sheet'; render(); }")
+        check("middle-school district-level" in page.inner_text('#sec-sr1'), "HS label missing")
+
         # ---------- 10. dark mode + phone sheet ----------
         page.evaluate("() => { document.documentElement.dataset.theme = 'dark'; S.pick = { level: 'symphonic', inst: 'basstrombone', round: 'district', variant: null }; setMock(newMock()); S.view='sheet'; render(); }")
         check(page.locator(".banner.warn").count() == 1, "bass trombone factor notice")

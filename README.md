@@ -9,6 +9,8 @@ A free tool for band directors and private teachers to run mock GMEA All-State B
 3. Print the filled-in sheet with a feedback page, or send the student a read-only link or QR code.
 4. Run mocks again over the season and watch the student's score chart.
 
+Sight-reading sections can generate an original etude (from Band Arcade's First Sight) and show it full screen on a music stand with a study timer. The etude's code is saved with the mock so the student can practice it again.
+
 Optional: the student can score themselves first, and the results show their self-assessment beside yours.
 
 Everything stays on your device. There are no accounts, and nothing is uploaded. Student history is saved in your browser, so use **Export backup** to keep it safe or move it to another device.

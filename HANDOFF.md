@@ -62,6 +62,25 @@ A single-page tool for running mock GMEA All-State Band auditions. The teacher p
 - Dark mode swaps `--brand` to gold, so primary buttons, chips, and totals turn gold on navy.
 - `inner_text` in Playwright returns CSS-uppercased text. Compare headings case-insensitively in tests.
 
+## Sight reading (v1.2.0): First Sight inside the mock
+- The engine is **Band Arcade's First Sight, copied unchanged** into `vendor/first-sight/`: generator `etudes.js`, engraver `notation.js` + `ui.js` staff helpers, `instruments.js` / `scales.js` / `counting.js`, wind voices `winds.js`, click/snare kit `backing.js`, and the Noto Music subset `music.woff2` (OFL).
+  - `vendor/first-sight/SOURCE.md` records the Band Arcade commit (2f382e1 on first copy).
+  - **Never edit those files here.** Fix them in stemband/band-arcade, then run `python3 tools/sync_first_sight.py <band-arcade checkout>`, rebuild, and test.
+  - `src/fs-shim.js` supplies `Arcade.Sfx.output()` (one AudioContext, created on the first tap).
+- `src/sight.js` is the glue (loaded before app.js):
+  - `fsMember`: our instrument → a First Sight member.
+    - Baritone: the clef follows the MS variant or a Clef picker (`m.sightBari`).
+    - Contra clarinet: E♭ is written as baritone sax, B♭ as bass clarinet. Hear It plays an octave lower.
+    - Percussion: snare sections → snare; mallets/xylophone → bells; timpani → none (a message says so).
+  - The panel, the stand (`FSS` state; study / count-in / click / Hear It / tempo, ported from first-sight/game.js), the results block, print pages, and share (`sr`, `sb` in the packed mock).
+- Saved on the mock as `m.sight = {sectionId: code}`. A code (e.g. `5E6-K7QX`) is the same music everywhere, including Band Arcade's First Sight.
+- Defaults (`FS_DEFAULTS`, overridable per device in prefs `fs`):
+  - Level 5, any key, 6 bars, 30 s study.
+  - The click is OFF in a mock; Practice mode turns it on.
+  - Hear It asks before playing until a play-through finishes. In a real audition nobody plays it for you.
+- HS sheets show the etude labeled "middle-school district-level". First Sight has no HS levels. If Mat wants real HS sight reading, that work belongs in Band Arcade's `etudes.js` LEVELS (more keys, faster tempos), then a sync.
+- Phones engrave 2 bars a row, or 1 when 2 would shrink the notes below 75%. Laptops and iPads use First Sight's 4 bars a row (3 for 6 bars).
+
 ## Updating for a new year
 1. Run `python3 tools/gen_hs_district.py "<new first-round PDF>"` to regenerate `src/hs_district.js`. It prints a math check and flags any printed factor that does not give 30.
 2. Re-read the MS scale sheets and update `MS_DISTRICT` octaves, factors, and cuts. Run the smoke test; it asserts every scale section sums to 30 except the keys in `KNOWN`. Update `FORM_NOTICES` and `KNOWN` if GMEA fixes or changes anything.

@@ -1,7 +1,7 @@
 /* ============================================================
    All-State Mock Audition — app
    ============================================================ */
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const LS = { draft: 'asm.draft.v1', hist: 'asm.history.v1', theme: 'asm.theme', prefs: 'asm.prefs.v1', exported: 'asm.lastExport' };
 
 /* ---------- utils ---------- */
@@ -27,7 +27,7 @@ function toast(msg) {
 /* ---------- state ---------- */
 const S = { view: 'home', pick: { level: null, inst: null, round: null, variant: null }, mock: null, who: 'teacher', readOnly: false, histKey: null, histFilter: null, sheetTab: 'judge' };
 let FORM = null;
-function setMock(m) { S.mock = m; FORM = buildForm(m.level, m.round, m.inst, m.variant); }
+function setMock(m) { if (!m.sight) m.sight = {}; S.mock = m; FORM = buildForm(m.level, m.round, m.inst, m.variant); }
 function sc(who = S.who) { return S.mock.scores[who]; }
 
 /* ---------- scoring ---------- */
@@ -147,7 +147,7 @@ function newMock() {
     level: p.level, round: p.round, inst: p.inst, variant: p.variant,
     student: { name: '', school: prefs.school || '', grade: '' }, judge: prefs.judge || '', date: todayISO(),
     flow: 'teacher', scores: { teacher: {}, self: {} }, comments: { teacher: {}, self: {} },
-    overall: { teacher: '', self: '' }, saved: false,
+    overall: { teacher: '', self: '' }, saved: false, sight: {},
   };
 }
 let draftTimer = null;
@@ -193,6 +193,7 @@ function packMock(m, opts) {
     n: opts.firstName ? (m.student.name || '').trim().split(/\s+/)[0] : m.student.name, sch: m.student.school, g: m.student.grade,
     j: m.judge, d: m.date, t: strip(m.scores.teacher), s: opts.self ? strip(m.scores.self) : {},
     ct: strip(m.comments.teacher), cs: opts.self ? strip(m.comments.self) : {}, ot: m.overall.teacher, os: opts.self ? m.overall.self : '',
+    sr: strip(m.sight), sb: m.sightBari || undefined,
   };
 }
 function unpackMock(p) {
@@ -200,7 +201,7 @@ function unpackMock(p) {
     id: p.id || uid(), v: 1, created: Date.now(), updated: Date.now(), level: p.l, round: p.r, inst: p.i, variant: p.va || null,
     student: { name: p.n || '', school: p.sch || '', grade: p.g || '' }, judge: p.j || '', date: p.d || '',
     flow: 'teacher', scores: { teacher: p.t || {}, self: p.s || {} }, comments: { teacher: p.ct || {}, self: p.cs || {} },
-    overall: { teacher: p.ot || '', self: p.os || '' }, saved: false,
+    overall: { teacher: p.ot || '', self: p.os || '' }, saved: false, sight: p.sr || {}, sightBari: p.sb || undefined,
   };
 }
 async function encodeShare(m, opts) {
@@ -234,6 +235,7 @@ function render() {
     v === 'history' ? viewHistory() : '';
   renderTopbar();
   if (v === 'history') drawHistoryChart();
+  if (v === 'sheet') fsPaintPreviews(main);
   window.scrollTo(0, 0);
 }
 
@@ -489,6 +491,7 @@ function sectionInner(sec) {
     <div class="progress" title="${r.done} of ${r.cells} scored"><i style="width:${prog}%"></i></div>
     ${sec.help ? `<p class="help">${esc(sec.help)}</p>` : ''}
         ${tools.length ? `<div class="sec-tools">${tools.join('')}</div>` : ''}
+    ${sec.sightReading ? fsPanel(sec) : ''}
     <div class="sec-body">${body}</div>
     <details class="cmt-wrap" ${cmt ? 'open' : ''}><summary>Comments${cmt ? ' ✎' : ''}</summary>
       <div class="quick">${quick.map((q) => `<button class="qc" data-act="quick" data-sec="${sec.id}" data-v="${esc(q)}">${esc(q)}</button>`).join('')}</div>
@@ -549,6 +552,7 @@ function refreshSection(secId) {
   const open = $('.cmt-wrap', el)?.open;
   el.innerHTML = sectionInner(sec);
   if (open) $('.cmt-wrap', el).open = true;
+  fsPaintPreviews(el);
   const r = scoreForm(FORM, sc());
   const lt = $('#live-total'); if (lt) lt.textContent = fmt(r.total, 1);
 }
@@ -636,6 +640,7 @@ function viewResults() {
     <p class="muted small">Suggested daily routine based on this mock. Adjust it to the student.</p>
   </section>
 
+  ${fsResultsBlock()}
   ${hasScores('self') && hasScores('teacher') ? compareBlock() : ''}
   ${commentsBlock(who)}
   ${ro ? '' : `<p class="muted small center">${m.saved ? 'Saved to this device’s student history.' : ''}</p>`}`;
@@ -926,7 +931,7 @@ function buildPrint(who) {
     ${focus.map((c) => `<h4>${CATS[c.key].name}: practice ideas</h4><ul>${CATS[c.key].tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`).join('')}
     ${m.overall[who] || comments ? `<h4>${who === 'self' ? 'Student reflection' : 'Judge comments'}</h4>${m.overall[who] ? `<p>${esc(m.overall[who])}</p>` : ''}${comments ? `<ul>${comments}</ul>` : ''}` : ''}
     <div class="p-foot">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms. Not affiliated with GMEA.</div>
-  </div>`;
+  </div>${fsPrintPages()}`;
 }
 function doPrint() {
   const who = resultsWho();
@@ -984,7 +989,7 @@ function openTools(focus) {
 /* ============================================================
    EVENTS
    ============================================================ */
-function go(view) { S.view = view; render(); }
+function go(view) { if (FSS.secId) fsCloseStand(); S.view = view; render(); }
 function readSetup() {
   const m = S.mock;
   m.student.name = $('#f-name').value.trim(); m.student.school = $('#f-school').value.trim();
@@ -996,6 +1001,7 @@ function readSetup() {
 document.addEventListener('click', async (e) => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act, v = b.dataset.v;
+  if (a.startsWith('fs') && fsAction(a, v)) return;
   switch (a) {
     case 'go': if (v === 'sheet' && S.readOnly) return; go(v); break;
     case 'level': S.pick = { level: v, inst: null, round: null, variant: null }; go('inst'); break;
@@ -1118,13 +1124,20 @@ document.addEventListener('input', (e) => {
     touch();
   }
 });
+document.addEventListener('submit', (e) => {
+  const f = e.target.closest('form[data-fscode]');
+  if (f) { e.preventDefault(); fsSubmit(f); }
+});
 document.addEventListener('change', (e) => {
   const t = e.target;
+  if (fsChange(t)) return;
   if (t.matches('input[type=range][data-k]')) refreshSection(t.dataset.k.split('.')[0]);
   if (t.matches('input[name=flow]')) { $$('.radio').forEach((r) => r.classList.toggle('on', r.contains(t))); }
   if (t.id === 'import' && t.files[0]) importHistory(t.files[0]);
 });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); $('#tools').hidden = true; } });
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { if (!$('#stand').hidden) { fsCloseStand(); return; } closeModal(); $('#tools').hidden = true; }
+});
 $('#modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
 window.addEventListener('afterprint', () => { $('#print').innerHTML = ''; });
 
