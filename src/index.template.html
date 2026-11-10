@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>All-State Mock Audition</title>
+<meta name="description" content="Score practice All-State Band auditions on the GMEA district and state judge sheets, then print or share the results with students.">
+<meta name="theme-color" content="#1f3a5f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3a5f'/%3E%3Cpath d='M18 46V20l14 8 14-8v26' stroke='%23fff' stroke-width='6' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+<!--INLINE:src/styles.css-->
+</style>
+</head>
+<body>
+<header class="topbar">
+  <button class="tb-home" data-act="home" aria-label="Home">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="currentColor"/><path d="M18 46V20l14 8 14-8v26" stroke="var(--on-brand)" stroke-width="6" fill="none" stroke-linejoin="round"/></svg>
+  </button>
+  <div id="topbar-mid" class="tb-mid"></div>
+  <div id="tb-total" class="tb-total"></div>
+  <button id="btn-tools" class="tb-icon" data-act="tools" aria-label="Timer and metronome" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l3 2M9 2h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </button>
+  <button class="tb-icon" data-act="theme" aria-label="Toggle dark mode">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main id="main" class="wrap"></main>
+
+<div id="tools" class="tools" hidden>
+  <div class="tools-h"><b>Audition tools</b><button class="x" data-act="tools-close" aria-label="Close">✕</button></div>
+  <div class="tool">
+    <div class="tool-l">Timer <span id="t-limit" class="muted small"></span></div>
+    <div id="t-time" class="t-time">0:00</div>
+    <div class="tool-row">
+      <button class="btn sm primary" id="t-go" data-act="t-go">Start</button>
+      <button class="btn sm" data-act="t-reset">Reset</button>
+      <button class="btn sm ghost" data-act="t-limit" data-v="0">No limit</button>
+    </div>
+  </div>
+  <div class="tool">
+    <div class="tool-l">Metronome</div>
+    <div class="tool-row">
+      <button class="btn sm" data-act="m-bpm" data-v="-">−</button>
+      <span class="bpm">♩ = <b id="m-bpm">120</b></span>
+      <button class="btn sm" data-act="m-bpm" data-v="+">+</button>
+      <button class="btn sm primary" id="m-go" data-act="m-go">Start</button>
+    </div>
+    <div class="tool-row">
+      <button class="chip-btn" data-act="m-bpm" data-v="120">MS 120</button>
+      <button class="chip-btn" data-act="m-bpm" data-v="132">Concert 132</button>
+      <button class="chip-btn" data-act="m-bpm" data-v="144">Symphonic 144</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal" class="modal" hidden><div class="modal-card"><button class="x" data-act="close" aria-label="Close">✕</button><div id="modal-body"></div></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="print" class="print"></div>
+
+<footer class="foot wrap">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms · not affiliated with GMEA · data stays on your device</footer>
+
+<script>
+<!--INLINE:vendor/qrcode.js-->
+</script>
+<script>
+<!--INLINE:src/hs_district.js-->
+<!--INLINE:src/data.js-->
+<!--INLINE:src/feedback.js-->
+<!--INLINE:src/app.js-->
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+#!/usr/bin/env python3
+"""Smoke tests for All-State Mock Audition.
+
+Run from the repo root:
+    python3 build.py && python3 tests/smoke.py
+Starts its own static server, drives the built index.html with Playwright (Chromium),
+and exits non-zero on any failure. Pass --shots DIR to save screenshots.
+"""
+import http.server
+import pathlib
+import socketserver
+import sys
+import threading
+
+from playwright.sync_api import sync_playwright
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+SHOTS = None
+if "--shots" in sys.argv:
+    SHOTS = pathlib.Path(sys.argv[sys.argv.index("--shots") + 1])
+    SHOTS.mkdir(parents=True, exist_ok=True)
+
+FAILS = []
+
+
+def check(cond, msg):
+    if not cond:
+        FAILS.append(msg)
+        print("FAIL:", msg)
+
+
+def serve():
+    class H(http.server.SimpleHTTPRequestHandler):
+        def __init__(self, *a, **k):
+            super().__init__(*a, directory=str(ROOT), **k)
+
+        def log_message(self, *a):
+            pass
+
+    srv = socketserver.TCPServer(("127.0.0.1", 0), H)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv, f"http://127.0.0.1:{srv.server_address[1]}/index.html"
+
+
+def shot(page, name, full=True):
+    if SHOTS:
+        page.screenshot(path=str(SHOTS / f"{name}.png"), full_page=full)
+
+
+# Printed-form anomalies we reproduce on purpose (scale section max != 30)
+KNOWN = {"district.concert.tenorsax": 31.875, "district.symphonic.basstrombone": 28.85}
+
+
+def main():
+    srv, url = serve()
+    with sync_playwright() as p:
+        b = p.chromium.launch(channel="chromium")
+        page = b.new_page(viewport={"width": 1100, "height": 900})
+        errs = []
+        page.on("pageerror", lambda e: errs.append(str(e)))
+        page.on("console", lambda m: m.type == "error" and errs.append(m.text))
+        page.goto(url)
+        page.wait_for_timeout(200)
+
+        # ---------- 1. form data integrity ----------
+        combos = page.evaluate("""() => {
+          const out = [];
+          for (const L of Object.keys(LEVELS)) for (const I of INSTRUMENTS) {
+            if (I.hsOnly && L === 'ms') continue;
+            for (const R of ['district', 'state']) {
+              const d = L === 'ms' && R === 'district' && MS_DISTRICT[I.id];
+              const vars = d && d.variants ? Object.keys(d.variants) : [null];
+              for (const V of vars) {
+                const f = buildForm(L, R, I.id, V);
+                const sc = f.sections.find(s => s.kind === 'windScales');
+                out.push({ key: f.key, v: V, max: f.max, scaleMax: sc ? sc.max : null, nSec: f.sections.length,
+                  rows: sc ? sc.rows.length : 0, cut: f.cut, perc: I.id === 'percussion', notices: f.notices.length });
+              }
+            }
+          }
+          return out;
+        }""")
+        # MS: 15 instruments x 2 rounds + 2 extra scale-sheet variants (contra Eb/BBb, baritone BC/TC); HS: 16 x 2 x 2
+        check(len(combos) == 15 * 2 + 2 + 16 * 2 * 2, f"expected 96 form combos, got {len(combos)}")
+        for c in combos:
+            k = c["key"]
+            if c["perc"]:
+                check(abs(c["max"] - 300) < 1e-6, f"{k} max {c['max']} != 300")
+                continue
+            if k.startswith("state"):
+                check(abs(c["max"] - 100) < 1e-6, f"{k} max {c['max']} != 100")
+                continue
+            exp_scale = KNOWN.get(k, 30)
+            check(abs(c["scaleMax"] - exp_scale) < 0.03, f"{k} scale max {c['scaleMax']} != {exp_scale}")
+            check(c["cut"] in (70, 80, 85), f"{k} cut {c['cut']}")
+            check(c["rows"] == {"ms": 4, "concert": 8, "symphonic": 12}[k.split(".")[1]], f"{k} rows {c['rows']}")
+            check((k in KNOWN) == (c["notices"] > 0), f"{k} notice mismatch")
+
+        # ---------- 2. every form renders and a perfect run scores the form max ----------
+        for c in combos:
+            res = page.evaluate("""async ([key, v]) => {
+              const [R, L, I] = key.split('.');
+              S.pick = { level: L, inst: I, round: R, variant: v };
+              const m = newMock(); m.student.name = 'Test ' + key; setMock(m); S.who = 'teacher'; S.readOnly = false;
+              S.view = 'sheet'; render();
+              for (const sec of FORM.sections) {
+                if (sec.kind === 'windScales' || sec.kind === 'malletScales') {
+                  document.querySelector(`[data-act=allperfect][data-v="${sec.id}"]`).click();
+                } else {
+                  for (const it of sec.items) {
+                    const chip = document.querySelector(`[data-act=set][data-k="${sec.id}.${it.id}"][data-v="${it.max}"]`);
+                    if (chip) chip.click();
+                    else { const r = document.querySelector(`input[type=range][data-k="${sec.id}.${it.id}"]`);
+                      r.value = it.max; r.dispatchEvent(new Event('input', { bubbles: true })); r.dispatchEvent(new Event('change', { bubbles: true })); }
+                  }
+                }
+              }
+              const r = scoreForm(FORM, S.mock.scores.teacher);
+              return { total: r.total, max: r.max, done: r.done, cells: r.cells };
+            }""", [c["key"], c["v"]])
+            check(abs(res["total"] - res["max"]) < 1e-9, f"{c['key']} perfect run {res['total']} != {res['max']}")
+            check(res["done"] == res["cells"], f"{c['key']} unscored cells after perfect run")
+
+        # ---------- 3. hand-scored MS clarinet district: exact arithmetic ----------
+        page.evaluate("() => { S.pick = { level: 'ms', inst: 'clarinet', round: 'district', variant: null }; setMock(newMock()); S.view='sheet'; render(); }")
+        page.click('[data-act=allperfect][data-v=scales]')
+        for k in ["scales.r3.d2", "scales.r3.arp", "scales.r1.a2"]:
+            page.click(f'[data-act=cell][data-k="{k}"]')
+        page.click('[data-act=set][data-k="chrom.c0"][data-v="8"]')
+        page.click('[data-act=nudge][data-k="chrom.c0"]')
+        for sec, vals in {"lyr": ["4", "3.5", "4", "3", "2.5", "3.5"], "sr": ["3", "2.5", "2", "3", "2", "2.5"]}.items():
+            for i, v in enumerate(vals):
+                page.click(f'[data-act=set][data-k="{sec}.c{i}"][data-v="{v}"]')
+        tot = page.evaluate("() => scoreForm(FORM, S.mock.scores.teacher).total")
+        check(abs(tot - 69.5) < 1e-9, f"MS clarinet hand score {tot} != 69.5")
+        check(page.inner_text("#live-total").strip() == "69.5", "live total not updated")
+        # tapping the selected chip clears it
+        page.click('[data-act=set][data-k="lyr.c0"][data-v="4"]')
+        check(page.evaluate("() => S.mock.scores.teacher['lyr.c0']") is None, "re-tap did not clear score")
+        page.click('[data-act=set][data-k="lyr.c0"][data-v="4"]')
+        page.fill('#main input[type=text], #main textarea[data-overall]', 'Great progress since last month.')
+        shot(page, "sheet_ms_clarinet")
+
+        # ---------- 4. results + history save ----------
+        page.click("[data-act=results]")
+        page.wait_for_timeout(150)
+        check("69.5" in page.inner_text(".res-total"), "results total")
+        check("15.5 points below" in page.inner_text(".cut"), "cut gauge message")
+        check("Bb (C)" in page.inner_text(".miss"), "scale misses listed")
+        shot(page, "results_ms_clarinet")
+        hist = page.evaluate("() => getHistory().length")
+        check(hist >= 1, "results did not save to history")
+
+        # ---------- 5. share link round trip (incl. compression) ----------
+        page.click("[data-act=share]")
+        page.wait_for_timeout(400)
+        share = page.input_value("#sh-url")
+        check("#view=z" in share, "share link not compressed")
+        check(page.locator(".qr svg").count() == 1, "QR code missing")
+        page.keyboard.press("Escape")
+        p2 = b.new_page(viewport={"width": 390, "height": 844})
+        p2.on("pageerror", lambda e: errs.append("shared: " + str(e)))
+        p2.goto(share)
+        p2.wait_for_timeout(400)
+        check("69.5" in p2.inner_text(".res-total"), "shared view total")
+        check(p2.locator("[data-act=share]").count() == 0, "shared view should be read-only")
+        check(p2.is_hidden("#btn-tools"), "tools button visible on shared view")
+        shot(p2, "shared_phone")
+        p2.close()
+
+        # ---------- 6. print builds both pages ----------
+        page.evaluate("() => buildPrint('teacher')")
+        check(page.locator("#print .p-page").count() == 2, "print pages")
+        check("AUDITION TOTAL: 69.5" in page.inner_text("#print .p-total"), "print total")
+        if SHOTS:
+            page.emulate_media(media="print")
+            page.pdf(path=str(SHOTS / "print_ms_clarinet.pdf"), format="Letter")
+            page.emulate_media(media="screen")
+
+        # ---------- 7. self-assessment compare ----------
+        page.evaluate("""() => { S.pick = { level: 'concert', inst: 'trumpet', round: 'state', variant: null };
+          const m = newMock(); m.student.name = 'Avery Stone'; m.flow = 'self-first'; setMock(m); S.who = 'self'; S.view = 'sheet'; render(); }""")
+        check(page.locator(".banner.self").count() == 1, "self banner")
+        for i in range(6):
+            page.click(f'[data-act=set][data-k="et1.c{i}"][data-v="5"]')
+        page.click("[data-act=handoff]")
+        check(page.evaluate("() => S.who") == "teacher", "handoff to teacher")
+        check(page.locator('[data-act=set].on').count() == 0, "teacher view shows self scores")
+        for i, v in enumerate(["4", "3", "4", "3", "3", "3"]):
+            page.click(f'[data-act=set][data-k="et1.c{i}"][data-v="{v}"]')
+        shot(page, "sheet_hs_state")
+        page.click("[data-act=results]")
+        page.wait_for_timeout(150)
+        txt = page.inner_text("#main")
+        check("Self-assessment vs. teacher" in txt, "compare block missing")
+        check("10 points higher" in txt, "compare summary should use shared categories only")
+        shot(page, "results_compare")
+
+        # ---------- 8. percussion forms render, mallet + slider widgets work ----------
+        for rnd in ["district", "state"]:
+            page.evaluate(f"""() => {{ S.pick = {{ level: 'concert', inst: 'percussion', round: '{rnd}', variant: null }};
+              const m = newMock(); m.student.name = 'Perc {rnd}'; setMock(m); S.who='teacher'; S.view = 'sheet'; render(); }}""")
+            check(page.locator(".group-h").count() == 3, f"percussion {rnd} groups")
+            shot(page, f"sheet_perc_{rnd}")
+        page.click('[data-act=nudge][data-k="ti_et.c0"][data-v="0.5"]')
+        check(page.evaluate("() => S.mock.scores.teacher['ti_et.c0']") == 0.5, "slider nudge")
+
+        # ---------- 9. history view, chart, export/import ----------
+        page.evaluate("""() => {
+          const base = getHistory().find(x => x.inst === 'clarinet');
+          ['2026-09-15', '2026-10-12'].forEach((d, i) => {
+            const c = JSON.parse(JSON.stringify(base)); c.id = 'seed' + i; c.date = d; c.created = i;
+            Object.keys(c.scores.teacher).forEach(k => { if (k.startsWith('sr')) c.scores.teacher[k] = Math.max(0, c.scores.teacher[k] - (2 - i)); });
+            delete c.summary; saveToHistory(c, true);
+          });
+          S.histKey = studentKey(base); S.histFilter = null; S.view = 'history'; render(); }""")
+        check(page.locator("#hchart circle.dot").count() == 3, "history chart points")
+        check(page.locator("#hchart .cutl").count() == 1, "history cut line")
+        page.hover("#hchart circle.hit >> nth=0")
+        check(page.is_visible("#htip"), "chart tooltip")
+        shot(page, "history")
+        with page.expect_download() as dl:
+            page.click("[data-act=export] >> nth=0")
+        path = dl.value.path()
+        page.evaluate("() => localStorage.removeItem('asm.history.v1')")
+        page.set_input_files("#import", path) if page.locator("#import").count() else None
+        page.evaluate("() => { S.view = 'history'; render(); }")
+        page.set_input_files("#import", path)
+        page.wait_for_timeout(300)
+        check(page.evaluate("() => getHistory().length") >= 4, "import restored history")
+
+        # ---------- 10. dark mode + phone sheet ----------
+        page.evaluate("() => { document.documentElement.dataset.theme = 'dark'; S.pick = { level: 'symphonic', inst: 'basstrombone', round: 'district', variant: null }; setMock(newMock()); S.view='sheet'; render(); }")
+        check(page.locator(".banner.warn").count() == 1, "bass trombone factor notice")
+        shot(page, "sheet_dark_basstrombone", full=False)
+        ph = b.new_page(viewport={"width": 390, "height": 844})
+        ph.on("pageerror", lambda e: errs.append("phone: " + str(e)))
+        ph.goto(url)
+        ph.click("[data-act=level][data-v=ms]")
+        ph.click("[data-act=inst][data-v=contraclar]")
+        ph.click("[data-act=variant][data-v=eb]")
+        ph.click("[data-act=round][data-v=district]")
+        ph.fill("#f-name", "Sam Lee")
+        ph.click("[data-act=start]")
+        check(ph.evaluate("() => FORM.sections[0].rows.map(r => r.oct).join('')") == "1212", "Eb contra octaves")
+        overflow = ph.evaluate("() => document.documentElement.scrollWidth > window.innerWidth + 1")
+        check(not overflow, "horizontal overflow on phone")
+        shot(ph, "phone_sheet")
+        ph.click("[data-act=home]")
+        shot(ph, "phone_home")
+        ph.close()
+
+        check(not errs, f"console/page errors: {errs}")
+        b.close()
+    srv.shutdown()
+    print(f"\n{'FAILED' if FAILS else 'PASSED'}: {len(FAILS)} failure(s)")
+    sys.exit(1 if FAILS else 0)
+
+
+if __name__ == "__main__":
+    main()

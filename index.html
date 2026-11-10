@@ -1,0 +1,4126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>All-State Mock Audition</title>
+<meta name="description" content="Score practice All-State Band auditions on the GMEA district and state judge sheets, then print or share the results with students.">
+<meta name="theme-color" content="#1f3a5f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3a5f'/%3E%3Cpath d='M18 46V20l14 8 14-8v26' stroke='%23fff' stroke-width='6' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root {
+  color-scheme: light;
+  --bg: #f4f2ee;
+  --surface: #fffefb;
+  --surface-2: #f0ede6;
+  --line: #ddd8cd;
+  --ink: #1b1a18;
+  --ink-2: #57544d;
+  --ink-3: #8a867c;
+  --brand: #1f3a5f;
+  --brand-2: #2a5a92;
+  --on-brand: #ffffff;
+  --accent: #2a78d6;
+  --accent-soft: #e3eefb;
+  --good: #1d7a4a;
+  --good-soft: #e3f3ea;
+  --bad: #b3372f;
+  --bad-soft: #fbe7e5;
+  --warn: #8a5a00;
+  --warn-soft: #fdf3dc;
+  --self: #eb6834;
+  --tch: #2a78d6;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.05);
+  --r: 14px;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141413; --surface: #1d1d1b; --surface-2: #262623; --line: #36352f;
+    --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8e8c82;
+    --brand: #8fb4e6; --brand-2: #a9c6ee; --on-brand: #10233b;
+    --accent: #3987e5; --accent-soft: #1b2b40;
+    --good: #5cc28d; --good-soft: #17301f; --bad: #f08a80; --bad-soft: #3a1d1a; --warn: #f0c060; --warn-soft: #33290f;
+    --self: #d95926; --tch: #3987e5;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141413; --surface: #1d1d1b; --surface-2: #262623; --line: #36352f;
+  --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8e8c82;
+  --brand: #8fb4e6; --brand-2: #a9c6ee; --on-brand: #10233b;
+  --accent: #3987e5; --accent-soft: #1b2b40;
+  --good: #5cc28d; --good-soft: #17301f; --bad: #f08a80; --bad-soft: #3a1d1a; --warn: #f0c060; --warn-soft: #33290f;
+  --self: #d95926; --tch: #3987e5;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 var(--sans); min-height: 100vh; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+.muted { color: var(--ink-2); }
+.small { font-size: 0.86rem; }
+.tiny { font-size: 0.78rem; }
+.center { text-align: center; }
+h1, h2, h3, h4 { font-family: var(--serif); line-height: 1.2; margin: 0; }
+
+/* topbar */
+.topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 10px; padding: 8px 12px; padding-top: max(8px, env(safe-area-inset-top));
+  background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.tb-home { border: 0; background: none; padding: 0; color: var(--brand); width: 36px; height: 36px; flex: none; }
+.tb-home svg { width: 36px; height: 36px; display: block; }
+.tb-mid { flex: 1; min-width: 0; }
+.tb-brand { font-family: var(--serif); font-weight: 700; font-size: 1.1rem; }
+.tb-student { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-meta { font-size: 0.8rem; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-total { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tb-score { font-size: 1.4rem; font-weight: 800; color: var(--brand); }
+.tb-max { color: var(--ink-3); margin-left: 3px; }
+.tb-icon { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; flex: none; color: var(--ink-2); }
+.tb-icon svg { width: 20px; height: 20px; }
+.tb-icon.live { color: var(--on-brand); background: var(--brand); border-color: var(--brand); }
+
+main { padding-top: 20px; padding-bottom: 40px; }
+.foot { color: var(--ink-3); font-size: 0.78rem; text-align: center; padding-bottom: 28px; }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 8px 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); font-weight: 600; text-decoration: none; }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+.btn.ghost { background: transparent; }
+.btn.sm { min-height: 36px; padding: 4px 12px; font-size: 0.9rem; }
+.btn.big { min-height: 54px; font-size: 1.08rem; padding: 10px 24px; }
+.btn.danger { background: var(--bad); color: #fff; border-color: var(--bad); }
+.back { border: 0; background: none; color: var(--brand-2); font-weight: 600; padding: 6px 0; margin-bottom: 6px; }
+.chip-btn { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 5px 12px; font-size: 0.85rem; font-weight: 600; min-height: 34px; }
+
+/* home */
+.hero { padding: 8px 0 12px; }
+.hero h1 { font-size: clamp(1.7rem, 4.5vw, 2.5rem); max-width: 18ch; letter-spacing: -0.01em; }
+.hero p { color: var(--ink-2); max-width: 60ch; margin: 10px 0 0; }
+.steps { list-style: none; display: flex; gap: 6px; padding: 0; margin: 18px 0 14px; flex-wrap: wrap; }
+.steps li { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--ink-3); padding-right: 10px; }
+.steps li span { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-weight: 700; font-size: 0.75rem; }
+.steps li.done { color: var(--ink-2); }
+.steps li.done span { background: var(--surface-2); }
+.steps li.cur { color: var(--ink); font-weight: 700; }
+.steps li.cur span { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+.pick-h { font-size: 1.35rem; margin: 6px 0 14px; }
+.fam { font-family: var(--sans); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 18px 0 8px; }
+.cards { display: grid; gap: 12px; }
+.cards.three { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.cards.two { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.cards.inst { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); }
+.pick { text-align: left; padding: 18px; display: flex; flex-direction: column; gap: 4px; transition: border-color .15s, transform .15s; }
+.pick:hover { border-color: var(--brand-2); transform: translateY(-1px); }
+.pick.sm { padding: 14px; min-height: 56px; justify-content: center; }
+.pick-g { font-size: 0.8rem; font-weight: 700; color: var(--brand-2); text-transform: uppercase; letter-spacing: 0.06em; }
+.pick-t { font-family: var(--serif); font-size: 1.35rem; font-weight: 700; }
+.pick.sm .pick-t { font-size: 1.05rem; font-family: var(--sans); font-weight: 600; }
+.pick-s { font-size: 0.86rem; color: var(--ink-2); }
+.pick.round ul { margin: 6px 0 8px; padding-left: 18px; color: var(--ink-2); font-size: 0.92rem; }
+.home-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+.resume { width: 100%; display: flex; flex-direction: column; text-align: left; gap: 2px; padding: 14px 16px; border-radius: var(--r); border: 1px solid var(--brand-2); background: var(--accent-soft); margin: 8px 0; }
+.resume-k { font-weight: 700; color: var(--brand); }
+.resume-v { color: var(--ink-2); font-size: 0.92rem; }
+.nag { background: var(--warn-soft); border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); padding: 12px 14px; border-radius: 12px; margin: 10px 0; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 0.92rem; }
+.variant { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; color: var(--ink-2); font-size: 0.92rem; }
+
+/* segmented */
+.seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 2px; }
+.seg.wrap { flex-wrap: wrap; }
+.seg button { border: 0; background: none; padding: 7px 12px; border-radius: 9px; font-weight: 600; font-size: 0.9rem; color: var(--ink-2); min-height: 38px; }
+.seg button.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+
+/* setup */
+.formcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; box-shadow: var(--shadow); }
+.sheet-id { display: flex; flex-direction: column; margin-bottom: 14px; }
+.sheet-id strong { font-family: var(--serif); font-size: 1.1rem; }
+.sheet-id span { color: var(--ink-2); font-size: 0.9rem; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.fld { display: flex; flex-direction: column; gap: 4px; font-size: 0.86rem; color: var(--ink-2); font-weight: 600; }
+.fld.wide { grid-column: 1 / -1; }
+.fld input, .fld select { min-height: 46px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); font-weight: 400; font-size: 1rem; }
+.fld input:focus, .fld select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.flow { border: 0; padding: 0; margin: 18px 0; display: grid; gap: 8px; }
+.flow legend { font-weight: 700; margin-bottom: 8px; }
+.radio { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
+.radio.on { border-color: var(--brand-2); background: var(--accent-soft); }
+.radio input { margin-top: 4px; accent-color: var(--brand); width: 18px; height: 18px; }
+.radio span { display: flex; flex-direction: column; }
+.radio small { color: var(--ink-2); font-size: 0.86rem; }
+details.tips { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; }
+details.tips summary { font-weight: 700; cursor: pointer; }
+details.tips ul, .modal ul { padding-left: 18px; }
+details.tips li, .modal li { margin: 6px 0; }
+
+/* sheet */
+.sheet-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 10px; }
+.sheet-head .sheet-id { margin: 0; }
+.banner { background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: 12px; padding: 12px 14px; margin: 10px 0; font-size: 0.93rem; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.banner.self { background: color-mix(in srgb, var(--self) 14%, var(--surface)); border-color: color-mix(in srgb, var(--self) 40%, transparent); }
+.banner.warn { background: var(--warn-soft); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+.group-h { font-size: 1.25rem; margin: 26px 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.sec { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; margin: 12px 0; box-shadow: var(--shadow); }
+.sec-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.sec-h h3 { font-size: 1.15rem; }
+.sec-score { font-variant-numeric: tabular-nums; color: var(--ink-2); white-space: nowrap; }
+.sec-score span { font-weight: 800; color: var(--ink); font-size: 1.15rem; }
+.progress { height: 3px; background: var(--surface-2); border-radius: 3px; margin: 8px 0 10px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--accent); transition: width .2s; }
+.help { color: var(--ink-2); font-size: 0.88rem; margin: 0 0 10px; }
+.help.practice { font-style: italic; }
+.sec-tools { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+
+.item { padding: 10px 0; border-top: 1px dashed var(--line); }
+.item:first-child { border-top: 0; }
+.item-h { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; }
+.val { font-variant-numeric: tabular-nums; font-weight: 800; }
+.val small { color: var(--ink-3); font-weight: 400; }
+.scale-chips { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; }
+.sc { min-height: 42px; min-width: 0; padding: 0 2px; border: 1px solid var(--line); background: var(--bg); border-radius: 9px; font-weight: 600; font-variant-numeric: tabular-nums; font-size: 0.92rem; }
+.sc:hover { border-color: var(--ink-3); }
+.sc.on { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+.sc.nudge { background: var(--surface-2); color: var(--brand-2); }
+.slider { display: grid; grid-template-columns: 44px 1fr 44px; gap: 8px; align-items: center; }
+.slider .ticks { grid-column: 2; display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--ink-3); margin-top: -4px; }
+.slider input[type=range] { width: 100%; accent-color: var(--brand); height: 32px; }
+.slider.unset input[type=range] { opacity: 0.45; }
+
+/* wind scale rows */
+.srow { display: grid; grid-template-columns: minmax(72px, 0.9fr) auto auto auto 52px auto; gap: 8px; align-items: center; padding: 8px 0; border-top: 1px dashed var(--line); }
+.srow:first-child { border-top: 0; }
+.skey { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 5px; }
+.skey b { font-family: var(--serif); font-size: 1.25rem; }
+.skey small { color: var(--ink-2); }
+.oct { font-size: 0.72rem; color: var(--ink-3); width: 100%; }
+.cg { display: flex; align-items: center; gap: 4px; }
+.cg > span { font-size: 0.72rem; color: var(--ink-3); width: 30px; text-align: right; margin-right: 2px; }
+.cell { width: 44px; height: 44px; border-radius: 10px; border: 1.5px dashed var(--line); background: var(--bg); font-weight: 700; color: var(--ink-3); font-size: 0.95rem; }
+.cell.ok { border: 1.5px solid var(--good); background: var(--good-soft); color: var(--good); }
+.cell.no { border: 1.5px solid var(--bad); background: var(--bad-soft); color: var(--bad); }
+.stot { font-weight: 800; font-variant-numeric: tabular-nums; text-align: right; }
+.stot small { color: var(--ink-3); font-weight: 400; }
+.rowbtn { border: 1px solid var(--line); background: var(--surface-2); border-radius: 8px; font-size: 0.8rem; padding: 6px 8px; min-height: 36px; white-space: nowrap; }
+.factor { margin-top: 10px; padding: 10px 12px; background: var(--surface-2); border-radius: 10px; font-variant-numeric: tabular-nums; font-size: 0.92rem; }
+.mrow { display: grid; grid-template-columns: 56px 1fr 1fr; gap: 12px; align-items: center; padding: 8px 0; border-top: 1px dashed var(--line); }
+.mrow:first-child { border-top: 0; }
+.mcol .lbl { font-size: 0.74rem; color: var(--ink-3); display: block; margin-bottom: 3px; }
+
+.cmt-wrap { margin-top: 10px; }
+.cmt-wrap summary { cursor: pointer; font-weight: 600; color: var(--brand-2); font-size: 0.92rem; padding: 4px 0; }
+.quick { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.qc { border: 1px solid var(--line); background: var(--surface-2); border-radius: 999px; padding: 5px 11px; font-size: 0.82rem; min-height: 34px; }
+.qc:hover { border-color: var(--brand-2); }
+textarea.cmt { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); resize: vertical; font-size: 0.98rem; }
+.sheet-foot { display: flex; justify-content: flex-end; margin-top: 18px; }
+
+/* results */
+.res-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 6px 0 14px; border-bottom: 2px solid var(--ink); margin-bottom: 14px; }
+.res-name { font-family: var(--serif); font-size: 2rem; font-weight: 700; line-height: 1.1; }
+.res-meta { color: var(--ink-2); font-size: 0.92rem; margin-top: 4px; }
+.res-total { display: flex; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; }
+.res-total .big { font-size: 3rem; font-weight: 800; line-height: 1; color: var(--brand); }
+.res-total .of { color: var(--ink-3); font-size: 1.2rem; }
+.res-total .pc { margin-left: 8px; background: var(--surface-2); border-radius: 999px; padding: 2px 10px; font-weight: 700; color: var(--ink-2); }
+.res-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+.res-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; margin: 12px 0; box-shadow: var(--shadow); }
+.res-grid .panel { margin: 0; }
+.res-grid + .res-grid { margin-top: 12px; }
+.panel h3 { font-size: 1.1rem; margin-bottom: 10px; }
+.panel h4 { font-family: var(--sans); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); margin: 14px 0 6px; }
+.panel.good { border-top: 4px solid var(--good); }
+.panel.focus { border-top: 4px solid var(--warn); }
+.cut .cut-msg { font-size: 1.05rem; }
+.cut.above .cut-msg b { color: var(--good); }
+.cut.below .cut-msg b { color: var(--bad); }
+.gauge { position: relative; height: 14px; background: var(--surface-2); border-radius: 7px; margin: 30px 0 8px; }
+.gauge i { display: block; height: 100%; border-radius: 7px; background: var(--accent); }
+.gauge .mark { position: absolute; top: -8px; bottom: -8px; width: 2px; background: var(--ink); }
+.gauge .mark em { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 0.75rem; font-weight: 700; white-space: nowrap; margin-bottom: 2px; }
+.bar { margin: 10px 0; }
+.bar-l { display: flex; justify-content: space-between; gap: 8px; font-size: 0.92rem; }
+.bar-l b { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.bar-t { height: 8px; background: var(--surface-2); border-radius: 4px; margin-top: 4px; overflow: hidden; }
+.bar-t i { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+.lost { margin: 0; padding-left: 20px; }
+.lost li { margin: 6px 0; }
+.lost li { display: list-item; }
+.lost li span { display: inline-block; min-width: 60%; }
+.lost li b { color: var(--bad); font-variant-numeric: tabular-nums; float: right; }
+.miss { margin: 0; padding-left: 18px; font-size: 0.92rem; }
+.miss li { margin: 4px 0; }
+.cat { padding: 8px 0; border-top: 1px dashed var(--line); }
+.cat:first-of-type { border-top: 0; }
+.cat-h { display: flex; justify-content: space-between; }
+.cat-h span { font-weight: 800; font-variant-numeric: tabular-nums; }
+.cat-ctx { font-size: 0.82rem; color: var(--ink-3); }
+.insight { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; font-size: 0.92rem; margin: 10px 0 0; }
+.plan { list-style: none; padding: 0; margin: 0; counter-reset: p; }
+.plan li { display: grid; grid-template-columns: 70px 1fr; gap: 10px; padding: 9px 0; border-top: 1px dashed var(--line); }
+.plan li:first-child { border-top: 0; }
+.plan .min { font-weight: 800; color: var(--brand-2); font-variant-numeric: tabular-nums; }
+.plan b { display: block; }
+.plan span { color: var(--ink-2); font-size: 0.92rem; }
+.cmp-sum { margin: 0 0 8px; }
+.cmp-legend { display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--ink-2); margin-bottom: 6px; }
+.cmp-legend .k { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-left: 8px; }
+.cmp-legend .k.self { background: var(--self); }
+.cmp-legend .k.tch { background: var(--tch); }
+.cmp-row { display: grid; grid-template-columns: minmax(130px, 1fr) 1.4fr; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px dashed var(--line); }
+.cmp-row.flag .cmp-l { font-weight: 700; }
+.cmp-l { font-size: 0.88rem; }
+.cmp-l em { display: block; font-style: normal; font-size: 0.75rem; color: var(--warn); font-weight: 700; }
+.cmp-bars { display: grid; gap: 3px; }
+.cb { display: grid; grid-template-columns: 1fr 36px; align-items: center; gap: 6px; }
+.cb i { display: block; height: 8px; border-radius: 0 4px 4px 0; min-width: 2px; }
+.cb.self i { background: var(--self); }
+.cb.tch i { background: var(--tch); }
+.cb span { font-size: 0.78rem; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+.cmt-block p { margin: 0 0 8px; }
+.cmt-block ul { margin: 0; padding-left: 18px; }
+
+/* history */
+.hist { display: grid; grid-template-columns: 220px 1fr; gap: 14px; }
+.hist-list { display: flex; flex-direction: column; gap: 6px; }
+.hist-st { text-align: left; padding: 10px 12px; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; display: flex; flex-direction: column; }
+.hist-st span { font-size: 0.8rem; color: var(--ink-3); }
+.hist-st.on { border-color: var(--brand-2); background: var(--accent-soft); }
+.hist-main { min-width: 0; }
+.combo { font-weight: 700; margin-bottom: 8px; }
+.chart-wrap { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 10px; margin: 10px 0; }
+#hchart svg { width: 100%; height: auto; display: block; }
+#hchart .g { stroke: var(--line); stroke-width: 1; }
+#hchart .ax { fill: var(--ink-3); font-size: 11px; font-family: var(--sans); }
+#hchart .cutl { stroke: var(--ink-2); stroke-width: 1.5; stroke-dasharray: 5 4; }
+#hchart .cutt { fill: var(--ink-2); font-weight: 600; }
+#hchart .ln { fill: none; stroke: var(--tch); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+#hchart .dot { fill: var(--tch); stroke: var(--surface); stroke-width: 2; }
+#hchart .hit { fill: transparent; cursor: pointer; }
+#hchart .lbl { fill: var(--ink); font-size: 12px; font-weight: 700; font-family: var(--sans); }
+.htip { position: absolute; transform: translate(-50%, -100%); background: var(--ink); color: var(--bg); padding: 6px 10px; border-radius: 8px; font-size: 0.82rem; pointer-events: none; display: flex; flex-direction: column; white-space: nowrap; }
+.htable { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.htable th { text-align: left; color: var(--ink-3); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px; border-bottom: 1px solid var(--line); }
+.htable td { padding: 8px 6px; border-bottom: 1px dashed var(--line); vertical-align: middle; }
+.htable .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.htable .num small { display: block; font-size: 0.75rem; }
+.pos { color: var(--good); } .neg { color: var(--bad); }
+.htable .acts { text-align: right; white-space: nowrap; }
+.htable .acts .btn { margin-left: 4px; }
+.hist-io { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+
+/* tools panel */
+.tools { position: fixed; right: 12px; top: 64px; z-index: 40; width: min(320px, calc(100vw - 24px)); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: 0 10px 40px rgb(0 0 0 / 0.18); padding: 12px 14px; }
+.tools-h { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.tool { padding: 10px 0; border-top: 1px solid var(--line); }
+.tool-l { font-weight: 700; font-size: 0.9rem; }
+.t-time { font-size: 2.6rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.t-time.over { color: var(--bad); }
+.tool-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.bpm { min-width: 74px; text-align: center; font-variant-numeric: tabular-nums; }
+.x { border: 0; background: none; font-size: 1.1rem; color: var(--ink-2); width: 36px; height: 36px; border-radius: 8px; }
+
+/* modal + toast */
+.modal { position: fixed; inset: 0; z-index: 50; background: rgb(0 0 0 / 0.45); display: grid; place-items: center; padding: 16px; }
+.modal[hidden] { display: none; }
+.modal-card { position: relative; background: var(--surface); border-radius: var(--r); max-width: 620px; width: 100%; max-height: calc(100vh - 32px); overflow: auto; padding: 22px; }
+.modal-card > .x { position: absolute; top: 10px; right: 10px; }
+.modal h3 { font-size: 1.3rem; margin: 0 40px 8px 0; }
+.modal h4 { margin: 16px 0 6px; }
+.share-opts { display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0; font-size: 0.92rem; }
+.share-opts input { accent-color: var(--brand); }
+.share-url { display: flex; gap: 8px; }
+.share-url input { flex: 1; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; background: var(--bg); font-size: 0.85rem; }
+.qr { display: flex; align-items: center; gap: 14px; margin: 14px 0; }
+.qr svg { width: 150px; height: 150px; background: #fff; border-radius: 8px; flex: none; }
+.qr span { color: var(--ink-2); font-size: 0.88rem; }
+.calib { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.calib th { text-align: left; white-space: nowrap; padding: 6px 10px 6px 0; vertical-align: top; }
+.calib td { padding: 6px 0; color: var(--ink-2); }
+.calib tr { border-top: 1px dashed var(--line); }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 30px); opacity: 0; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 600; transition: all .2s; pointer-events: none; z-index: 60; max-width: calc(100vw - 32px); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* responsive */
+@media (max-width: 720px) {
+  .hist { grid-template-columns: 1fr; }
+  .hist-list { flex-direction: row; overflow-x: auto; padding-bottom: 4px; }
+  .hist-st { flex: none; }
+  .srow { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 12px; }
+  .srow .skey { order: 0; flex: 1 0 calc(100% - 140px); flex-wrap: nowrap; align-self: center; }
+  .srow .rowbtn { order: 1; align-self: center; }
+  .srow .stot { order: 2; min-width: 40px; align-self: center; }
+  .srow .cg { order: 3; position: relative; padding-top: 16px; flex-wrap: nowrap; }
+  .srow .cg > span { position: absolute; top: 0; left: 0; width: auto; text-align: left; margin: 0; }
+  .cell { width: 42px; height: 42px; }
+  .oct { width: auto; margin-left: 6px; }
+  .mrow { grid-template-columns: 1fr; gap: 6px; }
+  .res-total .big { font-size: 2.4rem; }
+  .res-name { font-size: 1.6rem; }
+  .cmp-row { grid-template-columns: 1fr; gap: 4px; }
+  .tb-total .tb-max { display: none; }
+}
+@media (max-width: 400px) {
+  .cell { width: 38px; height: 40px; }
+  .cg { gap: 3px; }
+}
+@media (max-width: 520px) {
+  /* wrap long chip rows into two rows of 6 so every target stays finger-sized */
+  .scale-chips { grid-auto-flow: row; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+  .mcol .scale-chips { grid-template-columns: repeat(5, 1fr); }
+  .sc { min-height: 42px; }
+}
+
+/* ===================== PRINT ===================== */
+.print { display: none; }
+@media print {
+  @page { size: letter; margin: 0.45in; }
+  body { background: #fff; color: #000; }
+  .topbar, #main, .foot, .tools, .modal, .toast { display: none !important; }
+  .print { display: block; font: 10.5pt/1.35 "Times New Roman", Times, serif; color: #000; }
+  .p-page { page-break-after: always; }
+  .p-page:last-child { page-break-after: auto; }
+  .p-mock { text-align: right; font: 700 8pt Arial, sans-serif; letter-spacing: 0.08em; color: #555; }
+  .p-title { text-align: center; font-size: 14pt; font-weight: 700; }
+  .p-sub { text-align: center; font-size: 12pt; font-weight: 700; margin-bottom: 4px; }
+  .p-div { text-align: center; font-size: 10pt; }
+  .p-info { width: 100%; border-collapse: collapse; margin: 6px 0 8px; }
+  .p-info td { padding: 2px 4px; border-bottom: 1px solid #000; }
+  .p-group { font-size: 12pt; margin: 10px 0 2px; border-bottom: 1.5px solid #000; font-family: inherit; }
+  .p-group span { font-weight: 400; font-size: 10pt; }
+  .p-sec { margin: 6px 0; break-inside: avoid; }
+  .p-sech { font-weight: 700; display: flex; justify-content: space-between; }
+  .p-tot { font-weight: 400; }
+  .p-scales { width: 100%; border-collapse: collapse; margin: 3px 0; }
+  .p-scales th, .p-scales td { border: 1px solid #000; padding: 1px 6px; text-align: center; font-size: 9.5pt; }
+  .p-scales th { background: #eee; }
+  .p-calc { text-align: right; font-size: 9.5pt; }
+  .p-rub { width: 100%; border-collapse: collapse; }
+  .p-rub td { padding: 0 4px; font-size: 9.5pt; }
+  .p-rub td:first-child { width: 30%; }
+  .p-rub i { font-style: normal; color: #888; letter-spacing: 1px; }
+  .circ { border: 1.5px solid #000; border-radius: 50%; padding: 0 4px; }
+  .p-mallet { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 9.5pt; }
+  .p-note { font-size: 8.5pt; font-style: italic; color: #444; }
+  .p-total { margin-top: 10px; font-size: 13pt; text-align: right; border-top: 2px solid #000; padding-top: 6px; }
+  .p-total span { display: block; font-size: 9pt; }
+  .p-big { text-align: center; font-size: 22pt; font-weight: 700; margin: 10px 0; }
+  .p-big span { display: block; font-size: 10pt; font-weight: 400; }
+  .p-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .print h4 { font-size: 11pt; margin: 10px 0 2px; }
+  .print ul, .print ol { margin: 2px 0; padding-left: 18px; }
+  .p-foot { margin-top: 16px; font-size: 8pt; color: #555; text-align: center; }
+}
+
+</style>
+</head>
+<body>
+<header class="topbar">
+  <button class="tb-home" data-act="home" aria-label="Home">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="currentColor"/><path d="M18 46V20l14 8 14-8v26" stroke="var(--on-brand)" stroke-width="6" fill="none" stroke-linejoin="round"/></svg>
+  </button>
+  <div id="topbar-mid" class="tb-mid"></div>
+  <div id="tb-total" class="tb-total"></div>
+  <button id="btn-tools" class="tb-icon" data-act="tools" aria-label="Timer and metronome" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v4l3 2M9 2h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+  </button>
+  <button class="tb-icon" data-act="theme" aria-label="Toggle dark mode">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main id="main" class="wrap"></main>
+
+<div id="tools" class="tools" hidden>
+  <div class="tools-h"><b>Audition tools</b><button class="x" data-act="tools-close" aria-label="Close">✕</button></div>
+  <div class="tool">
+    <div class="tool-l">Timer <span id="t-limit" class="muted small"></span></div>
+    <div id="t-time" class="t-time">0:00</div>
+    <div class="tool-row">
+      <button class="btn sm primary" id="t-go" data-act="t-go">Start</button>
+      <button class="btn sm" data-act="t-reset">Reset</button>
+      <button class="btn sm ghost" data-act="t-limit" data-v="0">No limit</button>
+    </div>
+  </div>
+  <div class="tool">
+    <div class="tool-l">Metronome</div>
+    <div class="tool-row">
+      <button class="btn sm" data-act="m-bpm" data-v="-">−</button>
+      <span class="bpm">♩ = <b id="m-bpm">120</b></span>
+      <button class="btn sm" data-act="m-bpm" data-v="+">+</button>
+      <button class="btn sm primary" id="m-go" data-act="m-go">Start</button>
+    </div>
+    <div class="tool-row">
+      <button class="chip-btn" data-act="m-bpm" data-v="120">MS 120</button>
+      <button class="chip-btn" data-act="m-bpm" data-v="132">Concert 132</button>
+      <button class="chip-btn" data-act="m-bpm" data-v="144">Symphonic 144</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal" class="modal" hidden><div class="modal-card"><button class="x" data-act="close" aria-label="Close">✕</button><div id="modal-body"></div></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="print" class="print"></div>
+
+<footer class="foot wrap">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms · not affiliated with GMEA · data stays on your device</footer>
+
+<script>
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(row * cellSize, col * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+
+</script>
+<script>
+const HS_DISTRICT = {"concert":{"flute":{"factor":0.7143,"cut":85.0,"scales":[["G","",5],["C","",7],["F","",5],["Bb","",5],["Eb","",5],["Ab","",5],["Db","",5],["Gb","",5]]},"oboe":{"factor":0.9375,"cut":80.0,"scales":[["G","",3],["C","",5],["F","",5],["Bb","",3],["Eb","",5],["Ab","",3],["Db","",5],["Gb","",3]]},"bassoon":{"factor":0.714,"cut":70.0,"scales":[["G","",5],["C","",5],["F","",5],["Bb","",7],["Eb","",5],["Ab","",5],["Db","",5],["Gb","",5]]},"clarinet":{"factor":0.6818,"cut":85.0,"scales":[["G","A",5],["C","D",5],["F","G",7],["Bb","C",5],["Eb","F",7],["Ab","Bb",5],["Db","Eb",5],["Gb","Ab",5]]},"bassclar":{"factor":0.833,"cut":70.0,"scales":[["G","A",5],["C","D",3],["F","G",5],["Bb","C",5],["Eb","F",5],["Ab","Bb",5],["Db","Eb",3],["Gb","Ab",5]]},"contraclar":{"factor":0.8333,"cut":70.0,"scales":[["G","",5],["C","",3],["F","",5],["Bb","",5],["Eb","",5],["Ab","",5],["Db","",3],["Gb","",5]]},"altosax":{"factor":0.833,"cut":85.0,"scales":[["G","E",5],["C","A",3],["F","D",5],["Bb","G",3],["Eb","C",5],["Ab","F",5],["Db","Bb",5],["Gb","Eb",5]]},"tenorsax":{"factor":0.9375,"cut":80.0,"scales":[["G","A",3],["C","D",5],["F","G",3],["Bb","C",5],["Eb","F",5],["Ab","Bb",5],["Db","Eb",5],["Gb","Ab",3]]},"barisax":{"factor":0.833,"cut":80.0,"scales":[["G","E",5],["C","A",3],["F","D",5],["Bb","G",3],["Eb","C",5],["Ab","F",5],["Db","Bb",5],["Gb","Eb",5]]},"trumpet":{"factor":0.882,"cut":80.0,"scales":[["G","A",5],["C","D",3],["F","G",5],["Bb","C",5],["Eb","F",3],["Ab","Bb",5],["Db","Eb",3],["Gb","Ab",5]]},"horn":{"factor":1.0,"cut":70.0,"scales":[["G","D",3],["C","G",5],["F","C",3],["Bb","F",5],["Eb","Bb",3],["Ab","Eb",3],["Db","Ab",5],["Gb","Db",3]]},"trombone":{"factor":0.882,"cut":70.0,"scales":[["G","",5],["C","",3],["F","",5],["Bb","",5],["Eb","",3],["Ab","",5],["Db","",3],["Gb","",5]]},"basstrombone":{"factor":0.8824,"cut":70.0,"scales":[["G","",3],["C","",5],["F","",5],["Bb","",5],["Eb","",5],["Ab","",3],["Db","",5],["Gb","",3]]},"baritone":{"factor":0.882,"cut":70.0,"scales":[["G","",5],["C","",3],["F","",5],["Bb","",5],["Eb","",3],["Ab","",5],["Db","",3],["Gb","",5]]},"tuba":{"factor":0.882,"cut":70.0,"scales":[["G","",5],["C","",3],["F","",5],["Bb","",5],["Eb","",3],["Ab","",5],["Db","",3],["Gb","",5]]}},"symphonic":{"flute":{"factor":0.484,"cut":85.0,"scales":[["G","",5],["C","",7],["F","",5],["Bb","",5],["Eb","",5],["Ab","",5],["Db","",5],["Gb","",5],["B","",5],["E","",5],["A","",5],["D","",5]]},"oboe":{"factor":0.6,"cut":80.0,"scales":[["G","",3],["C","",5],["F","",5],["Bb","",3],["Eb","",5],["Ab","",3],["Db","",5],["Gb","",3],["B","",5],["E","",5],["A","",3],["D","",5]]},"bassoon":{"factor":0.484,"cut":70.0,"scales":[["G","",5],["C","",5],["F","",5],["Bb","",7],["Eb","",5],["Ab","",5],["Db","",5],["Gb","",5],["B","",5],["E","",5],["A","",5],["D","",5]]},"clarinet":{"factor":0.441,"cut":85.0,"scales":[["G","A",5],["C","D",5],["F","G",7],["Bb","C",5],["Eb","F",7],["Ab","Bb",5],["Db","Eb",5],["Gb","Ab",5],["B","Db",5],["E","Gb",7],["A","B",5],["D","E",7]]},"bassclar":{"factor":0.556,"cut":70.0,"scales":[["G","A",5],["C","D",3],["F","G",5],["Bb","C",5],["Eb","F",5],["Ab","Bb",5],["Db","Eb",3],["Gb","Ab",5],["B","Db",3],["E","Gb",5],["A","B",5],["D","E",5]]},"contraclar":{"factor":0.556,"cut":70.0,"scales":[["G","",5],["C","",3],["F","",5],["Bb","",5],["Eb","",5],["Ab","",5],["Db","",3],["Gb","",5],["B","",5],["E","",5],["A","",5],["D","",3]]},"altosax":{"factor":0.577,"cut":85.0,"scales":[["G","E",5],["C","A",3],["F","D",5],["Bb","G",3],["Eb","C",5],["Ab","F",5],["Db","Bb",5],["Gb","Eb",5],["B","G#",3],["E","C#",5],["A","F#",3],["D","B",5]]},"tenorsax":{"factor":0.577,"cut":80.0,"scales":[["G","A",3],["C","D",5],["F","G",3],["Bb","C",5],["Eb","F",5],["Ab","Bb",5],["Db","Eb",5],["Gb","Ab",3],["B","C#",5],["E","F#",3],["A","B",5],["D","E",5]]},"barisax":{"factor":0.577,"cut":80.0,"scales":[["G","E",5],["C","A",3],["F","D",5],["Bb","G",3],["Eb","C",5],["Ab","F",5],["Db","Bb",5],["Gb","Eb",5],["B","G#",3],["E","C#",5],["A","F#",3],["D","B",5]]},"trumpet":{"factor":0.6,"cut":80.0,"scales":[["G","A",5],["C","D",3],["F","G",5],["Bb","C",5],["Eb","F",3],["Ab","Bb",5],["Db","Eb",3],["Gb","Ab",5],["B","Db",3],["E","Gb",5],["A","B",5],["D","E",3]]},"horn":{"factor":0.652,"cut":70.0,"scales":[["G","D",3],["C","G",5],["F","C",3],["Bb","F",5],["Eb","Bb",3],["Ab","Eb",3],["Db","Ab",5],["Gb","Db",3],["B","Gb",5],["E","B",3],["A","E",3],["D","A",5]]},"trombone":{"factor":0.6,"cut":70.0,"scales":[["G","",5],["C","",3],["F","",5],["Bb","",5],["Eb","",3],["Ab","",5],["Db","",3],["Gb","",5],["B","",3],["E","",5],["A","",5],["D","",3]]},"basstrombone":{"factor":0.577,"cut":70.0,"scales":[["G","",3],["C","",5],["F","",5],["Bb","",5],["Eb","",5],["Ab","",3],["Db","",5],["Gb","",3],["B","",3],["E","",5],["A","",3],["D","",5]]},"baritone":{"factor":0.6,"cut":70.0,"scales":[["G","",5],["C","",3],["F","",5],["Bb","",5],["Eb","",3],["Ab","",5],["Db","",3],["Gb","",5],["B","",3],["E","",5],["A","",5],["D","",3]]},"tuba":{"factor":0.6,"cut":70.0,"scales":[["G","",5],["C","",3],["F","",5],["Bb","",5],["Eb","",3],["Ab","",5],["Db","",3],["Gb","",5],["B","",3],["E","",5],["A","",5],["D","",3]]}}};
+
+/* ============================================================
+   GMEA All-State Band audition forms (2025–26) encoded as data.
+   Source: GMEA district (first round) and state (final round)
+   audition forms + GMEA MS scale sheets 2025–26.
+   HS district wind scale tables live in hs_district.js (generated
+   straight from the PDF text).
+   ============================================================ */
+
+const LEVELS = {
+  ms:        { id: 'ms',        grades: '6–8',   band: 'All State Middle School Band', short: 'Middle School', tempo: 120 },
+  concert:   { id: 'concert',   grades: '9–10',  band: 'All State Concert Band',      short: 'Concert Band',  tempo: 132 },
+  symphonic: { id: 'symphonic', grades: '11–12', band: 'All State Symphonic Band',    short: 'Symphonic Band', tempo: 144 },
+};
+
+const INSTRUMENTS = [
+  { id: 'flute',        name: 'Flute',              fam: 'Woodwinds' },
+  { id: 'oboe',         name: 'Oboe',               fam: 'Woodwinds' },
+  { id: 'bassoon',      name: 'Bassoon',            fam: 'Woodwinds' },
+  { id: 'clarinet',     name: 'Clarinet',           fam: 'Woodwinds' },
+  { id: 'bassclar',     name: 'Bass Clarinet',      fam: 'Woodwinds' },
+  { id: 'contraclar',   name: 'Contra Clarinet',    fam: 'Woodwinds' },
+  { id: 'altosax',      name: 'Alto Saxophone',     fam: 'Woodwinds' },
+  { id: 'tenorsax',     name: 'Tenor Saxophone',    fam: 'Woodwinds' },
+  { id: 'barisax',      name: 'Baritone Saxophone', fam: 'Woodwinds' },
+  { id: 'trumpet',      name: 'Trumpet',            fam: 'Brass' },
+  { id: 'horn',         name: 'French Horn',        fam: 'Brass' },
+  { id: 'trombone',     name: 'Trombone',           fam: 'Brass' },
+  { id: 'basstrombone', name: 'Bass Trombone',      fam: 'Brass', hsOnly: true },
+  { id: 'baritone',     name: 'Baritone',           fam: 'Brass' },
+  { id: 'tuba',         name: 'Tuba',               fam: 'Brass' },
+  { id: 'percussion',   name: 'Percussion',         fam: 'Percussion' },
+];
+
+/* Instruments whose HS state form carries the "Division Preference: Band | Orchestra | None" line */
+const ORCH_INSTRUMENTS = ['flute', 'oboe', 'bassoon', 'clarinet', 'trumpet', 'horn', 'trombone', 'basstrombone', 'tuba', 'percussion'];
+
+/* ---------- Middle school district (first round) winds ----------
+   Concert scales F, Bb, Eb, Ab. Octaves per scale read from the GMEA
+   2025–26 MS scale sheets; they reproduce every printed adjustment
+   factor (raw max × factor = 30). Written keys added for transposing
+   instruments (the official MS form lists concert names only). */
+const MS_KEYS = ['F', 'Bb', 'Eb', 'Ab'];
+const W_Bb = ['G', 'C', 'F', 'Bb'];   // Bb instruments
+const W_Eb = ['D', 'G', 'C', 'F'];    // Eb instruments
+const W_F  = ['C', 'F', 'Bb', 'Eb'];  // F horn
+const MS_DISTRICT = {
+  flute:      { oct: [2, 1, 2, 1], factor: 1.875, cut: 85 },
+  oboe:       { oct: [1, 1, 1, 1], factor: 2.5,   cut: 80 },
+  bassoon:    { oct: [2, 2, 2, 1], factor: 1.667, cut: 70 },
+  clarinet:   { oct: [2, 2, 2, 2], factor: 1.5,   cut: 85, written: W_Bb },
+  bassclar:   { oct: [2, 1, 2, 1], factor: 1.875, cut: 70, written: W_Bb },
+  contraclar: { factor: 1.875, cut: 70, variants: {
+                  eb:  { label: 'Eb Contra', oct: [1, 2, 1, 2], written: W_Eb },
+                  bbb: { label: 'BBb Contra', oct: [2, 1, 2, 1], written: W_Bb } }, defaultVariant: 'bbb' },
+  altosax:    { oct: [2, 1, 2, 1], factor: 1.875, cut: 85, written: W_Eb },
+  tenorsax:   { oct: [1, 2, 1, 1], factor: 2.143, cut: 80, written: W_Bb },
+  barisax:    { oct: [2, 1, 2, 1], factor: 1.875, cut: 80, written: W_Eb },
+  trumpet:    { oct: [2, 1, 1, 1], factor: 2.143, cut: 80, written: W_Bb },
+  horn:       { oct: [1, 2, 1, 1], factor: 2.143, cut: 70, written: W_F },
+  trombone:   { oct: [2, 1, 1, 1], factor: 2.143, cut: 70 },
+  baritone:   { oct: [2, 1, 1, 1], factor: 2.143, cut: 70, variants: {
+                  bc: { label: 'Bass clef', oct: [2, 1, 1, 1] },
+                  tc: { label: 'Treble clef', oct: [2, 1, 1, 1], written: W_Bb } }, defaultVariant: 'bc' },
+  tuba:       { oct: [2, 1, 1, 1], factor: 2.143, cut: 70 },
+};
+
+/* Known printed-form anomalies, reproduced on purpose so mock scores match the real sheet */
+const FORM_NOTICES = {
+  'district.concert.tenorsax': 'GMEA’s printed 9–10 Tenor Sax form uses an adjustment factor of 0.9375, but its scale maximums add up to 34 (the factor should be about 0.8824). This tool follows the printed form, so a perfect scale run scores 31.88 instead of 30.',
+  'district.symphonic.basstrombone': 'GMEA’s printed 11–12 Bass Trombone form uses an adjustment factor of 0.5770, but its scale maximums add up to 50 (the factor should be 0.6000). This tool follows the printed form, so a perfect scale run scores 28.85 instead of 30.',
+};
+
+const SCALE_TIME_LIMIT = { ms: 60 };                 // MS wind scale sheets: "Time Limit = 1:00"
+const MALLET_TIME_LIMIT = { ms: 75, concert: 135, symphonic: 210 }; // percussion scale sheet
+
+/* ---------- rubric category sets ---------- */
+const R6 = ['Tone Quality', 'Technique', 'Rhythmic Accuracy', 'Articulation/Style', 'Dynamics/Phrasing', 'Interpretation/Tempo'];
+const SR_MS_STATE = ['Rhythmic Accuracy', 'Tone Quality', 'Technique', 'Interpretation/Tempo'];
+const SR_HS_STATE = ['Tone Quality', 'Technique', 'Rhythmic Accuracy', 'Articulation/Style/Dynamics', 'Phrasing/Interpretation/Tempo'];
+
+function items(labels, max, step = 0.5) {
+  return labels.map((label, i) => ({ id: 'c' + i, label, max, step }));
+}
+function itemsMax(pairs, step = 0.5) {
+  return pairs.map(([label, max], i) => ({ id: 'c' + i, label, max, step }));
+}
+const sum = (a) => a.reduce((x, y) => x + y, 0);
+
+/* ---------- form builders ---------- */
+function buildForm(level, round, inst, variant) {
+  const L = LEVELS[level];
+  const instMeta = INSTRUMENTS.find((i) => i.id === inst);
+  const key = `${round}.${level}.${inst}`;
+  const form = {
+    key, level, round, inst, variant: variant || null,
+    title: `${L.band} (Grades ${L.grades.replace('–', '-')})`,
+    subtitle: (inst === 'percussion' ? 'Percussion ' : 'Wind Instrument ') + (round === 'district' ? 'District' : 'State') + ' Audition Form',
+    instrumentLabel: instMeta.name,
+    division: round === 'state' && level !== 'ms' && ORCH_INSTRUMENTS.includes(inst),
+    cut: null,
+    notices: [],
+    sections: [],
+  };
+  if (FORM_NOTICES[key]) form.notices.push(FORM_NOTICES[key]);
+
+  if (inst === 'percussion') {
+    round === 'district' ? buildPercDistrict(form, level) : buildPercState(form);
+  } else if (round === 'district') {
+    buildWindDistrict(form, level, inst, variant);
+  } else {
+    buildWindState(form, level);
+  }
+  form.max = sum(form.sections.map((s) => s.max));
+  return form;
+}
+
+function buildWindDistrict(form, level, inst, variant) {
+  let rows, factor, cut;
+  if (level === 'ms') {
+    const d = MS_DISTRICT[inst];
+    let oct = d.oct, written = d.written;
+    if (d.variants) {
+      const v = d.variants[variant || d.defaultVariant];
+      form.variant = variant || d.defaultVariant;
+      form.variantLabel = v.label;
+      oct = v.oct; written = v.written;
+    }
+    rows = MS_KEYS.map((k, i) => ({ id: 'r' + i, concert: k, written: written ? written[i] : '', oct: oct[i] }));
+    factor = d.factor; cut = d.cut;
+  } else {
+    const d = HS_DISTRICT[level][inst];
+    rows = d.scales.map(([concert, written, max], i) => ({ id: 'r' + i, concert, written, oct: (max - 1) / 2 }));
+    factor = d.factor; cut = d.cut;
+  }
+  form.cut = cut;
+  const rawMax = sum(rows.map((r) => 2 * r.oct + 1));
+  form.sections.push({
+    id: 'scales', title: 'Major Scales and Arpeggios', kind: 'windScales', rows, factor, rawMax,
+    max: rawMax * factor, maxLabel: 30, catKey: 'scales',
+    timeLimit: SCALE_TIME_LIMIT[level] || null, tempo: LEVELS[level].tempo,
+    help: 'One point for each octave played correctly ascending, one for each octave descending, and one for the arpeggio. From memory, per the GMEA scale sheet.',
+  });
+  form.sections.push({ id: 'chrom', title: 'Chromatic Scale', kind: 'rubric', max: 10, catKey: 'chromatic',
+    items: [{ id: 'c0', label: 'Chromatic Scale', max: 10, step: 0.5, catKey: 'chromatic' }] });
+  form.sections.push({ id: 'lyr', title: 'Lyrical Etude', kind: 'rubric', max: 30, items: items(R6, 5) });
+  form.sections.push({ id: 'sr', title: 'Sight Reading Exercise', kind: 'rubric', max: 30, items: items(R6, 5), sightReading: true });
+}
+
+function buildWindState(form, level) {
+  if (level === 'ms') {
+    form.sections.push({ id: 'prep', title: 'Prepared Selection', kind: 'rubric', max: 60, items: items(R6, 10) });
+    form.sections.push({ id: 'sr1', title: 'Sight Reading #1', kind: 'rubric', max: 20, items: items(SR_MS_STATE, 5), sightReading: true });
+    form.sections.push({ id: 'sr2', title: 'Sight Reading #2', kind: 'rubric', max: 20, items: items(SR_MS_STATE, 5), sightReading: true });
+  } else {
+    form.sections.push({ id: 'et1', title: 'Etude #1', kind: 'rubric', max: 30, items: items(R6, 5) });
+    form.sections.push({ id: 'et2', title: 'Etude #2', kind: 'rubric', max: 30, items: items(R6, 5) });
+    form.sections.push({ id: 'sr1', title: 'Sight Reading #1', kind: 'rubric', max: 20, items: items(SR_HS_STATE, 4), sightReading: true });
+    form.sections.push({ id: 'sr2', title: 'Sight Reading #2', kind: 'rubric', max: 20, items: items(SR_HS_STATE, 4), sightReading: true });
+  }
+}
+
+function buildPercDistrict(form, level) {
+  const scaleCfg = { ms: [8, 4], concert: [4, 2], symphonic: [3, 1] }[level];
+  const keys = { ms: MS_KEYS, concert: ['G', 'C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb'],
+    symphonic: ['G', 'C', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'B', 'E', 'A', 'D'] }[level];
+  const S = form.sections;
+  S.push({ id: 'sn_et', group: 'Snare Drum', title: 'Snare — Etude Performance', kind: 'rubric', max: 60,
+    items: itemsMax([['Rudiment Quality', 15], ['Roll Quality', 15], ['Tempo/Pulse Control', 15], ['Accuracy', 15]]) });
+  S.push({ id: 'sn_sr', group: 'Snare Drum', title: 'Snare — Sight Reading', kind: 'rubric', max: 40, sightReading: true,
+    items: itemsMax([['Rhythmic Accuracy', 20], ['Technique/Tone Production', 10], ['Dynamics/Expression', 10]]) });
+  S.push({ id: 'ma_sc', group: 'Mallets', title: 'Mallets — Major Scales', kind: 'malletScales', max: 48, catKey: 'malletscales',
+    scaleMax: scaleCfg[0], arpMax: scaleCfg[1], rows: keys.map((k, i) => ({ id: 'r' + i, concert: k })),
+    timeLimit: MALLET_TIME_LIMIT[level], tempo: LEVELS[level].tempo,
+    help: `Two octaves each, from memory, in the order listed (QN=${LEVELS[level].tempo}). Up to ${scaleCfg[0]} points per scale and ${scaleCfg[1]} per arpeggio.` });
+  S.push({ id: 'ma_ch', group: 'Mallets', title: 'Mallets — Chromatic Scale', kind: 'rubric', max: 12, catKey: 'chromatic',
+    help: '2-octave chromatic starting on C, played after the major scales (not included in the time limit).',
+    items: [{ id: 'c0', label: 'Chromatic Scale', max: 12, step: 0.5, catKey: 'chromatic' }] });
+  S.push({ id: 'ma_sr', group: 'Mallets', title: 'Mallets — Sight Reading', kind: 'rubric', max: 40, sightReading: true,
+    items: itemsMax([['Rhythmic Accuracy', 15], ['Technique/Tone Production', 15], ['Dynamics/Expression', 10]]) });
+  S.push({ id: 'ti_et', group: 'Timpani', title: 'Timpani — Etude Performance', kind: 'rubric', max: 60,
+    items: itemsMax([['Tuning Accuracy', 15], ['Roll Quality', 15], ['Tempo/Pulse Control', 15], ['Accuracy', 15]]) });
+  S.push({ id: 'ti_sr', group: 'Timpani', title: 'Timpani — Sight Reading', kind: 'rubric', max: 40, sightReading: true,
+    items: itemsMax([['Rhythmic Accuracy', 20], ['Technique/Tone Production', 10], ['Dynamics/Expression', 10]]) });
+}
+
+function buildPercState(form) {
+  const S = form.sections;
+  const P = 'Practice breakdown: the official state percussion form records only section totals (snare 60/40, xylophone 60/40, timpani 50/30/20). The categories inside each section are borrowed from the district form so students get specific feedback; they add up to the official totals.';
+  form.notices.push(P);
+  S.push({ id: 'sn_et', group: 'Snare Drum', title: 'Snare — Etude', kind: 'rubric', max: 60, practice: P,
+    items: itemsMax([['Rudiment Quality', 15], ['Roll Quality', 15], ['Tempo/Pulse Control', 15], ['Accuracy', 15]]) });
+  S.push({ id: 'sn_sr', group: 'Snare Drum', title: 'Snare — Sight Reading', kind: 'rubric', max: 40, practice: P, sightReading: true,
+    items: itemsMax([['Rhythmic Accuracy', 20], ['Technique/Tone Production', 10], ['Dynamics/Expression', 10]]) });
+  S.push({ id: 'xy_et', group: 'Xylophone', title: 'Xylophone — Etude', kind: 'rubric', max: 60, practice: P,
+    items: itemsMax([['Tone Production', 15], ['Mallet Technique', 15], ['Tempo/Pulse Control', 15], ['Note Accuracy', 15]]) });
+  S.push({ id: 'xy_sr', group: 'Xylophone', title: 'Xylophone — Sight Reading', kind: 'rubric', max: 40, practice: P, sightReading: true,
+    items: itemsMax([['Rhythmic Accuracy', 15], ['Technique/Tone Production', 15], ['Dynamics/Expression', 10]]) });
+  S.push({ id: 'ti_et', group: 'Timpani', title: 'Timpani — Etude', kind: 'rubric', max: 50, practice: P,
+    items: itemsMax([['Roll Quality', 15], ['Tempo/Pulse Control', 15], ['Accuracy', 20]]) });
+  S.push({ id: 'ti_sr', group: 'Timpani', title: 'Timpani — Sight Reading', kind: 'rubric', max: 30, practice: P, sightReading: true,
+    items: itemsMax([['Rhythmic Accuracy', 15], ['Technique/Tone Production', 10], ['Dynamics/Expression', 5]]) });
+  S.push({ id: 'ti_tu', group: 'Timpani', title: 'Timpani — Tuning', kind: 'rubric', max: 20, practice: P,
+    items: itemsMax([['Initial Tuning', 10], ['Pitch Changes', 10]]) });
+}
+
+/* What appears on each round, for the round-picker cards */
+function roundSummary(level, round, inst) {
+  if (inst === 'percussion') {
+    return round === 'district'
+      ? ['Snare: etude + sight reading', 'Mallets: major scales, chromatic, sight reading', 'Timpani: etude + sight reading', 'Scored out of 300']
+      : ['Snare: etude + sight reading', 'Xylophone: etude + sight reading', 'Timpani: etude, sight reading, tuning', 'Scored out of 300'];
+  }
+  if (round === 'district') {
+    const n = level === 'ms' ? 4 : level === 'concert' ? 8 : 12;
+    return [`${n} major scales + arpeggios (30)`, 'Chromatic scale (10)', 'Lyrical etude (30)', 'Sight reading (30)'];
+  }
+  return level === 'ms'
+    ? ['Prepared selection (60)', 'Sight reading #1 (20)', 'Sight reading #2 (20)']
+    : ['Etude #1 (30)', 'Etude #2 (30)', 'Sight reading #1 (20)', 'Sight reading #2 (20)'];
+}
+
+/* ============================================================
+   Feedback library: maps judge-sheet categories to student-facing
+   names, practice drills, and quick-tap judge comments.
+   ============================================================ */
+
+function catKeyFor(label) {
+  const l = label.toLowerCase();
+  if (l.startsWith('tone quality') || l === 'tone production' || l.includes('technique/tone')) return 'tone';
+  if (l === 'technique' || l === 'mallet technique') return 'technique';
+  if (l.startsWith('rhythmic')) return 'rhythm';
+  if (l.startsWith('articulation')) return 'artic';
+  if (l.startsWith('dynamics')) return 'dynamics';
+  if (l.startsWith('interpretation') || l.startsWith('phrasing')) return 'interp';
+  if (l.startsWith('rudiment')) return 'rudiments';
+  if (l.startsWith('roll')) return 'rolls';
+  if (l.startsWith('tempo/pulse')) return 'pulse';
+  if (l === 'accuracy' || l === 'note accuracy') return 'accuracy';
+  if (l.includes('tuning') || l.startsWith('pitch changes')) return 'tuning';
+  if (l.startsWith('chromatic')) return 'chromatic';
+  return 'general';
+}
+
+const CATS = {
+  scales:       { name: 'Major scales & arpeggios',
+    tips: ['Play each scale slowly with a metronome, then raise the tempo 4 bpm at a time until you reach audition tempo.',
+           'Practice the scale you missed first, every day, before the ones you already know.',
+           'Run all of your scales in audition order without stopping, from memory, once a day.'] },
+  malletscales: { name: 'Mallet scales',
+    tips: ['Practice each scale hands-separate, then together, with a metronome. Raise the tempo 4 bpm at a time.',
+           'Say the note names out loud while you play to lock in the key signature.',
+           'Run the full set in order once a day with a timer to stay under the time limit.'] },
+  chromatic:    { name: 'Chromatic scale',
+    tips: ['Practice in 4-note groups with a metronome, slurred and tongued.',
+           'Mark the trouble spots (register breaks, alternate fingerings) and loop just those two or three notes.',
+           'Record yourself; listen for uneven notes and any spots that rush.'] },
+  tone:         { name: 'Tone quality',
+    tips: ['Start each practice with 5 minutes of long tones across your whole range.',
+           'Play your etude’s slowest phrase at half tempo, focusing only on a full, centered sound.',
+           'Listen to a professional recording on your instrument before you practice and copy that sound.'] },
+  technique:    { name: 'Technique',
+    tips: ['Find the 2–3 hardest measures and loop them slowly. Speed up only when they are perfect three times in a row.',
+           'Practice tricky runs in different rhythms (long-short, short-long), then go back to even notes.',
+           'Check hand position and posture in a mirror while you play the hard spots.'] },
+  rhythm:       { name: 'Rhythmic accuracy',
+    tips: ['Count and clap the rhythm out loud before you play it.',
+           'Practice with the metronome on beats 2 and 4, or on the off-beats, so you feel the pulse yourself.',
+           'Write in the counts above tricky rhythms. Subdivide on long notes and rests.'] },
+  artic:        { name: 'Articulation & style',
+    tips: ['Circle every articulation marking in your etude and play the passage exaggerating each one.',
+           'Practice the articulations on one note before adding the pitches.',
+           'Ask yourself what style each phrase is (smooth, light, marcato) and make the difference obvious.'] },
+  dynamics:     { name: 'Dynamics & phrasing',
+    tips: ['Mark every dynamic change and make the contrast twice as big as feels natural; judges hear less than you think.',
+           'Sing each phrase, then shape it the same way on your instrument. Know where each phrase is heading.',
+           'Record yourself and check that soft and loud sound clearly different.'] },
+  interp:       { name: 'Interpretation & tempo',
+    tips: ['Check your tempo with a metronome at the start of every run. Don’t let nerves rush you.',
+           'Listen to a model recording and note the tempo, style, and where the music breathes.',
+           'Perform the whole piece without stopping, as if for a judge, at least once every day.'] },
+  rudiments:    { name: 'Rudiment quality',
+    tips: ['Play the etude’s rudiments slow–fast–slow with a metronome, aiming for even heights and sounds.',
+           'Practice on a pad in a mirror and check stick heights and matching strokes.',
+           'Isolate flams and drags. Grace notes should be low and close.'] },
+  rolls:        { name: 'Roll quality',
+    tips: ['Practice rolls with a metronome, counting the subdivision so the roll stays even and connected.',
+           'Work on roll releases. Know exactly which beat the roll ends on.',
+           'Practice crescendo/decrescendo rolls without changing the speed of the roll.'] },
+  pulse:        { name: 'Tempo & pulse control',
+    tips: ['Practice with a metronome, then turn it off halfway through and see if you’re still with it when it comes back on.',
+           'Watch the spots where you rush (rolls, loud passages) and where you drag (soft or busy passages).',
+           'Count the first measure out loud before you start, to set the tempo.'] },
+  accuracy:     { name: 'Accuracy',
+    tips: ['Slow the etude down until it’s 100% correct, then raise the tempo gradually.',
+           'Mark sticking, dynamics, and accidentals in the music before practicing.',
+           'Do daily mock run-throughs from the top without stopping.'] },
+  tuning:       { name: 'Tuning',
+    tips: ['Practice tuning to a reference pitch and checking it by singing or humming the pitch into the drum.',
+           'Practice pitch changes during rests in the etude while counting out loud.',
+           'Use a tuner to check yourself after you tune by ear.'] },
+  general:      { name: 'General musicianship', tips: ['Record yourself and listen back with the judge sheet in hand.'] },
+};
+
+/* Extra practice cards that come from patterns, not one category */
+const PATTERN_TIPS = {
+  sightReading: {
+    name: 'Sight-reading routine',
+    tips: ['Use the study time: check the key signature, time signature, accidentals, rhythms, dynamics, and articulations before playing.',
+           'Sight-read one new short exercise every day. Easy material is fine; the habit matters more than the difficulty.',
+           'Keep going no matter what. Don’t stop or fix mistakes; holding a steady pulse earns more points than correct notes played out of time.'] },
+};
+
+/* Quick-tap comments the judge can drop into a section's comment box */
+const QUICK = {
+  scales:       ['Strong — clean and confident', 'Missed key signature note', 'Hesitation between scales', 'Rushed the tempo', 'Uneven top octave', 'Arpeggio needs work', 'Not memorized yet'],
+  malletscales: ['Strong — clean and confident', 'Missed key signature note', 'Uneven sticking', 'Rushed the tempo', 'Hesitation between scales', 'Arpeggio needs work'],
+  chromatic:    ['Even and clean', 'Rushed the top', 'Fingering slips at the break', 'Uneven tempo', 'Missed notes on the descent'],
+  wind:         ['Beautiful sound', 'Pinched/thin upper register', 'Breathy tone', 'Watch pitch on long notes', 'Rushing the 16ths', 'Note accuracy in fast passages', 'Articulations not clear', 'Bigger dynamic contrast', 'Shape the phrases more', 'Tempo too slow', 'Tempo too fast', 'Breathing breaks the phrase', 'Great style!'],
+  sight:        ['Kept a steady pulse — great!', 'Stopped to fix mistakes — keep going', 'Missed the key signature', 'Missed accidentals', 'Ignored dynamics', 'Rhythms in the dotted/syncopated spots', 'Use your study time to scan the whole exercise'],
+  perc:         ['Clean and confident', 'Uneven stick heights', 'Roll not connected', 'Rushed the loud sections', 'Watch the grace notes', 'Bigger dynamic contrast', 'Check tempo at the start', 'Tuning was off', 'Great sound quality'],
+};
+
+function quickFor(sec, form) {
+  if (sec.kind === 'windScales') return QUICK.scales;
+  if (sec.kind === 'malletScales') return QUICK.malletscales;
+  if (sec.catKey === 'chromatic') return QUICK.chromatic;
+  if (form.inst === 'percussion') return QUICK.perc;
+  if (sec.sightReading) return QUICK.sight;
+  return QUICK.wind;
+}
+
+/* Calibration guide shown in Help (a suggested guide, not GMEA language) */
+const CALIBRATION = [
+  ['90–100% of the category', 'Clearly ready for the audition. Consistent, characteristic, and confident; any flaws are minor and isolated.'],
+  ['75–89%', 'Solid, with a few flaws that are consistent enough for a judge to notice.'],
+  ['60–74%', 'Developing. Problems show up regularly and affect the performance.'],
+  ['40–59%', 'Inconsistent. The basic skill is still being built.'],
+  ['Below 40%', 'Not yet prepared in this area.'],
+];
+
+/* ============================================================
+   All-State Mock Audition — app
+   ============================================================ */
+const APP_VERSION = '1.0.0';
+const LS = { draft: 'asm.draft.v1', hist: 'asm.history.v1', theme: 'asm.theme', prefs: 'asm.prefs.v1', exported: 'asm.lastExport' };
+
+/* ---------- utils ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const todayISO = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); };
+function fmt(n, d = 2) { if (n == null || isNaN(n)) return '—'; const r = Math.round(n * 10 ** d) / 10 ** d; return String(r); }
+function pct(a, b) { return b ? (a / b) * 100 : 0; }
+function fmtDate(iso) { if (!iso) return ''; const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }); }
+function mmss(ms) { const s = Math.max(0, Math.floor(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) { /* ignore */ } },
+};
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ---------- state ---------- */
+const S = { view: 'home', pick: { level: null, inst: null, round: null, variant: null }, mock: null, who: 'teacher', readOnly: false, histKey: null, histFilter: null, sheetTab: 'judge' };
+let FORM = null;
+function setMock(m) { S.mock = m; FORM = buildForm(m.level, m.round, m.inst, m.variant); }
+function sc(who = S.who) { return S.mock.scores[who]; }
+
+/* ---------- scoring ---------- */
+function cellKeys(sec, r) {
+  const k = [];
+  for (let i = 1; i <= r.oct; i++) k.push(`${sec.id}.${r.id}.a${i}`);
+  for (let i = 1; i <= r.oct; i++) k.push(`${sec.id}.${r.id}.d${i}`);
+  k.push(`${sec.id}.${r.id}.arp`);
+  return k;
+}
+function sectionKeys(sec) {
+  if (sec.kind === 'windScales') return sec.rows.flatMap((r) => cellKeys(sec, r));
+  if (sec.kind === 'malletScales') return sec.rows.flatMap((r) => [`${sec.id}.${r.id}.s`, `${sec.id}.${r.id}.a`]);
+  return sec.items.map((it) => `${sec.id}.${it.id}`);
+}
+function scoreSection(sec, s) {
+  const keys = sectionKeys(sec);
+  const done = keys.filter((k) => s[k] != null).length;
+  const raw = keys.reduce((a, k) => a + (s[k] || 0), 0);
+  const total = sec.kind === 'windScales' ? raw * sec.factor : raw;
+  return { sec, raw, total, max: sec.max, done, cells: keys.length };
+}
+function scoreForm(form, s) {
+  const sections = form.sections.map((sec) => scoreSection(sec, s));
+  return {
+    sections, total: sections.reduce((a, x) => a + x.total, 0), max: form.max,
+    done: sections.reduce((a, x) => a + x.done, 0), cells: sections.reduce((a, x) => a + x.cells, 0),
+  };
+}
+function hasScores(who) { return S.mock && Object.values(S.mock.scores[who] || {}).some((v) => v != null); }
+
+/* category roll-up across sections (scored items only) */
+function categoryStats(form, s) {
+  const m = {};
+  const add = (key, got, max, ctx) => {
+    if (!m[key]) m[key] = { key, got: 0, max: 0, ctx: [] };
+    m[key].got += got; m[key].max += max; if (ctx && !m[key].ctx.includes(ctx)) m[key].ctx.push(ctx);
+  };
+  form.sections.forEach((sec) => {
+    const r = scoreSection(sec, s);
+    if (sec.kind === 'windScales' || sec.kind === 'malletScales') {
+      if (r.done) add(sec.catKey, r.total, sec.max * (r.done / r.cells), sec.group || null);
+      return;
+    }
+    sec.items.forEach((it) => {
+      const v = s[`${sec.id}.${it.id}`];
+      if (v == null) return;
+      add(it.catKey || catKeyFor(it.label), v, it.max, sec.title.replace(/^.*— /, ''));
+    });
+  });
+  return Object.values(m).filter((x) => x.max > 0).map((x) => ({ ...x, pct: pct(x.got, x.max) }));
+}
+function scaleMisses(form, s) {
+  const out = [];
+  form.sections.forEach((sec) => {
+    if (sec.kind === 'windScales') {
+      sec.rows.forEach((r) => {
+        const miss = [];
+        for (let i = 1; i <= r.oct; i++) if (s[`${sec.id}.${r.id}.a${i}`] === 0) miss.push(r.oct > 1 ? `up oct ${i}` : 'ascending');
+        for (let i = 1; i <= r.oct; i++) if (s[`${sec.id}.${r.id}.d${i}`] === 0) miss.push(r.oct > 1 ? `down oct ${i}` : 'descending');
+        if (s[`${sec.id}.${r.id}.arp`] === 0) miss.push('arpeggio');
+        if (miss.length) out.push({ key: keyLabel(r), miss });
+      });
+    } else if (sec.kind === 'malletScales') {
+      sec.rows.forEach((r) => {
+        const sv = s[`${sec.id}.${r.id}.s`], av = s[`${sec.id}.${r.id}.a`]; const miss = [];
+        if (sv != null && sv < sec.scaleMax) miss.push(`scale ${fmt(sv)}/${sec.scaleMax}`);
+        if (av != null && av < sec.arpMax) miss.push(`arpeggio ${fmt(av)}/${sec.arpMax}`);
+        if (miss.length) out.push({ key: r.concert, miss });
+      });
+    }
+  });
+  return out;
+}
+function keyLabel(r) { return r.written ? `${r.concert} (${r.written})` : r.concert; }
+
+/* ---------- mocks / history ---------- */
+function newMock() {
+  const p = S.pick; const prefs = store.get(LS.prefs, {});
+  return {
+    id: uid(), v: 1, created: Date.now(), updated: Date.now(),
+    level: p.level, round: p.round, inst: p.inst, variant: p.variant,
+    student: { name: '', school: prefs.school || '', grade: '' }, judge: prefs.judge || '', date: todayISO(),
+    flow: 'teacher', scores: { teacher: {}, self: {} }, comments: { teacher: {}, self: {} },
+    overall: { teacher: '', self: '' }, saved: false,
+  };
+}
+let draftTimer = null;
+function touch() {
+  if (S.readOnly || !S.mock) return;
+  S.mock.updated = Date.now();
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(() => {
+    store.set(LS.draft, S.mock);
+    if (S.mock.saved) saveToHistory(S.mock, true);
+  }, 250);
+}
+function getHistory() { return store.get(LS.hist, []); }
+function summarize(m) {
+  const f = buildForm(m.level, m.round, m.inst, m.variant);
+  const who = Object.values(m.scores.teacher || {}).some((v) => v != null) ? 'teacher' : 'self';
+  const r = scoreForm(f, m.scores[who]);
+  return { total: r.total, max: r.max, who, cut: f.cut };
+}
+function saveToHistory(m, quiet) {
+  const h = getHistory(); m.saved = true;
+  const entry = { ...m, summary: summarize(m) };
+  const i = h.findIndex((x) => x.id === m.id);
+  if (i >= 0) h[i] = entry; else h.push(entry);
+  const ok = store.set(LS.hist, h);
+  store.set(LS.draft, m);
+  if (!quiet) toast(ok ? 'Saved to this device’s history' : 'Could not save — browser storage is unavailable');
+  return ok;
+}
+function studentKey(m) { return (m.student.name || 'Unnamed').trim().toLowerCase(); }
+
+/* ---------- share links ---------- */
+function b64u(bytes) { let s = ''; bytes.forEach((b) => (s += String.fromCharCode(b))); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function unb64u(str) { const s = atob(str.replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(s, (c) => c.charCodeAt(0)); }
+async function streamBytes(bytes, Stream, fmtName) {
+  const st = new Blob([bytes]).stream().pipeThrough(new Stream(fmtName));
+  return new Uint8Array(await new Response(st).arrayBuffer());
+}
+function packMock(m, opts) {
+  const strip = (o) => Object.fromEntries(Object.entries(o || {}).filter(([, v]) => v != null && v !== ''));
+  return {
+    v: 1, id: m.id, l: m.level, r: m.round, i: m.inst, va: m.variant || undefined,
+    n: opts.firstName ? (m.student.name || '').trim().split(/\s+/)[0] : m.student.name, sch: m.student.school, g: m.student.grade,
+    j: m.judge, d: m.date, t: strip(m.scores.teacher), s: opts.self ? strip(m.scores.self) : {},
+    ct: strip(m.comments.teacher), cs: opts.self ? strip(m.comments.self) : {}, ot: m.overall.teacher, os: opts.self ? m.overall.self : '',
+  };
+}
+function unpackMock(p) {
+  return {
+    id: p.id || uid(), v: 1, created: Date.now(), updated: Date.now(), level: p.l, round: p.r, inst: p.i, variant: p.va || null,
+    student: { name: p.n || '', school: p.sch || '', grade: p.g || '' }, judge: p.j || '', date: p.d || '',
+    flow: 'teacher', scores: { teacher: p.t || {}, self: p.s || {} }, comments: { teacher: p.ct || {}, self: p.cs || {} },
+    overall: { teacher: p.ot || '', self: p.os || '' }, saved: false,
+  };
+}
+async function encodeShare(m, opts) {
+  const bytes = new TextEncoder().encode(JSON.stringify(packMock(m, opts)));
+  if (window.CompressionStream) {
+    try { return 'z' + b64u(await streamBytes(bytes, CompressionStream, 'deflate-raw')); } catch (e) { /* fall through */ }
+  }
+  return 'j' + b64u(bytes);
+}
+async function decodeShare(data) {
+  let bytes = unb64u(data.slice(1));
+  if (data[0] === 'z') bytes = await streamBytes(bytes, DecompressionStream, 'deflate-raw');
+  return unpackMock(JSON.parse(new TextDecoder().decode(bytes)));
+}
+function shareBase() { return location.origin + location.pathname; }
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function render() {
+  const main = $('#main');
+  const v = S.view;
+  document.body.dataset.view = v;
+  main.innerHTML =
+    v === 'home' ? viewHome() :
+    v === 'inst' ? viewInst() :
+    v === 'round' ? viewRound() :
+    v === 'setup' ? viewSetup() :
+    v === 'sheet' ? viewSheet() :
+    v === 'results' ? viewResults() :
+    v === 'history' ? viewHistory() : '';
+  renderTopbar();
+  if (v === 'history') drawHistoryChart();
+  window.scrollTo(0, 0);
+}
+
+function renderTopbar() {
+  const tb = $('#topbar-mid');
+  if ((S.view === 'sheet' || S.view === 'results') && S.mock) {
+    const r = scoreForm(FORM, sc(S.view === 'results' ? resultsWho() : S.who));
+    tb.innerHTML = `<div class="tb-student">${esc(S.mock.student.name || 'Student')}</div>
+      <div class="tb-meta">${esc(FORM.instrumentLabel)} · ${LEVELS[S.mock.level].grades} · ${S.mock.round === 'district' ? 'First Round' : 'Final Round'}</div>`;
+    $('#tb-total').innerHTML = S.view === 'sheet' ? `<span class="tb-score" id="live-total">${fmt(r.total, 1)}</span><span class="tb-max">/ ${fmt(r.max, 2)}</span>` : '';
+  } else {
+    tb.innerHTML = `<div class="tb-brand">All-State Mock Audition</div>`;
+    $('#tb-total').innerHTML = '';
+  }
+  $('#btn-tools').hidden = S.view !== 'sheet';
+}
+
+function steps(n) {
+  const labels = ['Grade', 'Instrument', 'Round', 'Student'];
+  return `<ol class="steps">${labels.map((l, i) => `<li class="${i + 1 < n ? 'done' : i + 1 === n ? 'cur' : ''}"><span>${i + 1}</span>${l}</li>`).join('')}</ol>`;
+}
+
+/* ---------- home ---------- */
+function viewHome() {
+  const draft = store.get(LS.draft, null);
+  const h = getHistory();
+  const lastExp = store.get(LS.exported, 0);
+  const stale = h.length >= 3 && Date.now() - lastExp > 21 * 864e5;
+  let resume = '';
+  if (draft && draft.level && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
+    const inst = INSTRUMENTS.find((i) => i.id === draft.inst);
+    resume = `<button class="resume" data-act="resume"><span class="resume-k">Resume unfinished mock</span>
+      <span class="resume-v">${esc(draft.student.name || 'Unnamed student')} · ${esc(inst ? inst.name : '')} · ${draft.round === 'district' ? 'First Round' : 'Final Round'}</span></button>`;
+  }
+  return `
+  <section class="hero">
+    <h1>Mock All-State auditions, on the real judge sheet.</h1>
+    <p>Score a practice audition on the GMEA district or state form. Then print the sheet, share it with your student, and track progress until audition day.</p>
+  </section>
+  ${stale ? exportNag() : ''}
+  ${resume}
+  ${steps(1)}
+  <h2 class="pick-h">Which band is the student auditioning for?</h2>
+  <div class="cards three">
+    ${Object.values(LEVELS).map((L) => `
+      <button class="card pick" data-act="level" data-v="${L.id}">
+        <span class="pick-g">Grades ${L.grades}</span>
+        <span class="pick-t">${L.short}</span>
+        <span class="pick-s">${L.id === 'ms' ? '4 scales · scales at QN=120' : L.id === 'concert' ? '8 scales · QN=132' : '12 scales · QN=144'}</span>
+      </button>`).join('')}
+  </div>
+  <div class="home-links">
+    <button class="btn ghost" data-act="history">Student history${h.length ? ` (${new Set(h.map(studentKey)).size})` : ''}</button>
+    <button class="btn ghost" data-act="help">How to run a great mock audition</button>
+  </div>`;
+}
+function exportNag() {
+  return `<div class="nag"><strong>Back up your history.</strong> Saved mocks live only in this browser on this device. Export a backup file now and then.
+    <button class="btn sm" data-act="export">Export backup</button></div>`;
+}
+
+/* ---------- instrument ---------- */
+function viewInst() {
+  const L = LEVELS[S.pick.level];
+  const list = INSTRUMENTS.filter((i) => !(i.hsOnly && L.id === 'ms'));
+  const fams = ['Woodwinds', 'Brass', 'Percussion'];
+  return `${backBtn('home')}${steps(2)}
+  <h2 class="pick-h">${L.short} (${L.grades}) — which instrument?</h2>
+  ${fams.map((f) => `<h3 class="fam">${f}</h3><div class="cards inst">
+    ${list.filter((i) => i.fam === f).map((i) => `<button class="card pick sm" data-act="inst" data-v="${i.id}"><span class="pick-t">${i.name}</span></button>`).join('')}
+  </div>`).join('')}`;
+}
+
+/* ---------- round ---------- */
+function viewRound() {
+  const p = S.pick; const L = LEVELS[p.level];
+  const inst = INSTRUMENTS.find((i) => i.id === p.inst);
+  const d = p.level === 'ms' && MS_DISTRICT[p.inst];
+  let variant = '';
+  if (d && d.variants) {
+    const cur = p.variant || d.defaultVariant;
+    variant = `<div class="variant"><span>Scale sheet for First Round:</span>
+      <div class="seg">${Object.entries(d.variants).map(([k, v]) => `<button class="${k === cur ? 'on' : ''}" data-act="variant" data-v="${k}">${v.label}</button>`).join('')}</div></div>`;
+  }
+  const card = (round, title, sub) => `
+    <button class="card pick round" data-act="round" data-v="${round}">
+      <span class="pick-g">${sub}</span><span class="pick-t">${title}</span>
+      <ul>${roundSummary(p.level, round, p.inst).map((x) => `<li>${x}</li>`).join('')}</ul>
+      ${round === 'district' && p.inst !== 'percussion' ? `<span class="pick-s">State recommendation line: ${fmt(buildForm(p.level, 'district', p.inst, p.variant).cut)}</span>` : ''}
+    </button>`;
+  return `${backBtn('inst')}${steps(3)}
+  <h2 class="pick-h">${L.short} ${inst.name} — which round?</h2>
+  ${variant}
+  <div class="cards two">
+    ${card('district', 'First Round', 'District audition')}
+    ${card('state', 'Final Round', 'State audition')}
+  </div>`;
+}
+
+/* ---------- setup ---------- */
+function viewSetup() {
+  const m = S.mock; const L = LEVELS[m.level];
+  const names = [...new Set(getHistory().map((x) => x.student.name).filter(Boolean))];
+  const grades = { ms: [6, 7, 8], concert: [9, 10], symphonic: [11, 12] }[m.level];
+  const flows = [
+    ['teacher', 'Teacher scores', 'You fill out the judge sheet.'],
+    ['self-first', 'Student self-assesses first', 'The student scores themselves, then hands it to you. Their scores stay hidden until results, so they don’t influence yours.'],
+    ['self', 'Student self-assessment only', 'Good for scoring a practice recording at home.'],
+  ];
+  return `${backBtn('round')}${steps(4)}
+  <h2 class="pick-h">Who’s auditioning?</h2>
+  <div class="formcard">
+    <div class="sheet-id"><strong>${esc(FORM.title)}</strong><span>${esc(FORM.subtitle)} · ${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''}</span></div>
+    <div class="grid2">
+      <label class="fld"><span>Student name</span><input id="f-name" list="names" autocomplete="off" value="${esc(m.student.name)}" placeholder="First and last name"><datalist id="names">${names.map((n) => `<option value="${esc(n)}">`).join('')}</datalist></label>
+      <label class="fld"><span>Grade</span><select id="f-grade"><option value="">—</option>${grades.map((g) => `<option ${String(m.student.grade) === String(g) ? 'selected' : ''}>${g}</option>`).join('')}</select></label>
+      <label class="fld"><span>School</span><input id="f-school" value="${esc(m.student.school)}"></label>
+      <label class="fld"><span>Date</span><input id="f-date" type="date" value="${esc(m.date)}"></label>
+      <label class="fld wide"><span>Judge / teacher</span><input id="f-judge" value="${esc(m.judge)}" placeholder="Shown on the printed sheet"></label>
+    </div>
+    <fieldset class="flow"><legend>Who scores this mock?</legend>
+      ${flows.map(([k, t, d]) => `<label class="radio ${m.flow === k ? 'on' : ''}"><input type="radio" name="flow" value="${k}" ${m.flow === k ? 'checked' : ''}><span><strong>${t}</strong><small>${d}</small></span></label>`).join('')}
+    </fieldset>
+    <button class="btn primary big" data-act="start">Open the judge sheet →</button>
+  </div>
+  <details class="tips"><summary>Run it like the real thing</summary>${realThingTips()}</details>`;
+}
+function realThingTips() {
+  return `<ul>
+    <li><strong>Set up a screen.</strong> GMEA auditions are blind. Put the student behind a stand or partition, or turn your back, and listen only.</li>
+    <li><strong>No restarts.</strong> Once a section starts, score what you hear, just like a real panel.</li>
+    <li><strong>Use the order on the sheet:</strong> scales from memory, chromatic, then the etude and sight reading.</li>
+    <li><strong>Unfamiliar sight reading.</strong> Use an exercise the student hasn’t seen. Last year’s examples are ideal.</li>
+    <li><strong>Make it a little stressful.</strong> Have them wait outside, walk in, play. A mock with an audience of friends adds healthy pressure.</li>
+    <li><strong>Mock early and repeat.</strong> Two or three mocks spaced a few weeks apart show real growth in the history chart.</li>
+  </ul>`;
+}
+function backBtn(to) { return `<button class="back" data-act="go" data-v="${to}">← Back</button>`; }
+
+/* ---------- sheet ---------- */
+function viewSheet() {
+  const m = S.mock; const who = S.who;
+  let banner = '';
+  if (who === 'self') {
+    banner = `<div class="banner self"><strong>Student self-assessment.</strong> Score yourself honestly: how would a judge hear this performance?
+      ${m.flow === 'self-first' ? '<button class="btn sm" data-act="handoff">Done — hand to teacher →</button>' : ''}</div>`;
+  } else if (hasScores('self')) {
+    banner = `<div class="banner">The student’s self-scores are hidden while you judge. You’ll see them side by side on the results page.</div>`;
+  }
+  let lastGroup = null;
+  const secs = FORM.sections.map((sec) => {
+    let gh = '';
+    if (sec.group && sec.group !== lastGroup) { lastGroup = sec.group; gh = `<h3 class="group-h">${sec.group}</h3>`; }
+    return gh + `<section class="sec" id="sec-${sec.id}">${sectionInner(sec)}</section>`;
+  }).join('');
+  return `
+  <div class="sheet-head">
+    <div class="sheet-id"><strong>${esc(FORM.title)}</strong><span>${esc(FORM.subtitle)} · ${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''}${FORM.division ? ' · Division preference line on form' : ''}</span></div>
+    <div class="seg who">${['teacher', 'self'].map((w) => `<button class="${S.who === w ? 'on' : ''}" data-act="who" data-v="${w}">${w === 'teacher' ? 'Teacher scoring' : 'Student self-score'}</button>`).join('')}</div>
+  </div>
+  ${FORM.notices.map((n) => `<div class="banner warn">${esc(n)}</div>`).join('')}
+  ${banner}
+  ${secs}
+  <section class="sec">
+    <div class="sec-h"><h3>${who === 'self' ? 'My reflection' : 'Overall comments'}</h3></div>
+    <textarea class="cmt" data-overall="1" rows="3" placeholder="${who === 'self' ? 'What went well? What will you practice next?' : 'Big-picture feedback for the student'}">${esc(m.overall[who])}</textarea>
+  </section>
+  <div class="sheet-foot"><button class="btn primary big" data-act="results">See results →</button></div>`;
+}
+
+function sectionInner(sec) {
+  const s = sc(); const r = scoreSection(sec, s);
+  const prog = r.cells ? Math.round((r.done / r.cells) * 100) : 0;
+  let body = '';
+  if (sec.kind === 'windScales') body = windScalesBody(sec, s, r);
+  else if (sec.kind === 'malletScales') body = malletBody(sec, s);
+  else body = sec.items.map((it) => rubricItem(sec, it, s[`${sec.id}.${it.id}`])).join('');
+  const cmt = S.mock.comments[S.who][sec.id] || '';
+  const quick = quickFor(sec, FORM);
+  const tools = [];
+  if (sec.timeLimit) tools.push(`<button class="chip-btn" data-act="timer" data-v="${sec.timeLimit}">⏱ Time limit ${mmss(sec.timeLimit * 1000)}</button>`);
+  if (sec.tempo) tools.push(`<button class="chip-btn" data-act="metro" data-v="${sec.tempo}">♩ = ${sec.tempo}</button>`);
+  if (sec.kind === 'windScales' || sec.kind === 'malletScales') tools.push(`<button class="chip-btn" data-act="allperfect" data-v="${sec.id}">Start from perfect</button>`);
+  return `
+    <div class="sec-h">
+      <h3>${esc(sec.title)}</h3>
+      <div class="sec-score"><span>${fmt(r.total, 2)}</span> / ${fmt(sec.maxLabel || sec.max, 2)}</div>
+    </div>
+    <div class="progress" title="${r.done} of ${r.cells} scored"><i style="width:${prog}%"></i></div>
+    ${sec.help ? `<p class="help">${esc(sec.help)}</p>` : ''}
+        ${tools.length ? `<div class="sec-tools">${tools.join('')}</div>` : ''}
+    <div class="sec-body">${body}</div>
+    <details class="cmt-wrap" ${cmt ? 'open' : ''}><summary>Comments${cmt ? ' ✎' : ''}</summary>
+      <div class="quick">${quick.map((q) => `<button class="qc" data-act="quick" data-sec="${sec.id}" data-v="${esc(q)}">${esc(q)}</button>`).join('')}</div>
+      <textarea class="cmt" data-sec="${sec.id}" rows="2" placeholder="Notes for the student">${esc(cmt)}</textarea>
+    </details>`;
+}
+
+function windScalesBody(sec, s, r) {
+  const rows = sec.rows.map((row) => {
+    const ks = cellKeys(sec, row);
+    const rr = ks.reduce((a, k) => a + (s[k] || 0), 0);
+    const cell = (k, label) => { const v = s[k]; return `<button class="cell ${v === 1 ? 'ok' : v === 0 ? 'no' : ''}" data-act="cell" data-k="${k}" aria-label="${label}">${v === 1 ? '✓' : v === 0 ? '✗' : label}</button>`; };
+    const up = []; const dn = [];
+    for (let i = 1; i <= row.oct; i++) { up.push(cell(`${sec.id}.${row.id}.a${i}`, row.oct > 1 ? String(i) : '↑')); dn.push(cell(`${sec.id}.${row.id}.d${i}`, row.oct > 1 ? String(i) : '↓')); }
+    return `<div class="srow">
+      <div class="skey"><b>${row.concert}</b>${row.written ? `<small>(${row.written})</small>` : ''}<span class="oct">${row.oct} oct</span></div>
+      <div class="cg"><span>Up</span>${up.join('')}</div>
+      <div class="cg"><span>Down</span>${dn.join('')}</div>
+      <div class="cg"><span>Arp</span>${cell(`${sec.id}.${row.id}.arp`, '•')}</div>
+      <div class="stot">${rr}<small>/${2 * row.oct + 1}</small></div>
+      <button class="rowbtn" data-act="rowall" data-sec="${sec.id}" data-row="${row.id}" title="Mark this scale perfect">✓ all</button>
+    </div>`;
+  }).join('');
+  return `${rows}<div class="factor">Raw ${r.raw} / ${sec.rawMax} × ${sec.factor.toFixed(4)} = <strong>${fmt(r.total, 2)}</strong></div>
+    <p class="help tiny">Tap a cell: ✓ played correctly, tap again for ✗. Written keys (in parentheses) are for transposing instruments.</p>`;
+}
+function malletBody(sec, s) {
+  return sec.rows.map((row) => `<div class="mrow"><div class="skey"><b>${row.concert}</b></div>
+    <div class="mcol"><span class="lbl">Scale</span>${scoreWidget(`${sec.id}.${row.id}.s`, s[`${sec.id}.${row.id}.s`], sec.scaleMax, 0.5)}</div>
+    <div class="mcol"><span class="lbl">Arpeggio</span>${scoreWidget(`${sec.id}.${row.id}.a`, s[`${sec.id}.${row.id}.a`], sec.arpMax, 0.5)}</div></div>`).join('');
+}
+function rubricItem(sec, it, v) {
+  return `<div class="item"><div class="item-h"><span>${esc(it.label)}</span><span class="val">${v == null ? '—' : fmt(v)} <small>/ ${it.max}</small></span></div>
+    ${scoreWidget(`${sec.id}.${it.id}`, v, it.max, it.step)}</div>`;
+}
+function scoreWidget(key, v, max, step) {
+  const n = Math.round(max / step);
+  if (n <= 10) {
+    let h = '';
+    for (let i = 0; i <= n; i++) { const x = i * step; h += `<button class="sc ${v === x ? 'on' : ''}" data-act="set" data-k="${key}" data-v="${x}">${fmt(x)}</button>`; }
+    return `<div class="scale-chips">${h}</div>`;
+  }
+  if (max <= 10) {
+    let h = '';
+    for (let i = 0; i <= max; i++) { const on = v != null && Math.floor(v) === i; h += `<button class="sc ${on ? 'on' : ''} ${on && v % 1 ? 'half' : ''}" data-act="set" data-k="${key}" data-v="${i}">${i}${on && v % 1 ? '½' : ''}</button>`; }
+    return `<div class="scale-chips int">${h}<button class="sc nudge" data-act="nudge" data-k="${key}" data-v="${step}" data-max="${max}" aria-label="Add half point">+½</button></div>`;
+  }
+  return `<div class="slider ${v == null ? 'unset' : ''}">
+    <button class="sc nudge" data-act="nudge" data-k="${key}" data-v="${-step}" data-max="${max}" aria-label="Minus half point">−</button>
+    <input type="range" min="0" max="${max}" step="${step}" value="${v == null ? 0 : v}" data-k="${key}" aria-label="score">
+    <button class="sc nudge" data-act="nudge" data-k="${key}" data-v="${step}" data-max="${max}" aria-label="Plus half point">+</button>
+    <span class="ticks"><span>0</span><span>${max / 2}</span><span>${max}</span></span></div>`;
+}
+function refreshSection(secId) {
+  const sec = FORM.sections.find((x) => x.id === secId);
+  const el = $(`#sec-${secId}`);
+  if (!sec || !el) return;
+  const open = $('.cmt-wrap', el)?.open;
+  el.innerHTML = sectionInner(sec);
+  if (open) $('.cmt-wrap', el).open = true;
+  const r = scoreForm(FORM, sc());
+  const lt = $('#live-total'); if (lt) lt.textContent = fmt(r.total, 1);
+}
+function setScore(k, v) {
+  const s = sc();
+  if (v == null) delete s[k]; else s[k] = v;
+  touch(); refreshSection(k.split('.')[0]);
+}
+
+/* ---------- results ---------- */
+/* strengths / focus areas / sight-reading gap / practice plan — shared by results page and printout */
+function analyze(form, s) {
+  const cats = categoryStats(form, s).sort((a, b) => b.pct - a.pct);
+  const strengths = cats.filter((c) => c.pct >= 70).slice(0, 3);
+  const focus = cats.slice().sort((a, b) => a.pct - b.pct || (b.max - b.got) - (a.max - a.got))
+    .filter((c) => c.pct < 90 && !strengths.includes(c)).slice(0, 3);
+  const misses = scaleMisses(form, s);
+  /* sight reading vs prepared music, scored items only */
+  const part = (secs) => {
+    let got = 0, max = 0;
+    secs.forEach((sec) => sec.items.forEach((it) => { const v = s[`${sec.id}.${it.id}`]; if (v != null) { got += v; max += it.max; } }));
+    return max ? pct(got, max) : null;
+  };
+  const sp = part(form.sections.filter((x) => x.sightReading));
+  const pp = part(form.sections.filter((x) => !x.sightReading && x.kind === 'rubric' && !x.catKey));
+  const srGap = sp != null && pp != null && pp - sp >= 12 ? { sp, pp } : null;
+  return { cats, strengths, focus, misses, srGap, plan: practicePlan(focus, srGap, misses) };
+}
+function resultsWho() { return hasScores('teacher') ? 'teacher' : 'self'; }
+function viewResults() {
+  const m = S.mock; const who = resultsWho();
+  const s = m.scores[who]; const r = scoreForm(FORM, s);
+  const { strengths, focus, misses, srGap, plan } = analyze(FORM, s);
+  const unscored = r.cells - r.done;
+  const ro = S.readOnly;
+  const lost = r.sections.map((x) => ({ t: x.sec.title, lost: Math.max(0, x.max - x.total) })).sort((a, b) => b.lost - a.lost);
+  const cutBlock = FORM.cut ? cutGauge(r.total, FORM.cut, r.max) : '';
+
+  return `
+  ${ro ? `<div class="banner">Shared mock audition results (read-only). Nothing here is stored online; everything is inside the link.</div>` : backBtn('sheet')}
+  <section class="res-head">
+    <div>
+      <div class="res-name">${esc(m.student.name || 'Student')}</div>
+      <div class="res-meta">${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''} · ${esc(LEVELS[m.level].short)} (${LEVELS[m.level].grades}) · ${m.round === 'district' ? 'First Round (District)' : 'Final Round (State)'}<br>
+      ${m.date ? fmtDate(m.date) : ''}${m.judge ? ' · Judge: ' + esc(m.judge) : ''}${who === 'self' ? ' · <em>Student self-assessment</em>' : ''}</div>
+    </div>
+    <div class="res-total"><span class="big">${fmt(r.total, 2)}</span><span class="of">/ ${fmt(r.max, 0)}</span><span class="pc">${fmt(pct(r.total, r.max), 0)}%</span></div>
+  </section>
+  ${unscored ? `<div class="banner warn">${unscored} item${unscored > 1 ? 's were' : ' was'} left unscored and count as 0, like the official sheet.${ro ? '' : ' <button class="btn sm" data-act="go" data-v="sheet">Finish scoring</button>'}</div>` : ''}
+  ${cutBlock}
+  <div class="res-actions">
+    <button class="btn primary" data-act="print">Print / Save PDF</button>
+    ${ro ? '' : '<button class="btn" data-act="share">Share link</button>'}
+    ${ro ? '' : '<button class="btn" data-act="go" data-v="sheet">Edit scores</button>'}
+    ${ro ? '' : '<button class="btn ghost" data-act="again">New mock, same student</button>'}
+  </div>
+
+  <div class="res-grid">
+    <section class="panel">
+      <h3>Section scores</h3>
+      ${r.sections.map((x) => barRow(x.sec.title, x.total, x.max)).join('')}
+    </section>
+    <section class="panel">
+      <h3>Where the points went</h3>
+      <ol class="lost">${lost.filter((x) => x.lost > 0.004).map((x) => `<li><span>${esc(x.t)}</span><b>−${fmt(x.lost, 2)}</b></li>`).join('') || '<li><span>No points lost. A perfect sheet!</span></li>'}</ol>
+      ${misses.length ? `<h4>Scale spots to fix</h4><ul class="miss">${misses.map((x) => `<li><b>${esc(x.key)}</b> ${x.miss.map(esc).join(', ')}</li>`).join('')}</ul>` : ''}
+    </section>
+  </div>
+
+  <div class="res-grid">
+    <section class="panel good">
+      <h3>Strengths</h3>
+      ${strengths.length ? strengths.map((c) => catLine(c)).join('') : '<p class="muted">Score more categories to see strengths.</p>'}
+    </section>
+    <section class="panel focus">
+      <h3>Focus next</h3>
+      ${focus.length ? focus.map((c) => catLine(c)).join('') : '<p class="muted">Nothing below 90%. Keep polishing and run the full audition often.</p>'}
+      ${srGap ? `<p class="insight">Sight reading (${fmt(srGap.sp, 0)}%) is well behind prepared music (${fmt(srGap.pp, 0)}%). A daily sight-reading habit will gain the most points.</p>` : ''}
+    </section>
+  </div>
+
+  <section class="panel">
+    <h3>Practice plan for this week</h3>
+    <ol class="plan">${plan.map((p) => `<li><span class="min">${p.min} min</span><div><b>${esc(p.t)}</b><span>${esc(p.d)}</span></div></li>`).join('')}</ol>
+    <p class="muted small">Suggested daily routine based on this mock. Adjust it to the student.</p>
+  </section>
+
+  ${hasScores('self') && hasScores('teacher') ? compareBlock() : ''}
+  ${commentsBlock(who)}
+  ${ro ? '' : `<p class="muted small center">${m.saved ? 'Saved to this device’s student history.' : ''}</p>`}`;
+}
+function cutGauge(total, cut, max) {
+  const diff = total - cut;
+  const p = Math.min(100, pct(total, max)); const c = pct(cut, max);
+  return `<section class="panel cut ${diff >= 0 ? 'above' : 'below'}">
+    <div class="cut-msg">${diff >= 0
+      ? `<b>${fmt(diff, 2)} points above</b> the state-level recommendation line (${fmt(cut)}).`
+      : `<b>${fmt(-diff, 2)} points below</b> the state-level recommendation line (${fmt(cut)}).`}</div>
+    <div class="gauge"><i style="width:${p}%"></i><span class="mark" style="left:${c}%"><em>${fmt(cut)}</em></span></div>
+    <p class="muted small">The minimum district total for a state-level audition recommendation, as printed on this instrument’s form.</p>
+  </section>`;
+}
+function barRow(label, got, max) {
+  const p = Math.max(0, Math.min(100, pct(got, max)));
+  return `<div class="bar"><div class="bar-l"><span>${esc(label)}</span><b>${fmt(got, 2)} / ${fmt(max, 2)}</b></div><div class="bar-t"><i style="width:${p}%"></i></div></div>`;
+}
+function catLine(c) {
+  const C = CATS[c.key] || CATS.general;
+  return `<div class="cat"><div class="cat-h"><b>${C.name}</b><span>${fmt(c.pct, 0)}%</span></div>
+    ${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).length ? `<div class="cat-ctx">${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).map(esc).join(' · ')}</div>` : ''}</div>`;
+}
+function practicePlan(focus, srGap, misses) {
+  const plan = [{ min: 5, t: 'Warm-up and long tones', d: 'Start every session with a full, centered sound across the range.' }];
+  focus.forEach((c, i) => {
+    const C = CATS[c.key] || CATS.general;
+    let d = C.tips[0];
+    if ((c.key === 'scales' || c.key === 'malletscales') && misses.length) d = `Start with ${misses.slice(0, 3).map((x) => x.key).join(', ')}. ` + C.tips[0];
+    plan.push({ min: i === 0 ? 10 : 8, t: C.name, d });
+  });
+  if (srGap) plan.push({ min: 5, t: 'Sight reading', d: PATTERN_TIPS.sightReading.tips[1] });
+  plan.push({ min: 5, t: 'Full mock run', d: 'Play the whole audition in order without stopping, as if a judge is listening. Record it once a week.' });
+  return plan;
+}
+function compareBlock() {
+  const t = S.mock.scores.teacher, s = S.mock.scores.self;
+  const rows = [];
+  FORM.sections.forEach((sec) => {
+    if (sec.kind === 'windScales' || sec.kind === 'malletScales') {
+      const a = scoreSection(sec, s), b = scoreSection(sec, t);
+      if (a.done && b.done) rows.push({ l: sec.title, self: a.total, tch: b.total, max: sec.max });
+      return;
+    }
+    sec.items.forEach((it) => {
+      const a = s[`${sec.id}.${it.id}`], b = t[`${sec.id}.${it.id}`];
+      if (a != null && b != null) rows.push({ l: (sec.items.length > 1 ? sec.title.replace(/^.*— /, '') + ' · ' : '') + it.label, self: a, tch: b, max: it.max });
+    });
+  });
+  if (!rows.length) return '';
+  /* compare only what both people scored, so a half-finished self-assessment isn't read as "lower" */
+  const ss = rows.reduce((a, x) => a + x.self, 0), ts = rows.reduce((a, x) => a + x.tch, 0), mx = rows.reduce((a, x) => a + x.max, 0);
+  const d = ss - ts;
+  const flagged = rows.filter((x) => Math.abs(x.self - x.tch) >= Math.max(1, x.max * 0.15));
+  return `<section class="panel">
+    <h3>Self-assessment vs. teacher</h3>
+    <p class="cmp-sum">On the ${rows.length} categories both of you scored (${fmt(mx, 1)} points possible): student <b>${fmt(ss, 2)}</b> · teacher <b>${fmt(ts, 2)}</b>. ${Math.abs(d) < 1 ? 'Very well calibrated.' : d > 0 ? `The student rated themselves <b>${fmt(d, 1)} points higher</b>.` : `The student rated themselves <b>${fmt(-d, 1)} points lower</b>.`}</p>
+    <div class="cmp-legend"><span class="k self"></span>Student <span class="k tch"></span>Teacher</div>
+    <div class="cmp">${rows.map((x) => {
+      const big = Math.abs(x.self - x.tch) >= Math.max(1, x.max * 0.15);
+      return `<div class="cmp-row ${big ? 'flag' : ''}"><div class="cmp-l">${esc(x.l)}${big ? `<em>${x.self > x.tch ? 'rated higher' : 'rated lower'}</em>` : ''}</div>
+        <div class="cmp-bars"><div class="cb self"><i style="width:${pct(x.self, x.max)}%"></i><span>${fmt(x.self)}</span></div>
+        <div class="cb tch"><i style="width:${pct(x.tch, x.max)}%"></i><span>${fmt(x.tch)}</span></div></div></div>`;
+    }).join('')}</div>
+    ${flagged.length ? `<p class="insight">Talk through the ${flagged.length} flagged categor${flagged.length > 1 ? 'ies' : 'y'}. Big gaps usually mean the student can’t yet hear that problem in their own playing. Recording and listening back helps.</p>` : ''}
+  </section>`;
+}
+function commentsBlock(who) {
+  const m = S.mock;
+  const blocks = [];
+  ['teacher', 'self'].forEach((w) => {
+    const c = m.comments[w] || {};
+    const list = FORM.sections.filter((sec) => c[sec.id]).map((sec) => `<li><b>${esc(sec.title)}:</b> ${esc(c[sec.id])}</li>`);
+    const ov = m.overall[w];
+    if (list.length || ov) blocks.push(`<div class="cmt-block"><h4>${w === 'teacher' ? 'Judge comments' : 'Student reflection'}</h4>${ov ? `<p>${esc(ov)}</p>` : ''}${list.length ? `<ul>${list.join('')}</ul>` : ''}</div>`);
+  });
+  return blocks.length ? `<section class="panel">${blocks.join('')}</section>` : '';
+}
+
+/* ---------- history ---------- */
+function viewHistory() {
+  const h = getHistory();
+  const groups = {};
+  h.forEach((m) => { (groups[studentKey(m)] = groups[studentKey(m)] || []).push(m); });
+  const keys = Object.keys(groups).sort();
+  const io = `<div class="hist-io"><button class="btn sm" data-act="export">Export backup</button><label class="btn sm ghost">Import backup<input type="file" accept=".json,application/json" id="import" hidden></label></div>`;
+  if (!h.length) {
+    return `${backBtn('home')}<h2 class="pick-h">Student history</h2>
+      <p class="muted">No saved mocks yet. Every mock you finish is saved here, on this device, when you open its results.</p>${io}`;
+  }
+  if (!S.histKey || !groups[S.histKey]) S.histKey = keys[0];
+  const mine = groups[S.histKey].slice().sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.created - b.created);
+  const combos = [...new Set(mine.map((m) => `${m.round}|${m.level}|${m.inst}`))];
+  if (!S.histFilter || !combos.includes(S.histFilter)) S.histFilter = combos[combos.length - 1];
+  const comboLabel = (c) => { const [r, l, i] = c.split('|'); return `${INSTRUMENTS.find((x) => x.id === i).name} · ${LEVELS[l].short} · ${r === 'district' ? 'First Round' : 'Final Round'}`; };
+  return `${backBtn('home')}<h2 class="pick-h">Student history</h2>
+  ${Date.now() - store.get(LS.exported, 0) > 21 * 864e5 ? exportNag() : ''}
+  <div class="hist">
+    <aside class="hist-list">${keys.map((k) => {
+      const g = groups[k]; const last = g.slice().sort((a, b) => b.updated - a.updated)[0];
+      return `<button class="hist-st ${k === S.histKey ? 'on' : ''}" data-act="hstudent" data-v="${esc(k)}"><b>${esc(last.student.name || 'Unnamed')}</b><span>${g.length} mock${g.length > 1 ? 's' : ''}</span></button>`;
+    }).join('')}</aside>
+    <div class="hist-main">
+      ${combos.length > 1 ? `<div class="seg wrap">${combos.map((c) => `<button class="${c === S.histFilter ? 'on' : ''}" data-act="hfilter" data-v="${c}">${comboLabel(c)}</button>`).join('')}</div>` : `<div class="combo">${comboLabel(S.histFilter)}</div>`}
+      <div class="chart-wrap"><div id="hchart"></div><div id="htip" class="htip" hidden></div></div>
+      <table class="htable"><thead><tr><th>Date</th><th>Mock</th><th class="num">Score</th><th></th></tr></thead><tbody>
+      ${mine.slice().reverse().map((m) => {
+        const sm = m.summary || summarize(m);
+        return `<tr><td>${fmtDate(m.date)}</td><td>${m.round === 'district' ? 'First' : 'Final'} · ${esc(INSTRUMENTS.find((x) => x.id === m.inst).name)}${sm.who === 'self' ? ' <em>(self)</em>' : ''}</td>
+          <td class="num">${fmt(sm.total, 2)} / ${fmt(sm.max, 0)}${sm.cut ? `<small class="${sm.total >= sm.cut ? 'pos' : 'neg'}">${sm.total >= sm.cut ? '+' : ''}${fmt(sm.total - sm.cut, 1)} vs line</small>` : ''}</td>
+          <td class="acts"><button class="btn sm" data-act="hopen" data-v="${m.id}">Open</button><button class="btn sm ghost" data-act="hdel" data-v="${m.id}" aria-label="Delete">✕</button></td></tr>`;
+      }).join('')}
+      </tbody></table>
+    </div>
+  </div>${io}`;
+}
+function drawHistoryChart() {
+  const el = $('#hchart'); if (!el) return;
+  const h = getHistory().filter((m) => studentKey(m) === S.histKey && `${m.round}|${m.level}|${m.inst}` === S.histFilter)
+    .sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.created - b.created);
+  const pts = h.map((m) => ({ m, s: m.summary || summarize(m) }));
+  if (!pts.length) { el.innerHTML = ''; return; }
+  const W = 640, H = 220, P = { l: 40, r: 16, t: 16, b: 34 };
+  const max = pts[0].s.max; const cut = pts[0].s.cut;
+  const x = (i) => pts.length === 1 ? (P.l + W - P.r) / 2 : P.l + (i * (W - P.l - P.r)) / (pts.length - 1);
+  const y = (v) => P.t + (1 - v / max) * (H - P.t - P.b);
+  const grid = [0, 0.25, 0.5, 0.75, 1].map((f) => `<line x1="${P.l}" x2="${W - P.r}" y1="${y(f * max)}" y2="${y(f * max)}" class="g"/><text x="${P.l - 6}" y="${y(f * max) + 4}" class="ax" text-anchor="end">${fmt(f * max, 0)}</text>`).join('');
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p.s.total)}`).join(' ');
+  const cutL = cut ? `<line x1="${P.l}" x2="${W - P.r}" y1="${y(cut)}" y2="${y(cut)}" class="cutl"/><text x="${W - P.r}" y="${y(cut) - 5}" class="ax cutt" text-anchor="end">Recommendation line ${fmt(cut)}</text>` : '';
+  const xl = pts.map((p, i) => `<text x="${x(i)}" y="${H - 12}" class="ax" text-anchor="middle">${esc(fmtDate(p.m.date).replace(/, \d{4}$/, ''))}</text>`).join('');
+  const dots = pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.s.total)}" r="5" class="dot"/><circle cx="${x(i)}" cy="${y(p.s.total)}" r="16" class="hit" data-i="${i}"/>`).join('');
+  const last = pts[pts.length - 1];
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Score history chart">${grid}${cutL}<path d="${line}" class="ln"/>${dots}${xl}
+    <text x="${x(pts.length - 1)}" y="${y(last.s.total) - 12}" class="lbl" text-anchor="${pts.length > 1 ? 'end' : 'middle'}">${fmt(last.s.total, 1)}</text></svg>`;
+  const tip = $('#htip');
+  $$('.hit', el).forEach((c) => {
+    const show = () => {
+      const p = pts[+c.dataset.i]; const b = el.getBoundingClientRect(); const cb = c.getBoundingClientRect();
+      tip.innerHTML = `<b>${fmt(p.s.total, 2)} / ${fmt(p.s.max, 0)}</b><span>${fmtDate(p.m.date)}${p.s.who === 'self' ? ' · self' : ''}</span>`;
+      tip.hidden = false; tip.style.left = (cb.left - b.left + cb.width / 2) + 'px'; tip.style.top = (cb.top - b.top - 8) + 'px';
+    };
+    c.addEventListener('pointerenter', show); c.addEventListener('click', show);
+    c.addEventListener('pointerleave', () => (tip.hidden = true));
+  });
+}
+function exportHistory() {
+  const data = { app: 'allstate-mock', v: 1, exported: new Date().toISOString(), mocks: getHistory() };
+  const blob = new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `mock-auditions-backup-${todayISO()}.json`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  store.set(LS.exported, Date.now()); toast('Backup downloaded');
+}
+function importHistory(file) {
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const d = JSON.parse(rd.result); const inc = Array.isArray(d) ? d : d.mocks;
+      if (!Array.isArray(inc)) throw new Error('bad');
+      const h = getHistory(); let added = 0, upd = 0;
+      inc.forEach((m) => {
+        if (!m || !m.id || !m.level || !LEVELS[m.level]) return;
+        const i = h.findIndex((x) => x.id === m.id);
+        if (i < 0) { h.push(m); added++; } else if ((m.updated || 0) > (h[i].updated || 0)) { h[i] = m; upd++; }
+      });
+      store.set(LS.hist, h); toast(`Imported ${added} new, updated ${upd}`); render();
+    } catch (e) { toast('That file isn’t a mock audition backup'); }
+  };
+  rd.readAsText(file);
+}
+
+/* ============================================================
+   MODALS: share, help
+   ============================================================ */
+function modal(html) { $('#modal-body').innerHTML = html; $('#modal').hidden = false; }
+function closeModal() { $('#modal').hidden = true; $('#modal-body').innerHTML = ''; }
+async function openShare() {
+  const opts = store.get(LS.prefs, {}).share || { firstName: true, self: true };
+  const url = shareBase() + '#view=' + await encodeShare(S.mock, opts);
+  let qr = '';
+  if (typeof qrcode === 'function' && url.length < 2300) {
+    try { const q = qrcode(0, 'L'); q.addData(url); q.make(); qr = q.createSvgTag({ cellSize: 3, margin: 2, scalable: true }); } catch (e) { qr = ''; }
+  }
+  modal(`<h3>Share with the student</h3>
+    <p class="muted">Anyone with this link sees a read-only copy of this mock (scores, comments, and practice plan). Nothing is uploaded; all the data is inside the link itself.</p>
+    <div class="share-opts">
+      <label><input type="checkbox" id="sh-first" ${opts.firstName ? 'checked' : ''}> First name only</label>
+      <label><input type="checkbox" id="sh-self" ${opts.self ? 'checked' : ''}> Include student self-assessment</label>
+    </div>
+    <div class="share-url"><input id="sh-url" readonly value="${esc(url)}"><button class="btn primary" data-act="copy">Copy</button></div>
+    ${qr ? `<div class="qr">${qr}<span>Student can scan this to open it on a phone</span></div>` : ''}
+    <p class="muted small">Tip: paste the link into a Brightspace or Canvas message, an email, or your LMS assignment feedback.</p>`);
+  const re = async () => {
+    const o = { firstName: $('#sh-first').checked, self: $('#sh-self').checked };
+    const p = store.get(LS.prefs, {}); p.share = o; store.set(LS.prefs, p); openShare();
+  };
+  $('#sh-first').onchange = re; $('#sh-self').onchange = re;
+}
+function openHelp() {
+  modal(`<h3>How to run a great mock audition</h3>${realThingTips()}
+    <h4>Scoring calibration guide</h4>
+    <p class="muted small">A suggested guide for consistent scoring. GMEA does not publish one.</p>
+    <table class="calib">${CALIBRATION.map(([a, b]) => `<tr><th>${a}</th><td>${b}</td></tr>`).join('')}</table>
+    <h4>About this tool</h4>
+    <p class="small">An unofficial practice tool, not affiliated with GMEA. Sections, point values, adjustment factors, and recommendation lines are copied from the 2025–26 GMEA All-State Band district and state audition forms, and the MS octave requirements from the 2025–26 GMEA scale sheets. Always check the current year’s official materials.</p>
+    <p class="small">The HS state percussion forms labeled Vibraphone, Drum Set, and Piano use the same snare/xylophone/timpani layout as the Percussion form, so this tool uses that one form for all of them.</p>
+    <p class="small">Everything stays on this device. Student history is saved in this browser only, so use <b>Export backup</b> to move it or keep it safe.</p>
+    <p class="muted small">Version ${APP_VERSION}</p>`);
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+function printTicks(max, step, v) {
+  const ticks = [];
+  for (let x = 0; x <= max + 1e-9; x += step) ticks.push(Math.round(x * 100) / 100);
+  let placed = v == null;
+  const out = [];
+  ticks.forEach((t, i) => {
+    if (!placed && v < t && (i === 0 || v > ticks[i - 1])) { out.push(`<b class="circ">${fmt(v)}</b>`); placed = true; }
+    out.push(v === t ? `<b class="circ">${fmt(t)}</b>` : `<span>${fmt(t)}</span>`);
+    if (v === t) placed = true;
+  });
+  return out.join('<i> . . . </i>');
+}
+function buildPrint(who) {
+  const m = S.mock; const s = m.scores[who]; const r = scoreForm(FORM, s);
+  const printStep = (it) => (FORM.round === 'state' ? (it.max === 10 || it.max <= 5 ? 1 : 5) : it.max <= 5 ? 0.5 : 5);
+  let body = '';
+  let lastGroup = null;
+  FORM.sections.forEach((sec) => {
+    const x = scoreSection(sec, s);
+    if (sec.group && sec.group !== lastGroup) { lastGroup = sec.group; body += `<h3 class="p-group">${sec.group} <span>(${FORM.sections.filter((q) => q.group === sec.group).reduce((a, q) => a + q.max, 0)} points maximum)</span></h3>`; }
+    if (sec.kind === 'windScales') {
+      body += `<div class="p-sec"><div class="p-sech">• ${esc(sec.title)}:</div><table class="p-scales"><thead><tr><th>Scale</th><th>Ascending</th><th>Descending</th><th>Arpeggio</th><th>Total</th></tr></thead><tbody>
+      ${sec.rows.map((row) => {
+        let a = 0, d = 0; for (let i = 1; i <= row.oct; i++) { a += s[`${sec.id}.${row.id}.a${i}`] || 0; d += s[`${sec.id}.${row.id}.d${i}`] || 0; }
+        const arp = s[`${sec.id}.${row.id}.arp`] || 0;
+        return `<tr><td>${keyLabel(row)}</td><td>${a} / ${row.oct}</td><td>${d} / ${row.oct}</td><td>${arp} / 1</td><td>${a + d + arp} <small>(${2 * row.oct + 1} max)</small></td></tr>`;
+      }).join('')}</tbody></table>
+      <div class="p-calc">Total Raw Score: <b>${x.raw}</b> (${sec.rawMax} max) &nbsp; Adjustment Factor: x ${sec.factor.toFixed(4)} &nbsp; Major Scale Total: <b>${fmt(x.total, 2)}</b></div></div>`;
+    } else if (sec.kind === 'malletScales') {
+      body += `<div class="p-sec"><div class="p-sech">• Major Scales: (48 points maximum) <span class="p-tot">Major Scale Total: <b>${fmt(x.total)}</b> /48</span></div>
+        <div class="p-mallet">${sec.rows.map((row) => `<span>${row.concert}: <b>${fmt(s[`${sec.id}.${row.id}.s`] ?? 0)}</b>/${sec.scaleMax} + <b>${fmt(s[`${sec.id}.${row.id}.a`] ?? 0)}</b>/${sec.arpMax}</span>`).join('')}</div></div>`;
+    } else {
+      const showTicks = sec.items.every((it) => it.max <= 10);
+      body += `<div class="p-sec"><div class="p-sech">• ${esc(sec.title.replace(/^.*— /, ''))}: (${sec.max} points maximum)<span class="p-tot">${esc(sec.title.replace(/^.*— /, ''))} Total: <b>${fmt(x.total)}</b> /${sec.max}</span></div>
+        ${sec.items.length === 1 && sec.items[0].catKey === 'chromatic' ? '' : `<table class="p-rub">${sec.items.map((it) => {
+          const v = s[`${sec.id}.${it.id}`];
+          return `<tr><td>${esc(it.label)}</td><td>${showTicks ? printTicks(it.max, printStep(it), v) : `<b>${v == null ? '—' : fmt(v)}</b> / ${it.max}`}</td></tr>`;
+        }).join('')}</table>`}
+        ${sec.practice ? '<div class="p-note">Category breakdown is a practice aid; the official state form records only the total.</div>' : ''}</div>`;
+    }
+  });
+  const { strengths, focus, misses, srGap, plan } = analyze(FORM, s);
+  const comments = FORM.sections.filter((sec) => m.comments[who][sec.id]).map((sec) => `<li><b>${esc(sec.title)}:</b> ${esc(m.comments[who][sec.id])}</li>`).join('');
+  $('#print').innerHTML = `
+  <div class="p-page">
+    <div class="p-mock">MOCK AUDITION — practice only${who === 'self' ? ' · student self-assessment' : ''}</div>
+    <div class="p-title">${esc(FORM.title)}</div>
+    <div class="p-sub">${esc(FORM.subtitle)}</div>
+    ${FORM.division ? '<div class="p-div">Division Preference: Band | Orchestra | None</div>' : ''}
+    <table class="p-info"><tr><td>Student: <b>${esc(m.student.name)}</b></td><td>School: <b>${esc(m.student.school)}</b></td><td>Date: <b>${esc(fmtDate(m.date))}</b></td></tr>
+      <tr><td>Grade: <b>${esc(m.student.grade)}</b></td><td>Instrument: <b>${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''}</b></td><td>Judge: <b>${esc(m.judge)}</b></td></tr></table>
+    ${body}
+    <div class="p-total">AUDITION TOTAL: <b>${fmt(r.total, 2)}</b> / ${fmt(r.max, 0)}${FORM.cut ? `<span>Min. total score needed for state-level audition recommendation: ${FORM.cut.toFixed(4)}</span>` : ''}</div>
+  </div>
+  <div class="p-page p-break">
+    <div class="p-title">Mock Audition Feedback — ${esc(m.student.name || 'Student')}</div>
+    <div class="p-sub">${esc(FORM.instrumentLabel)} · ${esc(LEVELS[m.level].short)} (${LEVELS[m.level].grades}) · ${m.round === 'district' ? 'First Round' : 'Final Round'} · ${esc(fmtDate(m.date))}</div>
+    <div class="p-big">${fmt(r.total, 2)} / ${fmt(r.max, 0)} ${FORM.cut ? `<span>(${r.total >= FORM.cut ? fmt(r.total - FORM.cut, 2) + ' above' : fmt(FORM.cut - r.total, 2) + ' below'} the recommendation line of ${fmt(FORM.cut)})</span>` : ''}</div>
+    <div class="p-cols"><div><h4>Strengths</h4><ul>${strengths.map((c) => `<li>${CATS[c.key].name} — ${fmt(c.pct, 0)}%</li>`).join('') || '<li>—</li>'}</ul></div>
+      <div><h4>Focus next</h4><ul>${focus.map((c) => `<li>${CATS[c.key].name} — ${fmt(c.pct, 0)}%</li>`).join('') || '<li>—</li>'}</ul></div></div>
+    ${srGap ? `<p><b>Sight reading (${fmt(srGap.sp, 0)}%) is well behind prepared music (${fmt(srGap.pp, 0)}%).</b> A daily sight-reading habit will gain the most points.</p>` : ''}
+    ${misses.length ? `<h4>Scale spots to fix</h4><p>${misses.map((x) => `<b>${esc(x.key)}</b>: ${x.miss.map(esc).join(', ')}`).join(' &nbsp;·&nbsp; ')}</p>` : ''}
+    <h4>Practice plan for this week</h4><ol>${plan.map((p) => `<li><b>${p.min} min — ${esc(p.t)}.</b> ${esc(p.d)}</li>`).join('')}</ol>
+    ${focus.map((c) => `<h4>${CATS[c.key].name}: practice ideas</h4><ul>${CATS[c.key].tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`).join('')}
+    ${m.overall[who] || comments ? `<h4>${who === 'self' ? 'Student reflection' : 'Judge comments'}</h4>${m.overall[who] ? `<p>${esc(m.overall[who])}</p>` : ''}${comments ? `<ul>${comments}</ul>` : ''}` : ''}
+    <div class="p-foot">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms. Not affiliated with GMEA.</div>
+  </div>`;
+}
+function doPrint() {
+  const who = resultsWho();
+  buildPrint(who);
+  setTimeout(() => window.print(), 50);
+}
+
+/* ============================================================
+   TOOLS: timer + metronome
+   ============================================================ */
+const T = { start: 0, acc: 0, running: false, limit: 0, iv: null };
+function timerNow() { return T.acc + (T.running ? Date.now() - T.start : 0); }
+function timerPaint() {
+  const el = $('#t-time'); if (!el) return;
+  const ms = timerNow(); el.textContent = mmss(ms);
+  el.classList.toggle('over', !!T.limit && ms > T.limit * 1000);
+  $('#t-limit').textContent = T.limit ? `limit ${mmss(T.limit * 1000)}` : 'no limit';
+  $('#t-go').textContent = T.running ? 'Pause' : timerNow() ? 'Resume' : 'Start';
+}
+function timerToggle() {
+  if (T.running) { T.acc = timerNow(); T.running = false; clearInterval(T.iv); }
+  else { T.start = Date.now(); T.running = true; T.iv = setInterval(timerPaint, 200); }
+  timerPaint();
+}
+function timerReset() { T.running = false; T.acc = 0; clearInterval(T.iv); timerPaint(); }
+
+const MT = { ctx: null, on: false, bpm: 120, next: 0, iv: null, beat: 0 };
+function metroStart() {
+  if (!MT.ctx) MT.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  MT.ctx.resume(); MT.on = true; MT.next = MT.ctx.currentTime + 0.05; MT.beat = 0;
+  clearInterval(MT.iv);
+  MT.iv = setInterval(() => {
+    while (MT.next < MT.ctx.currentTime + 0.12) {
+      const o = MT.ctx.createOscillator(), g = MT.ctx.createGain();
+      o.frequency.value = MT.beat % 4 === 0 ? 1500 : 1000;
+      g.gain.setValueAtTime(0.0001, MT.next); g.gain.exponentialRampToValueAtTime(0.5, MT.next + 0.002); g.gain.exponentialRampToValueAtTime(0.0001, MT.next + 0.05);
+      o.connect(g).connect(MT.ctx.destination); o.start(MT.next); o.stop(MT.next + 0.06);
+      MT.next += 60 / MT.bpm; MT.beat++;
+    }
+  }, 25);
+  metroPaint();
+}
+function metroStop() { MT.on = false; clearInterval(MT.iv); metroPaint(); }
+function metroPaint() {
+  const b = $('#m-go'); if (!b) return;
+  b.textContent = MT.on ? 'Stop' : 'Start'; $('#m-bpm').textContent = MT.bpm;
+  $('#btn-tools').classList.toggle('live', MT.on || T.running);
+}
+function openTools(focus) {
+  const tp = $('#tools'); tp.hidden = false;
+  if (focus) tp.dataset.focus = focus;
+  timerPaint(); metroPaint();
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+function go(view) { S.view = view; render(); }
+function readSetup() {
+  const m = S.mock;
+  m.student.name = $('#f-name').value.trim(); m.student.school = $('#f-school').value.trim();
+  m.student.grade = $('#f-grade').value; m.date = $('#f-date').value; m.judge = $('#f-judge').value.trim();
+  m.flow = ($('input[name=flow]:checked') || {}).value || 'teacher';
+  const p = store.get(LS.prefs, {}); p.judge = m.judge; p.school = m.student.school; store.set(LS.prefs, p);
+}
+
+document.addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act, v = b.dataset.v;
+  switch (a) {
+    case 'go': if (v === 'sheet' && S.readOnly) return; go(v); break;
+    case 'level': S.pick = { level: v, inst: null, round: null, variant: null }; go('inst'); break;
+    case 'inst': S.pick.inst = v; S.pick.variant = null; go('round'); break;
+    case 'variant': S.pick.variant = v; render(); break;
+    case 'round': {
+      S.pick.round = v;
+      const d = S.pick.level === 'ms' && MS_DISTRICT[S.pick.inst];
+      if (v === 'district' && d && d.variants && !S.pick.variant) S.pick.variant = d.defaultVariant;
+      if (v !== 'district') S.pick.variant = null;
+      const keep = S.mock && S.mock._again ? S.mock : null;
+      const m = newMock();
+      if (keep) { m.student = { ...keep.student }; m.judge = keep.judge; }
+      setMock(m); go('setup'); break;
+    }
+    case 'start': readSetup(); S.who = S.mock.flow === 'teacher' ? 'teacher' : 'self'; touch(); go('sheet'); break;
+    case 'resume': { const d = store.get(LS.draft, null); if (d) { setMock(d); S.who = d.flow === 'self' ? 'self' : 'teacher'; S.readOnly = false; go('sheet'); } break; }
+    case 'history': S.histKey = null; S.histFilter = null; go('history'); break;
+    case 'help': openHelp(); break;
+    case 'who': S.who = v; render(); break;
+    case 'handoff': S.who = 'teacher'; render(); toast('Teacher scoring — the student’s scores are hidden'); break;
+    case 'set': { const cur = sc()[b.dataset.k]; const nv = +v; setScore(b.dataset.k, cur === nv ? null : nv); break; }
+    case 'nudge': {
+      const cur = sc()[b.dataset.k]; const max = +b.dataset.max; const d = +v;
+      let nv = cur == null ? (d > 0 ? d : 0) : cur + d;
+      if (max <= 10 && d > 0 && cur != null && cur % 1) nv = cur - d; // toggle half off
+      nv = Math.max(0, Math.min(max, Math.round(nv * 2) / 2));
+      setScore(b.dataset.k, nv); break;
+    }
+    case 'cell': { const cur = sc()[b.dataset.k]; setScore(b.dataset.k, cur === 1 ? 0 : 1); break; }
+    case 'rowall': {
+      const sec = FORM.sections.find((x) => x.id === b.dataset.sec); const row = sec.rows.find((x) => x.id === b.dataset.row);
+      const ks = cellKeys(sec, row); const all = ks.every((k) => sc()[k] === 1);
+      ks.forEach((k) => { if (all) delete sc()[k]; else sc()[k] = 1; });
+      touch(); refreshSection(sec.id); break;
+    }
+    case 'allperfect': {
+      const sec = FORM.sections.find((x) => x.id === v); const s = sc();
+      if (sec.kind === 'windScales') sectionKeys(sec).forEach((k) => (s[k] = 1));
+      else sec.rows.forEach((r) => { s[`${sec.id}.${r.id}.s`] = sec.scaleMax; s[`${sec.id}.${r.id}.a`] = sec.arpMax; });
+      touch(); refreshSection(sec.id); toast('All marked perfect — now tap what was missed'); break;
+    }
+    case 'quick': {
+      const ta = $(`textarea[data-sec="${b.dataset.sec}"]`);
+      ta.value = (ta.value.trim() ? ta.value.trim().replace(/[.;]?$/, '. ') : '') + v;
+      S.mock.comments[S.who][b.dataset.sec] = ta.value; touch(); break;
+    }
+    case 'results': {
+      if (!hasScores('teacher') && !hasScores('self')) { toast('Score at least one category first'); return; }
+      if (!S.readOnly) saveToHistory(S.mock, true);
+      go('results'); break;
+    }
+    case 'again': {
+      const m = S.mock; S.pick = { level: m.level, inst: m.inst, round: m.round, variant: m.variant };
+      const nm = newMock(); nm.student = { ...m.student }; nm.judge = m.judge; nm.flow = m.flow;
+      setMock(nm); store.set(LS.draft, nm); go('setup'); break;
+    }
+    case 'print': doPrint(); break;
+    case 'share': openShare(); break;
+    case 'copy': { const i = $('#sh-url'); i.select(); try { await navigator.clipboard.writeText(i.value); } catch (er) { document.execCommand('copy'); } toast('Link copied'); break; }
+    case 'close': closeModal(); break;
+    case 'export': exportHistory(); render(); break;
+    case 'hstudent': S.histKey = v; S.histFilter = null; render(); break;
+    case 'hfilter': S.histFilter = v; render(); break;
+    case 'hopen': { const m = getHistory().find((x) => x.id === v); if (m) { const c = JSON.parse(JSON.stringify(m)); delete c.summary; setMock(c); S.readOnly = false; S.who = 'teacher'; go('results'); } break; }
+    case 'hdel': {
+      if (b.dataset.confirm !== '1') { b.dataset.confirm = '1'; b.textContent = 'Delete?'; b.classList.add('danger'); setTimeout(() => { if (b.isConnected) { b.dataset.confirm = ''; b.textContent = '✕'; b.classList.remove('danger'); } }, 3000); return; }
+      store.set(LS.hist, getHistory().filter((x) => x.id !== v)); toast('Deleted'); render(); break;
+    }
+    case 'theme': {
+      const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      const nx = cur === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = nx; store.set(LS.theme, nx); break;
+    }
+    case 'tools': { const tp = $('#tools'); if (tp.hidden) openTools(); else tp.hidden = true; break; }
+    case 'timer': T.limit = +v; timerReset(); openTools('timer'); break;
+    case 'metro': MT.bpm = +v; openTools('metro'); metroPaint(); break;
+    case 't-go': timerToggle(); metroPaint(); break;
+    case 't-reset': timerReset(); metroPaint(); break;
+    case 't-limit': T.limit = +v; timerPaint(); break;
+    case 'm-go': MT.on ? metroStop() : metroStart(); break;
+    case 'm-bpm': MT.bpm = Math.max(40, Math.min(240, v === '+' ? MT.bpm + 4 : v === '-' ? MT.bpm - 4 : +v)); if (MT.on) { metroStop(); metroStart(); } metroPaint(); break;
+    case 'tools-close': $('#tools').hidden = true; break;
+    case 'home': if (S.readOnly) { S.readOnly = false; window.history.replaceState(null, '', location.pathname); } go('home'); break;
+  }
+});
+document.addEventListener('input', (e) => {
+  const t = e.target;
+  if (t.matches('input[type=range][data-k]')) { sc()[t.dataset.k] = +t.value; touch(); const it = t.closest('.item, .mcol'); const vl = it && $('.val', it); if (vl) vl.innerHTML = `${fmt(+t.value)} <small>/ ${t.max}</small>`; t.closest('.slider').classList.remove('unset'); }
+  if (t.matches('textarea.cmt')) {
+    if (t.dataset.overall) S.mock.overall[S.who] = t.value; else S.mock.comments[S.who][t.dataset.sec] = t.value;
+    touch();
+  }
+});
+document.addEventListener('change', (e) => {
+  const t = e.target;
+  if (t.matches('input[type=range][data-k]')) refreshSection(t.dataset.k.split('.')[0]);
+  if (t.matches('input[name=flow]')) { $$('.radio').forEach((r) => r.classList.toggle('on', r.contains(t))); }
+  if (t.id === 'import' && t.files[0]) importHistory(t.files[0]);
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeModal(); $('#tools').hidden = true; } });
+$('#modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
+window.addEventListener('afterprint', () => { $('#print').innerHTML = ''; });
+
+/* ---------- boot ---------- */
+(async function boot() {
+  const th = store.get(LS.theme, null); if (th) document.documentElement.dataset.theme = th;
+  if (location.hash.startsWith('#view=')) {
+    try {
+      const m = await decodeShare(location.hash.slice(6));
+      if (!LEVELS[m.level]) throw new Error('bad');
+      setMock(m); S.readOnly = true; S.view = 'results';
+    } catch (e) { toast('That share link is damaged or incomplete'); }
+  }
+  render();
+})();
+
+</script>
+</body>
+</html>
