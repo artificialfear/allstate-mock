@@ -350,6 +350,13 @@ textarea.cmt { width: 100%; border: 1px solid var(--line); border-radius: 10px; 
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 30px); opacity: 0; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 600; transition: all .2s; pointer-events: none; z-index: 60; max-width: calc(100vw - 32px); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+/* blank-box helpers */
+.banner.blanks { flex-direction: column; align-items: flex-start; }
+.banner-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+@keyframes flash { 0%, 60% { background: var(--warn-soft); box-shadow: 0 0 0 3px var(--warn); } 100% { background: transparent; box-shadow: none; } }
+.flash { animation: flash 2.4s ease-out; border-radius: 10px; }
+.cell.flash-cell { border-color: var(--warn); border-style: solid; }
+
 /* responsive */
 @media (max-width: 720px) {
   .hist { grid-template-columns: 1fr; }
@@ -3119,7 +3126,7 @@ const CALIBRATION = [
 /* ============================================================
    All-State Mock Audition — app
    ============================================================ */
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 const LS = { draft: 'asm.draft.v1', hist: 'asm.history.v1', theme: 'asm.theme', prefs: 'asm.prefs.v1', exported: 'asm.lastExport' };
 
 /* ---------- utils ---------- */
@@ -3197,6 +3204,41 @@ function categoryStats(form, s) {
     });
   });
   return Object.values(m).filter((x) => x.max > 0).map((x) => ({ ...x, pct: pct(x.got, x.max) }));
+}
+/* every box left blank, with a readable label; scaleCell = a scale octave/arpeggio box */
+function blankItems(form, s) {
+  const out = [];
+  form.sections.forEach((sec) => {
+    const short = sec.title.replace(/^.*— /, '');
+    if (sec.kind === 'windScales') {
+      sec.rows.forEach((row) => cellKeys(sec, row).forEach((k) => {
+        if (s[k] != null) return;
+        const part = k.split('.').pop();
+        const what = part === 'arp' ? 'arpeggio' : (part[0] === 'a' ? 'up' : 'down') + (row.oct > 1 ? ' oct ' + part.slice(1) : '');
+        out.push({ k, secId: sec.id, scaleCell: true, label: `${keyLabel(row)} ${what}` });
+      }));
+    } else if (sec.kind === 'malletScales') {
+      sec.rows.forEach((row) => [['s', 'scale'], ['a', 'arpeggio']].forEach(([p, what]) => {
+        const k = `${sec.id}.${row.id}.${p}`;
+        if (s[k] == null) out.push({ k, secId: sec.id, scaleCell: true, label: `${row.concert} ${what} (mallets)` });
+      }));
+    } else {
+      sec.items.forEach((it) => {
+        const k = `${sec.id}.${it.id}`;
+        if (s[k] == null) out.push({ k, secId: sec.id, scaleCell: false, label: sec.items.length > 1 ? `${short} · ${it.label}` : short });
+      });
+    }
+  });
+  return out;
+}
+/* set blank scale boxes to 0 (✗). secId limits it to one section. Returns how many changed. */
+function zeroBlankScales(s, secId) {
+  let n = 0;
+  blankItems(FORM, s).forEach((b) => {
+    if (!b.scaleCell || (secId && b.secId !== secId)) return;
+    s[b.k] = 0; n++;
+  });
+  return n;
 }
 function scaleMisses(form, s) {
   const out = [];
@@ -3499,7 +3541,10 @@ function sectionInner(sec) {
   const tools = [];
   if (sec.timeLimit) tools.push(`<button class="chip-btn" data-act="timer" data-v="${sec.timeLimit}">⏱ Time limit ${mmss(sec.timeLimit * 1000)}</button>`);
   if (sec.tempo) tools.push(`<button class="chip-btn" data-act="metro" data-v="${sec.tempo}">♩ = ${sec.tempo}</button>`);
-  if (sec.kind === 'windScales' || sec.kind === 'malletScales') tools.push(`<button class="chip-btn" data-act="allperfect" data-v="${sec.id}">Start from perfect</button>`);
+  if (sec.kind === 'windScales' || sec.kind === 'malletScales') {
+    tools.push(`<button class="chip-btn" data-act="allperfect" data-v="${sec.id}">Start from perfect</button>`);
+    if (r.done < r.cells) tools.push(`<button class="chip-btn" data-act="blankzero" data-v="${sec.id}" title="Every blank box in this section becomes ✗ (0 points)">Mark blanks ✗</button>`);
+  }
   return `
     <div class="sec-h">
       <h3>${esc(sec.title)}</h3>
@@ -3532,7 +3577,7 @@ function windScalesBody(sec, s, r) {
     </div>`;
   }).join('');
   return `${rows}<div class="factor">Raw ${r.raw} / ${sec.rawMax} × ${sec.factor.toFixed(4)} = <strong>${fmt(r.total, 2)}</strong></div>
-    <p class="help tiny">Tap a cell: ✓ played correctly, tap again for ✗. Written keys (in parentheses) are for transposing instruments.</p>`;
+    <p class="help tiny">Tap a cell once for <b>✓</b> (1 point), twice for <b>✗</b> (0 points). Only marking what was played correctly? Use <b>Mark blanks ✗</b> when you’re done. Written keys (in parentheses) are for transposing instruments.</p>`;
 }
 function malletBody(sec, s) {
   return sec.rows.map((row) => `<div class="mrow"><div class="skey"><b>${row.concert}</b></div>
@@ -3616,7 +3661,7 @@ function viewResults() {
     </div>
     <div class="res-total"><span class="big">${fmt(r.total, 2)}</span><span class="of">/ ${fmt(r.max, 0)}</span><span class="pc">${fmt(pct(r.total, r.max), 0)}%</span></div>
   </section>
-  ${unscored ? `<div class="banner warn">${unscored} item${unscored > 1 ? 's were' : ' was'} left unscored and count as 0, like the official sheet.${ro ? '' : ' <button class="btn sm" data-act="go" data-v="sheet">Finish scoring</button>'}</div>` : ''}
+  ${unscored ? blankBanner(s, ro) : ''}
   ${cutBlock}
   <div class="res-actions">
     <button class="btn primary" data-act="print">Print / Save PDF</button>
@@ -3658,6 +3703,16 @@ function viewResults() {
   ${hasScores('self') && hasScores('teacher') ? compareBlock() : ''}
   ${commentsBlock(who)}
   ${ro ? '' : `<p class="muted small center">${m.saved ? 'Saved to this device’s student history.' : ''}</p>`}`;
+}
+function blankBanner(s, ro) {
+  const blanks = blankItems(FORM, s);
+  const scaleBlanks = blanks.filter((b) => b.scaleCell).length;
+  const shown = blanks.slice(0, 6).map((b) => `<b>${esc(b.label)}</b>`).join(', ') + (blanks.length > 6 ? `, and ${blanks.length - 6} more` : '');
+  const n = blanks.length;
+  return `<div class="banner warn blanks"><div>${n} box${n > 1 ? 'es were' : ' was'} left blank and count${n > 1 ? '' : 's'} as 0, like the official sheet: ${shown}.</div>
+    ${ro ? '' : `<div class="banner-acts">
+      ${scaleBlanks ? `<button class="btn sm" data-act="blankzero" data-v="all">Count blank scale boxes as ✗ (0 pts)</button>` : ''}
+      <button class="btn sm ghost" data-act="gofix">Go to ${n > 1 ? 'first blank' : 'it'}</button></div>`}</div>`;
 }
 function cutGauge(total, cut, max) {
   const diff = total - cut;
@@ -4046,6 +4101,33 @@ document.addEventListener('click', async (e) => {
       if (sec.kind === 'windScales') sectionKeys(sec).forEach((k) => (s[k] = 1));
       else sec.rows.forEach((r) => { s[`${sec.id}.${r.id}.s`] = sec.scaleMax; s[`${sec.id}.${r.id}.a`] = sec.arpMax; });
       touch(); refreshSection(sec.id); toast('All marked perfect — now tap what was missed'); break;
+    }
+    case 'blankzero': {
+      if (v === 'all') {
+        const n = zeroBlankScales(S.mock.scores[resultsWho()]);
+        touch(); if (S.mock.saved) saveToHistory(S.mock, true);
+        render(); toast(`${n} blank scale box${n === 1 ? '' : 'es'} marked ✗`);
+      } else {
+        const n = zeroBlankScales(sc(), v);
+        touch(); refreshSection(v); toast(`${n} blank box${n === 1 ? '' : 'es'} marked ✗ (0 points)`);
+      }
+      break;
+    }
+    case 'gofix': {
+      S.who = resultsWho();
+      const first = blankItems(FORM, sc())[0];
+      go('sheet');
+      if (first) {
+        const el = $(`[data-k="${first.k}"]`);
+        const box = el && (el.closest('.srow, .mrow, .item') || el);
+        if (box) {
+          const cw = box.closest('.sec');
+          box.scrollIntoView({ block: 'center' });
+          box.classList.add('flash'); setTimeout(() => box.classList.remove('flash'), 2400);
+          if (cw) cw.querySelectorAll('.cell:not(.ok):not(.no)').forEach((c) => c.classList.add('flash-cell'));
+        }
+      }
+      break;
     }
     case 'quick': {
       const ta = $(`textarea[data-sec="${b.dataset.sec}"]`);

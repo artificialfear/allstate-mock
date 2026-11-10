@@ -340,6 +340,13 @@ textarea.cmt { width: 100%; border: 1px solid var(--line); border-radius: 10px; 
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 30px); opacity: 0; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 600; transition: all .2s; pointer-events: none; z-index: 60; max-width: calc(100vw - 32px); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+/* blank-box helpers */
+.banner.blanks { flex-direction: column; align-items: flex-start; }
+.banner-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+@keyframes flash { 0%, 60% { background: var(--warn-soft); box-shadow: 0 0 0 3px var(--warn); } 100% { background: transparent; box-shadow: none; } }
+.flash { animation: flash 2.4s ease-out; border-radius: 10px; }
+.cell.flash-cell { border-color: var(--warn); border-style: solid; }
+
 /* responsive */
 @media (max-width: 720px) {
   .hist { grid-template-columns: 1fr; }

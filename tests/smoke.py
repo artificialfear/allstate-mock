@@ -229,6 +229,43 @@ def main():
         page.wait_for_timeout(300)
         check(page.evaluate("() => getHistory().length") >= 4, "import restored history")
 
+        # ---------- 9b. blank scale boxes: named in banner, one-tap ✗, section button ----------
+        page.evaluate("""() => { S.pick = { level: 'ms', inst: 'trumpet', round: 'district', variant: null };
+          const m = newMock(); m.student.name = 'Blank Test'; setMock(m); S.who = 'teacher'; S.view = 'sheet'; render(); }""")
+        page.click('[data-act=allperfect][data-v=scales]')
+        page.evaluate("() => { delete S.mock.scores.teacher['scales.r1.arp']; delete S.mock.scores.teacher['scales.r3.a1']; refreshSection('scales'); }")
+        for sec in ["lyr", "sr"]:
+            for i in range(6):
+                page.click(f'[data-act=set][data-k="{sec}.c{i}"][data-v="4"]')
+        page.click('[data-act=set][data-k="chrom.c0"][data-v="8"]')
+        check(page.locator('[data-act=blankzero][data-v=scales]').count() == 1, "Mark blanks button missing on sheet")
+        page.click("[data-act=results]")
+        page.wait_for_timeout(150)
+        btxt = page.inner_text(".banner.blanks")
+        check("2 boxes were left blank" in btxt and "Bb (C) arpeggio" in btxt and "Ab (Bb) up" in btxt, f"blank banner text: {btxt}")
+        before = page.evaluate("() => scoreForm(FORM, S.mock.scores.teacher).total")
+        page.click("[data-act=gofix]")
+        page.wait_for_timeout(100)
+        check(page.evaluate("() => S.view") == "sheet", "Go to first blank did not open sheet")
+        check(page.locator(".srow.flash").count() == 1, "first blank not highlighted")
+        page.click("[data-act=results]")
+        page.wait_for_timeout(150)
+        page.click("[data-act=blankzero][data-v=all]")
+        page.wait_for_timeout(150)
+        check(page.locator(".banner.blanks").count() == 0, "banner still shown after marking blanks ✗")
+        after = page.evaluate("() => scoreForm(FORM, S.mock.scores.teacher).total")
+        check(abs(before - after) < 1e-9, "marking blanks ✗ changed the total")
+        check(page.evaluate("() => S.mock.scores.teacher['scales.r1.arp']") == 0, "blank not stored as 0")
+        # section button on the sheet
+        page.evaluate("() => { delete S.mock.scores.teacher['scales.r0.d1']; S.view='sheet'; render(); }")
+        page.click('[data-act=blankzero][data-v=scales]')
+        check(page.evaluate("() => S.mock.scores.teacher['scales.r0.d1']") == 0, "section Mark blanks ✗")
+        check(page.locator('[data-act=blankzero][data-v=scales]').count() == 0, "Mark blanks button should hide when none blank")
+        # rubric blanks are never auto-zeroed
+        page.evaluate("() => { delete S.mock.scores.teacher['lyr.c0']; S.view='results'; render(); }")
+        check(page.locator("[data-act=blankzero][data-v=all]").count() == 0, "rubric-only blanks should not offer scale ✗ button")
+        check("Lyrical Etude · Tone Quality" in page.inner_text(".banner.blanks"), "rubric blank not named")
+
         # ---------- 10. dark mode + phone sheet ----------
         page.evaluate("() => { document.documentElement.dataset.theme = 'dark'; S.pick = { level: 'symphonic', inst: 'basstrombone', round: 'district', variant: null }; setMock(newMock()); S.view='sheet'; render(); }")
         check(page.locator(".banner.warn").count() == 1, "bass trombone factor notice")

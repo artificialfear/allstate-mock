@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1 — 2026-11-10
+- The blank-box warning on the results page now names each blank box (e.g., "Bb (C) arpeggio").
+- New **Count blank scale boxes as ✗** button on the results page turns blank scale boxes into 0-point ✗ marks in one tap. Blank rubric categories still stay flagged, because those are usually forgotten, not zero.
+- New **Mark blanks ✗** button in each scale section, for teachers who only tap what was played correctly.
+- **Go to first blank** opens the sheet at the first blank box and highlights it.
+- Clearer scale hint: tap once for ✓ (1 point), twice for ✗ (0 points).
+
 ## 1.0.0 — 2026-11-10
 First release.
 - Choose grade band (6–8, 9–10, 11–12), instrument, and First Round (District) or Final Round (State). The tool opens the matching GMEA 2025–26 judge sheet.
