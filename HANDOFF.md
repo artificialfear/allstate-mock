@@ -81,7 +81,12 @@ A single-page tool for running mock GMEA All-State Band auditions. The teacher p
   - tempo2: when the clock ends, 8 more ticks.
   - perform: on the next beat, "Play!". No click or marker.
   - After that: Hear It / Play it again / ↺ Start over. Practice (from results) skips all of this (`phase 'free'`).
-  - A tab switch during the ticks restarts the sequence.
+  - A tab switch during the instructions or the ticks restarts the sequence.
+  - **Read-aloud (v1.4.0):** with prefs `fs.speak` (default true) the brief phase speaks `FS_JUDGE()` via the Web Speech API (`fsSpeak`, phase `'speaking'`), then goes into tempo1.
+    - `fsVoice` prefers natural/neural en-US voices.
+    - A safety timer (words / 2.2 + 3 s) covers browsers that never fire `onend`. With no voices, `onerror` fires and the sequence moves on immediately.
+    - The tap on the button also resumes the AudioContext, so the ticks after the speech can play.
+    - Tests stub `speechSynthesis.speak`.
 - Defaults (`FS_DEFAULTS`, overridable per device in prefs `fs`):
   - Level 5, any key, 6 bars, 30 s study.
   - The click is OFF in a mock; Practice mode turns it on.

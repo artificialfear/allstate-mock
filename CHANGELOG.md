@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0 — 2026-11-10
+- **The judge's instructions can be read aloud.** "🔊 Read the instructions aloud" is on the instruction screen (on by default, remembered per device). Tapping **▶ Read the instructions + give the tempo** speaks the script in the device's own voice. The 8 ticks start right after "Here is the tempo," and the rest of the sequence runs by itself, so a student can run a mock alone.
+- Uses the browser's built-in voice (works offline, nothing new to load). It picks the most natural English voice the device has. If a device has no voice, the sequence goes straight to the ticks.
+
 ## 1.3.0 — 2026-11-10
 - **"Put it on the stand" now runs the real audition sequence:**
   1. The music is covered, and the judge's instructions show in large type to read aloud: "You will have 30 seconds to study this music. You may not produce a tone on your instrument during the study time. Here is the tempo:"

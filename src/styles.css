@@ -538,6 +538,9 @@ body.stand-open { overflow: hidden; }
 .cover-k { font-family: var(--display); text-transform: uppercase; letter-spacing: .16em; color: var(--gold); font-size: .95rem; }
 .stand-cover blockquote { margin: 0; font: 600 clamp(1.3rem, 3.2vw, 2.1rem)/1.35 Georgia, "Times New Roman", serif; }
 .cover-help { margin: 0; color: rgb(255 255 255 / .75); font-size: .95rem; min-height: 1.4em; }
+.cover-speak { display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; color: rgb(255 255 255 / .9); cursor: pointer; }
+.cover-speak input { width: 20px; height: 20px; accent-color: var(--gold); }
+.stand-cover blockquote.speaking { color: var(--gold); transition: color .3s; }
 .fs-ticks { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .fs-ticks i { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font: 600 1rem var(--display); font-style: normal;
   border: 2px solid rgb(255 255 255 / .35); color: rgb(255 255 255 / .6); transition: background .08s, transform .08s; }

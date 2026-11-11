@@ -10,7 +10,7 @@
    Loaded before app.js (app.js's boot render uses these); uses app.js's S, FORM, store, esc, $, toast at call time.
    ============================================================ */
 const FS = window.Arcade.FSEtudes;
-const FS_DEFAULTS = { level: 5, key: 'mix', bars: 6, studyS: 30, click: false };
+const FS_DEFAULTS = { level: 5, key: 'mix', bars: 6, studyS: 30, click: false, speak: true };
 const FS_HS_NOTE = 'First Sight writes middle-school district-level etudes (concert F, B♭, E♭, A♭). They make good reading practice, but real 9–12 sight reading is harder.';
 const FS_RULES = { tempoStep: 4, tempoMin: 40, tempoOver: 16, leadS: 0.25,
   gain: { p: 0.42, mp: 0.58, mf: 0.75, f: 1 }, accent: 1.3, length: { normal: 0.9, stac: 0.45, ten: 1, slur: 1 },
@@ -215,7 +215,9 @@ function fsOpenStand(secId, { practice = false } = {}) {
   if (!info || !info.member || !code) return;
   fsStopRun(); fsStopStudy();
   const p = fsPrefs();
-  Object.assign(FSS, fsBuild(code, info), { secId, info, practice, played: false, hearArmed: false, click: practice ? true : !!p.click, studyS: p.studyS });
+  Object.assign(FSS, fsBuild(code, info), { secId, info, practice, played: false, hearArmed: false, click: practice ? true : !!p.click, studyS: p.studyS,
+    speak: !!p.speak && fsCanSpeak() });
+  if (FSS.speak) try { speechSynthesis.getVoices(); } catch (e) { /* voices load in the background */ }
   FSS.bpm = FSS.et.tempo;
   const el = $('#stand');
   el.innerHTML = `
@@ -231,8 +233,9 @@ function fsOpenStand(secId, { practice = false } = {}) {
           <div class="cover-k">The judge reads aloud</div>
           <blockquote id="fs-judge">“${esc(FS_JUDGE(FSS.studyS))}”</blockquote>
           <div class="fs-ticks" id="fs-ticks1">${fsTickDots()}</div>
-          <button class="btn gold big" id="fs-give" data-act="fsaud">▶ Give the tempo</button>
-          <p class="cover-help" id="fs-cover-help">Read the instructions to the student, then tap. After ${FS_TICKS} ticks the music appears and the study clock starts by itself.</p>
+          ${fsCanSpeak() ? `<label class="cover-speak"><input type="checkbox" id="fs-speak" ${FSS.speak ? 'checked' : ''}> 🔊 Read the instructions aloud</label>` : ''}
+          <button class="btn gold big" id="fs-give" data-act="fsaud"></button>
+          <p class="cover-help" id="fs-cover-help"></p>
         </div>
       </div>`}
     </div>
@@ -258,7 +261,7 @@ function fsOpenStand(secId, { practice = false } = {}) {
   el.hidden = false;
   document.body.classList.add('stand-open');
   FSS.phase = practice ? 'free' : 'brief';
-  fsDrawRows(); fsDrawTempo(); fsDrawButtons();
+  fsDrawRows(); fsDrawTempo(); fsDrawButtons(); fsDrawCover();
   if (practice) fsStartStudy();
   else fsSay('');
 }
@@ -301,10 +304,62 @@ function fsTickStop(finished) {
   cancelAnimationFrame(t.raf);
   if (t.kit) setTimeout(() => { try { t.kit.stopAll(); t.bus.disconnect(); } catch (e) { /* ignore */ } }, finished ? 300 : 0);
 }
+/* ---------- reading the judge's instructions aloud (the browser's own voice: Web Speech API, works offline) ---------- */
+const fsCanSpeak = () => 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function';
+function fsVoice() {
+  let vs = [];
+  try { vs = speechSynthesis.getVoices().filter((v) => /^en([-_]|$)/i.test(v.lang)); } catch (e) { return null; }
+  const rank = (v) => (/natural|neural|premium|enhanced/i.test(v.name) ? 0 : 3) + (/en[-_]US/i.test(v.lang) ? 0 : 1)
+    + (/google us|samantha|aria|jenny|ava|allison/i.test(v.name) ? -1 : 0) + (v.localService ? 0 : 0.5);
+  return vs.sort((a, b) => rank(a) - rank(b))[0] || null;
+}
+let fsSpeakId = 0;
+/** speak `text`, then done(). A safety timer covers browsers that never fire onend (some iPads) or have no voices. */
+function fsSpeak(text, done) {
+  const id = ++fsSpeakId;
+  let over = false;
+  const fin = () => { if (over || id !== fsSpeakId) return; over = true; clearTimeout(FSS.speakT); FSS.speaking = false; done(); };
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text), v = fsVoice();
+    if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-US';
+    u.rate = 0.95; u.pitch = 1; u.volume = 1;
+    u.onend = fin; u.onerror = fin;
+    FSS.speaking = true;
+    speechSynthesis.speak(u);
+    FSS.speakT = setTimeout(fin, (text.split(/\s+/).length / 2.2 + 3) * 1000);
+  } catch (e) { fin(); }
+}
+function fsSpeakStop() {
+  fsSpeakId++; clearTimeout(FSS.speakT); FSS.speaking = false;
+  try { if (fsCanSpeak()) speechSynthesis.cancel(); } catch (e) { /* ignore */ }
+}
+function fsDrawCover() {
+  const give = $('#fs-give'), help = $('#fs-cover-help');
+  if (!give) return;
+  give.textContent = FSS.speak ? '▶ Read the instructions + give the tempo' : '▶ Give the tempo';
+  help.textContent = FSS.speak
+    ? `The instructions are read aloud, then ${FS_TICKS} ticks. After the ticks, the music appears and the study clock starts by itself. A student can run this alone.`
+    : `Read the instructions to the student, then tap. After ${FS_TICKS} ticks the music appears and the study clock starts by itself.`;
+}
+
 function fsAudStart() {
   if (FSS.phase !== 'brief') return;
-  FSS.phase = 'tempo1';
+  try { const o = window.Arcade.Sfx.output(); if (o && o.ctx.state !== 'running') o.ctx.resume(); } catch (e) { /* ignore */ }  // unlock audio on this tap
   $('#fs-give').hidden = true;
+  const sp = $('.cover-speak'); if (sp) sp.hidden = true;
+  if (FSS.speak) {
+    FSS.phase = 'speaking';
+    $('#fs-cover-help').textContent = 'Listen to the instructions…';
+    $('#fs-judge').classList.add('speaking');
+    fsDrawButtons();
+    fsSpeak(FS_JUDGE(FSS.studyS), () => { if (FSS.phase !== 'speaking') return; $('#fs-judge').classList.remove('speaking'); fsAudTempo1(); });
+    return;
+  }
+  fsAudTempo1();
+}
+function fsAudTempo1() {
+  FSS.phase = 'tempo1';
   $('#fs-cover-help').textContent = 'Here is the tempo…';
   fsDrawButtons();
   fsTickRun($('#fs-ticks1'), () => {
@@ -339,14 +394,14 @@ function fsDrawButtons() {
   play.textContent = run && run.kind === 'play' ? '■ Stop' : FSS.click ? '▶ Play with the click' : '▶ Count me in';
   hear.textContent = run && run.kind === 'hear' ? '■ Stop' : '▶ Hear it';
   hear.classList.toggle('locked', !FSS.played && !FSS.hearArmed);
-  const seq = ['brief', 'tempo1', 'study', 'tempo2'].includes(FSS.phase);
+  const seq = ['brief', 'speaking', 'tempo1', 'study', 'tempo2'].includes(FSS.phase);
   $('.stand-btns').hidden = seq;                                   // no play / hear buttons during the audition sequence
   $('#stand').classList.toggle('running', !!run || (seq && FSS.phase !== 'brief'));
   if (FSS.phase === 'perform') play.textContent = run && run.kind === 'play' ? '■ Stop' : '▶ Play it again';
 }
 const fsSay = (t) => { const s = $('#fs-say'); if (s) s.textContent = t; };
 function fsCloseStand() {
-  fsStopRun(); fsStopStudy(); fsTickStop();
+  fsStopRun(); fsStopStudy(); fsTickStop(); fsSpeakStop();
   FSS.phase = 'free';
   try { window.Arcade.Winds.stopAll(); } catch (e) { /* no audio yet */ }
   $('#stand').hidden = true; $('#stand').innerHTML = '';
@@ -520,7 +575,7 @@ function fsAction(a, v) {
       }
       fsStart('hear'); return true;
     case 'fstempo': {
-      if (FSS.run || FSS.tick || ['tempo1', 'study', 'tempo2'].includes(FSS.phase)) return true;
+      if (FSS.run || FSS.tick || ['speaking', 'tempo1', 'study', 'tempo2'].includes(FSS.phase)) return true;
       FSS.bpm = Math.max(FS_RULES.tempoMin, Math.min(FSS.et.tempo + FS_RULES.tempoOver, FSS.bpm + +v));
       fsDrawTempo(); return true;
     }
@@ -538,6 +593,7 @@ function fsChange(t) {
     return true;
   }
   if (t.id === 'fs-click') { FSS.click = t.checked; if (!FSS.practice) fsSavePrefs({ click: t.checked }); fsDrawButtons(); return true; }
+  if (t.id === 'fs-speak') { FSS.speak = t.checked; fsSavePrefs({ speak: t.checked }); fsDrawCover(); return true; }
   if (t.id === 'fs-studys') {
     FSS.studyS = +t.value; fsSavePrefs({ studyS: FSS.studyS });
     if (FSS.phase === 'brief' && $('#fs-judge')) $('#fs-judge').textContent = `“${FS_JUDGE(FSS.studyS)}”`;
@@ -559,5 +615,5 @@ window.addEventListener('resize', () => {
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) return;
   fsStopRun();
-  if (FSS.tick) { fsTickStop(); if (FSS.secId && !FSS.practice) { const id = FSS.secId; fsCloseStand(); fsOpenStand(id); } }  // a tab switch mid-tempo restarts the sequence
+  if ((FSS.tick || FSS.phase === 'speaking') && FSS.secId && !FSS.practice) { const id = FSS.secId; fsCloseStand(); fsOpenStand(id); }  // a tab switch mid-instructions or mid-tempo restarts the sequence
 });

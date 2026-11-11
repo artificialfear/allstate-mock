@@ -299,7 +299,16 @@ def main():
         check(page.is_hidden('.stand-btns'), "play/hear buttons should hide during the sequence")
         check(page.evaluate("() => FSS.click") is False, "click should be off by default in a mock")
         page.evaluate("() => { FSS.bpm = 240; }")                       # speed the ticks up for the test
+        # read-aloud is on by default: stub the browser voice so it "finishes" quickly, and check what it was asked to say
+        page.evaluate("""() => { window.__said = [];
+          speechSynthesis.speak = (u) => { window.__said.push(u.text); setTimeout(() => u.onend && u.onend(), 150); };
+          speechSynthesis.cancel = () => {}; }""")
+        check(page.locator('#fs-speak').is_checked(), "read-aloud should be on by default")
+        check("Read the instructions" in page.inner_text('#fs-give'), "button should mention reading aloud")
         page.click('#fs-give')
+        check(page.evaluate("() => FSS.phase") in ("speaking", "tempo1"), "instructions should be read before the ticks")
+        page.wait_for_function("() => FSS.phase === 'tempo1' || FSS.phase === 'study'", timeout=4000)
+        check(page.evaluate("() => window.__said[0] || ''").startswith("You will have 30 seconds to study this music."), "spoken text should be the judge script")
         page.wait_for_function("() => FSS.phase === 'study'", timeout=8000)
         check(page.is_hidden('#fs-cover') and page.is_visible('#fs-study'), "music should be revealed as the study clock starts")
         check(page.locator('#fs-ticks1 i.on').count() == 8, "8 tempo ticks before study")
