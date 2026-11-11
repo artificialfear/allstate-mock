@@ -98,6 +98,36 @@ A single-page tool for running mock GMEA All-State Band auditions. The teacher p
 - HS sheets show the etude labeled "middle-school district-level". First Sight has no HS levels. If Mat wants real HS sight reading, that work belongs in Band Arcade's `etudes.js` LEVELS (more keys, faster tempos), then a sync.
 - Phones engrave 2 bars a row, or 1 when 2 would shrink the notes below 75%. Laptops and iPads use First Sight's 4 bars a row (3 for 6 bars).
 
+## v2.0.0 features (Nov 2026)
+New modules (all loaded before app.js, all using app.js globals only at call time):
+- **`src/tips.js`**: `INST_FAMILY`, `INST_TIPS[family][catKey]`, and `tipsFor(catKey, inst)` (instrument tips first, then the general CATS tips).
+  - Used by Focus next (`catLine(c, tip)`), `practicePlan(..., inst)` (percussion gets a pad warm-up), and the printout.
+  - Brass tips must say "partial", never "lip"; the smoke test enforces it.
+  - **Mat to review the wording each season.**
+- **Quick checks** (`data.js`):
+  - Every form section maps to one of four types: `scales`, `chromatic`, `etude`, `sight`. Percussion also gets `g:<group>` units. Functions: `unitSecs(form, type)`, `unitLabel`, `quickUnits(form)`.
+  - A mock with `scope` (section ids) + `scopeLabel` uses `formFor(m)`: the full form filtered to those sections, `max` recalculated, `cut` null. Everything downstream (sheet, results, print, blanks, analyze) works on `FORM` unchanged.
+  - `summarize()` stores per-section totals in `summary.secs` for the history section series. Overall = full mocks only. Hollow dots = quick checks.
+  - Share links carry `sc`/`sl`.
+- **Goals** (`src/goals.js`):
+  - Storage: localStorage `asm.goals.v1` per student key, plus `prefs.auditionDate` as the class-wide default.
+  - `goalStatus` fits a least-squares line to full mocks (score vs. day) and projects it to audition day; "on pace" = projected ≥ target.
+  - Where it shows: goal card on history, goal line on the chart, a line on results, and days-to-go on home and the student list.
+- **Audition day** (`src/session.js`):
+  - Storage: localStorage `asm.session.v1`, one active session. Each student is a normal mock with `m.session`.
+  - Navigation: `sessOpen(i)` creates or reopens a student's mock. `sessSaveCurrent()` saves scored mocks to history (unscored ones go to the draft).
+  - `sessSync()` (called from `touch`) copies etude codes into `session.codes` so the next students share them.
+  - Summary: views `session` / `summary`, with print and CSV.
+- **Recording** (`src/record.js`):
+  - MediaRecorder with echo cancellation, noise suppression, and auto-gain all OFF, for music. Stored in IndexedDB `asm-media`/`rec` under key `mockId|secId`; one per section, and re-recording replaces it.
+  - The sight-reading stand has an `fs.rec` pref: recording starts at "Play!" and auto-stops after the etude length + 8 s, on Done, Hear It, Play again, or Start over.
+  - `go()` stops a recording when leaving the sheet. Deleting a mock deletes its recordings, and history shows usage with "Delete all recordings".
+- **Offline:**
+  - `manifest.webmanifest`, icons in `assets/` (generated with PIL: navy tile, gold M).
+  - `src/sw.js` → `sw.js`, which **build.py writes** with `VERSION` = a hash of index.html + the cached files, so every change re-caches.
+  - Navigations are network-first with a cached fallback; other files are cache-first with `ignoreSearch`. The service worker registers only on https or localhost.
+- **Tests:** smoke.py launches Chromium with a fake mic (`--use-fake-device-for-media-stream`). Sections 11–16 cover these features, including an offline reload.
+
 ## Updating for a new year
 1. Run `python3 tools/gen_hs_district.py "<new first-round PDF>"` to regenerate `src/hs_district.js`. It prints a math check and flags any printed factor that does not give 30.
 2. Re-read the MS scale sheets and update `MS_DISTRICT` octaves, factors, and cuts. Run the smoke test; it asserts every scale section sums to 30 except the keys in `KNOWN`. Update `FORM_NOTICES` and `KNOWN` if GMEA fixes or changes anything.

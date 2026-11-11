@@ -54,7 +54,7 @@ KNOWN = {"district.concert.tenorsax": 31.875, "district.symphonic.basstrombone":
 def main():
     srv, url = serve()
     with sync_playwright() as p:
-        b = p.chromium.launch(channel="chromium")
+        b = p.chromium.launch(channel="chromium", args=["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"])
         page = b.new_page(viewport={"width": 1100, "height": 900})
         errs = []
         page.on("pageerror", lambda e: errs.append(str(e)))
@@ -369,6 +369,139 @@ def main():
         check(not bad, f"sight-reading coverage: {bad[:5]}")
         page.evaluate("() => { S.pick = { level: 'concert', inst: 'trumpet', round: 'state', variant: null }; setMock(newMock()); S.view = 'sheet'; render(); }")
         check("middle-school district-level" in page.inner_text('#sec-sr1'), "HS label missing")
+
+        # ---------- 11. quick checks + section trends ----------
+        page.evaluate("() => { localStorage.clear(); S.view = 'home'; render(); }")
+        page.click("[data-act=level][data-v=ms]"); page.click("[data-act=inst][data-v=clarinet]")
+        check(page.locator("[data-act=qround][data-round=district]").count() == 4, "district quick-check chips")
+        check(page.locator("[data-act=qround][data-round=state]").count() == 2, "state quick-check chips (etude, sight reading)")
+        page.click("[data-act=qround][data-round=district][data-v=scales]")
+        page.fill("#f-name", "Quinn Park"); page.click("[data-act=start]")
+        check(page.evaluate("() => FORM.sections.map(s => s.id).join()") == "scales", "quick check should show only scales")
+        check(page.evaluate("() => FORM.max") == 30 and page.evaluate("() => FORM.cut") is None, "quick check max 30, no cut line")
+        page.click("[data-act=allperfect][data-v=scales]")
+        page.click('[data-act=cell][data-k="scales.r0.arp"]')
+        page.click("[data-act=results]"); page.wait_for_timeout(150)
+        check("Quick check: Major scales" in page.inner_text("#main"), "results label quick check")
+        check(page.locator(".panel.cut").count() == 0, "no cut gauge on a quick check")
+        sm = page.evaluate("() => getHistory().find(x => x.student.name === 'Quinn Park').summary")
+        check(sm["scope"] == "Major scales" and "scales" in sm["secs"], f"quick-check summary: {sm}")
+        # a full mock with scales too -> the Scales series has 2 points (1 quick hollow + 1 full)
+        page.evaluate("""() => { S.pick = { level: 'ms', inst: 'clarinet', round: 'district', variant: null, scope: null };
+          const m = newMock(); m.student.name = 'Quinn Park'; m.date = '2026-11-12'; setMock(m);
+          const s = m.scores.teacher; sectionKeys(FORM.sections[0]).forEach(k => s[k] = 1); s['chrom.c0'] = 8;
+          ['lyr','sr'].forEach(x => { for (let i = 0; i < 6; i++) s[x + '.c' + i] = 4; }); saveToHistory(m, true);
+          S.histKey = 'quinn park'; S.histFilter = null; S.histSeries = null; S.view = 'history'; render(); }""")
+        check(page.locator("[data-act=hseries]").count() >= 4, "series chips")
+        page.click("[data-act=hseries][data-v=scales]")
+        check(page.locator("#hchart circle.dot").count() == 2 and page.locator("#hchart circle.dot.quick").count() == 1, "scales trend uses quick + full")
+        page.click("[data-act=hseries][data-v=overall]")
+        check(page.locator("#hchart circle.dot").count() == 1, "overall chart: full mocks only")
+        shot(page, "v2_history_quick")
+
+        # ---------- 12. goals ----------
+        page.fill("[data-goal=date]", "2027-01-31"); page.dispatch_event("[data-goal=date]", "change")
+        page.fill("[data-goal=target]", "90"); page.dispatch_event("[data-goal=target]", "change")
+        txt = page.inner_text(".goal-card")
+        check("days" in txt and "to the target" in txt, f"goal card: {txt}")
+        check(page.locator("#hchart .goall").count() == 1, "goal line on chart")
+        page.evaluate("""() => { const base = getHistory().find(x => x.student.name === 'Quinn Park' && !x.scope);
+          [['2026-10-01', 3], ['2026-10-20', 3.5]].forEach(([d, v], i) => { const c = JSON.parse(JSON.stringify(base)); c.id = 'g' + i; c.date = d;
+            ['lyr','sr'].forEach(x => { for (let k = 0; k < 6; k++) c.scores.teacher[x + '.c' + k] = v; }); delete c.summary; saveToHistory(c, true); });
+          render(); }""")
+        check(page.locator(".pace").count() == 1 and ("pace" in page.inner_text(".pace").lower()), "pace projection shown")
+        page.click("[data-act=goalall]")
+        check(page.evaluate("() => JSON.parse(localStorage.getItem('asm.prefs.v1')).auditionDate") == "2027-01-31", "default audition date saved")
+        shot(page, "v2_goals")
+
+        # ---------- 13. instrument tips ----------
+        tip = page.evaluate("() => tipsFor('tone', 'trumpet')[0]")
+        check("partial" in tip.lower() or "buzz" in tip.lower(), f"trumpet tone tip: {tip}")
+        check(page.evaluate("() => tipsFor('technique', 'clarinet')[0]").lower().find("break") >= 0, "clarinet technique tip mentions the break")
+        bad = page.evaluate("() => ['trumpet', 'horn', 'lowbrass'].flatMap(f => Object.values(INST_TIPS[f]).flat()).filter(t => /\\blip/i.test(t))")
+        check(not bad, f"brass tips must say partial, not lip: {bad}")
+        plan = page.evaluate("() => practicePlan([{key:'tone', got:3, max:5, pct:60, ctx:[]}], null, [], 'percussion')")
+        check(plan[0]["t"] == "Warm-up on a pad", "percussion warm-up")
+
+        # ---------- 14. audition day ----------
+        page.evaluate("() => { S.view = 'home'; render(); }")
+        page.click("[data-act=session]")
+        page.fill("[data-ss=roster]", "Ava Lee\nBen Cruz, Trumpet\nCam Diaz")
+        page.click("[data-act=ssstart]")
+        check(page.locator(".sess-bar").count() == 1 and "Student 1 of 3" in page.inner_text(".sess-bar"), "session bar")
+        check(page.evaluate("() => S.mock.student.name") == "Ava Lee", "first student opened")
+        page.click("[data-act=fsgen][data-v=sr]")
+        code = page.evaluate("() => S.mock.sight.sr")
+        page.click("[data-act=set][data-k='lyr.c0'][data-v='4']")
+        page.wait_for_timeout(350)
+        page.click("[data-act=ssnext]")
+        check(page.evaluate("() => S.mock.student.name") == "Ben Cruz" and page.evaluate("() => S.mock.inst") == "trumpet", "roster instrument override")
+        check(page.evaluate("() => S.mock.sight.sr") == code, "shared sight-reading etude carries to the next student")
+        page.click("[data-act=set][data-k='lyr.c0'][data-v='5']")
+        page.click("[data-act=ssprev]")
+        check(page.evaluate("() => S.mock.scores.teacher['lyr.c0']") == 4, "going back reopens the saved mock")
+        page.click("[data-act=sssummary]")
+        rows = page.locator(".sess-table tbody tr")
+        check(rows.count() == 3 and "Ben Cruz" in rows.nth(0).inner_text(), "summary ranked (Ben first), 3 rows")
+        check("not scored" in rows.nth(2).inner_text(), "unscored student listed last")
+        with page.expect_download() as dl:
+            page.click("[data-act=sscsv]")
+        csv = open(dl.value.path(), encoding="utf-8-sig").read()
+        check("Ben Cruz" in csv and "Rank" in csv, "CSV download")
+        shot(page, "v2_session_summary")
+        page.evaluate("() => sessAction('ssopen', '1')")
+        shot(page, "v2_session_sheet", full=False)
+        page.evaluate("() => sessAction('ssend')")
+        check(page.evaluate("() => sessActive()") is None, "end audition day")
+
+        # ---------- 15. recording (fake microphone) ----------
+        page.evaluate("""() => { S.pick = { level: 'ms', inst: 'flute', round: 'district', variant: null };
+          const m = newMock(); m.student.name = 'Rec Test'; setMock(m); S.view = 'sheet'; render(); }""")
+        page.click("[data-act=recstart][data-v=lyr]")
+        page.wait_for_function("() => !!REC.mr", timeout=5000)
+        page.wait_for_timeout(1500)
+        page.click("[data-act=recstop][data-v=lyr]")
+        page.wait_for_function("() => !!document.querySelector('[data-rec-row=lyr] audio')", timeout=5000)
+        r = page.evaluate("async () => { const x = await recGet(S.mock.id + '|lyr'); return x && x.blob.size; }")
+        check(r and r > 1000, f"recording saved to IndexedDB ({r} bytes)")
+        page.click("[data-act=set][data-k='lyr.c0'][data-v='4']")
+        page.click("[data-act=results]")
+        page.wait_for_function("() => { const p = document.querySelector('[data-rec-panel]'); return p && !p.hidden; }", timeout=5000)
+        check(page.locator("[data-rec-panel] audio").count() == 1 and page.locator("[data-rec-panel] a[download]").count() == 1, "results recording + download")
+        shot(page, "v2_results_recording", full=False)
+        mid = page.evaluate("() => S.mock.id")
+        page.evaluate(f"async () => {{ await recDeleteMock('{mid}'); }}")
+        check(page.evaluate(f"async () => !!(await recGet('{mid}|lyr'))") is False, "deleting a mock deletes its recordings")
+        # stand auto-record at "Play!"
+        page.evaluate("() => { S.view = 'sheet'; render(); fsGenerate('sr'); fsSavePrefs({ rec: true }); }")
+        page.click("[data-act=fsstand][data-v=sr]")
+        check(page.locator("#fs-rec").is_checked(), "stand record switch")
+        page.evaluate("() => { FSS.bpm = 240; FSS.speak = false; fsDrawCover(); }")
+        page.click("#fs-give")
+        page.wait_for_function("() => FSS.phase === 'study'", timeout=8000)
+        page.evaluate("() => { FSS.studyLeft = 0.2; }")
+        page.wait_for_function("() => FSS.phase === 'perform' && !!REC.mr", timeout=8000)
+        check(page.is_visible("#fs-rec-live"), "REC indicator on the stand")
+        page.wait_for_timeout(800)
+        page.keyboard.press("Escape")
+        page.wait_for_function("() => !REC.mr", timeout=5000)
+        page.wait_for_timeout(300)
+        check(page.evaluate("async () => !!(await recGet(S.mock.id + '|sr'))"), "stand recording saved for the sight-reading section")
+        page.evaluate("() => fsSavePrefs({ rec: false })")
+
+        # ---------- 16. offline ----------
+        ctx2 = b.new_context()
+        po = ctx2.new_page()
+        po.goto(url.replace("127.0.0.1", "localhost"))
+        po.wait_for_function("() => navigator.serviceWorker && navigator.serviceWorker.controller !== undefined", timeout=5000)
+        po.evaluate("() => navigator.serviceWorker.ready")
+        po.wait_for_timeout(800)
+        po.reload(); po.wait_for_timeout(500)
+        ctx2.set_offline(True)
+        po.reload(); po.wait_for_timeout(600)
+        check(po.locator(".hero-band").count() == 1, "app loads offline after the first visit")
+        check(po.evaluate("() => document.fonts.check('600 16px Oswald')"), "fonts available offline")
+        ctx2.set_offline(False); ctx2.close()
 
         # ---------- 10. dark mode + phone sheet ----------
         page.evaluate("() => { document.documentElement.dataset.theme = 'dark'; S.pick = { level: 'symphonic', inst: 'basstrombone', round: 'district', variant: null }; setMock(newMock()); S.view='sheet'; render(); }")

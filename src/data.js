@@ -218,3 +218,44 @@ function roundSummary(level, round, inst) {
     ? ['Prepared selection (60)', 'Sight reading #1 (20)', 'Sight reading #2 (20)']
     : ['Etude #1 (30)', 'Etude #2 (30)', 'Sight reading #1 (20)', 'Sight reading #2 (20)'];
 }
+
+/* ---------- quick checks: part of an audition ----------
+   A quick check is a mock with `scope` = the section ids it covers. The same five TYPES work for every form,
+   so a group (audition-day) session can run "Scales" for clarinets and percussion alike. Percussion also gets
+   one unit per instrument (snare / mallets / timpani / xylophone). */
+const QUICK_TYPES = ['scales', 'chromatic', 'etude', 'sight'];
+function unitSecs(form, type) {
+  const S_ = form.sections;
+  if (type.startsWith('g:')) return S_.filter((s) => s.group === type.slice(2)).map((s) => s.id);
+  if (type === 'scales') return S_.filter((s) => s.kind === 'windScales' || s.kind === 'malletScales').map((s) => s.id);
+  if (type === 'chromatic') return S_.filter((s) => s.catKey === 'chromatic').map((s) => s.id);
+  if (type === 'etude') return S_.filter((s) => s.kind === 'rubric' && !s.sightReading && !s.catKey).map((s) => s.id);
+  if (type === 'sight') return S_.filter((s) => s.sightReading).map((s) => s.id);
+  return [];
+}
+function unitLabel(form, type) {
+  if (type.startsWith('g:')) return type.slice(2);
+  if (type === 'scales') return form.inst === 'percussion' ? 'Mallet scales' : 'Major scales';
+  if (type === 'chromatic') return 'Chromatic scale';
+  if (type === 'sight') return 'Sight reading';
+  if (type === 'etude') {
+    if (form.inst === 'percussion') return 'Etudes';
+    if (form.round === 'district') return 'Lyrical etude';
+    return form.level === 'ms' ? 'Prepared selection' : 'Etudes';
+  }
+  return type;
+}
+function quickUnits(form) {
+  const types = QUICK_TYPES.slice();
+  if (form.inst === 'percussion') [...new Set(form.sections.map((s) => s.group))].forEach((g) => types.push('g:' + g));
+  return types.map((t) => ({ id: t, label: unitLabel(form, t), secs: unitSecs(form, t) })).filter((u) => u.secs.length);
+}
+/** the judge sheet a mock uses: the full form, or only its quick-check sections */
+function formFor(m) {
+  const f = buildForm(m.level, m.round, m.inst, m.variant);
+  if (!m.scope || !m.scope.length) return f;
+  const sections = f.sections.filter((s) => m.scope.includes(s.id));
+  if (!sections.length) return f;
+  return Object.assign({}, f, { sections, max: sections.reduce((a, s) => a + s.max, 0), cut: null, fullMax: f.max,
+    scope: m.scope, scopeLabel: m.scopeLabel || sections.map((s) => s.title).join(' + ') });
+}

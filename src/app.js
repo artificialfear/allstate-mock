@@ -1,7 +1,7 @@
 /* ============================================================
    All-State Mock Audition — app
    ============================================================ */
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '2.0.0';
 const LS = { draft: 'asm.draft.v1', hist: 'asm.history.v1', theme: 'asm.theme', prefs: 'asm.prefs.v1', exported: 'asm.lastExport' };
 
 /* ---------- utils ---------- */
@@ -27,7 +27,7 @@ function toast(msg) {
 /* ---------- state ---------- */
 const S = { view: 'home', pick: { level: null, inst: null, round: null, variant: null }, mock: null, who: 'teacher', readOnly: false, histKey: null, histFilter: null, sheetTab: 'judge' };
 let FORM = null;
-function setMock(m) { if (!m.sight) m.sight = {}; S.mock = m; FORM = buildForm(m.level, m.round, m.inst, m.variant); }
+function setMock(m) { if (!m.sight) m.sight = {}; S.mock = m; FORM = formFor(m); }
 function sc(who = S.who) { return S.mock.scores[who]; }
 
 /* ---------- scoring ---------- */
@@ -148,6 +148,7 @@ function newMock() {
     student: { name: '', school: prefs.school || '', grade: '' }, judge: prefs.judge || '', date: todayISO(),
     flow: 'teacher', scores: { teacher: {}, self: {} }, comments: { teacher: {}, self: {} },
     overall: { teacher: '', self: '' }, saved: false, sight: {},
+    scope: p.scope || undefined, scopeLabel: p.scopeLabel || undefined,
   };
 }
 let draftTimer = null;
@@ -158,14 +159,18 @@ function touch() {
   draftTimer = setTimeout(() => {
     store.set(LS.draft, S.mock);
     if (S.mock.saved) saveToHistory(S.mock, true);
+    sessSync();
   }, 250);
 }
 function getHistory() { return store.get(LS.hist, []); }
 function summarize(m) {
-  const f = buildForm(m.level, m.round, m.inst, m.variant);
+  const f = formFor(m);
   const who = Object.values(m.scores.teacher || {}).some((v) => v != null) ? 'teacher' : 'self';
   const r = scoreForm(f, m.scores[who]);
-  return { total: r.total, max: r.max, who, cut: f.cut };
+  /* per-section totals (scored sections only) feed the section-trend charts in history */
+  const secs = {};
+  r.sections.forEach((x) => { if (x.done) secs[x.sec.id] = { t: Math.round(x.total * 1000) / 1000, m: x.max }; });
+  return { total: r.total, max: r.max, who, cut: f.cut, secs, scope: m.scope ? (m.scopeLabel || 'Quick check') : null };
 }
 function saveToHistory(m, quiet) {
   const h = getHistory(); m.saved = true;
@@ -193,7 +198,7 @@ function packMock(m, opts) {
     n: opts.firstName ? (m.student.name || '').trim().split(/\s+/)[0] : m.student.name, sch: m.student.school, g: m.student.grade,
     j: m.judge, d: m.date, t: strip(m.scores.teacher), s: opts.self ? strip(m.scores.self) : {},
     ct: strip(m.comments.teacher), cs: opts.self ? strip(m.comments.self) : {}, ot: m.overall.teacher, os: opts.self ? m.overall.self : '',
-    sr: strip(m.sight), sb: m.sightBari || undefined,
+    sr: strip(m.sight), sb: m.sightBari || undefined, sc: m.scope || undefined, sl: m.scopeLabel || undefined,
   };
 }
 function unpackMock(p) {
@@ -202,6 +207,7 @@ function unpackMock(p) {
     student: { name: p.n || '', school: p.sch || '', grade: p.g || '' }, judge: p.j || '', date: p.d || '',
     flow: 'teacher', scores: { teacher: p.t || {}, self: p.s || {} }, comments: { teacher: p.ct || {}, self: p.cs || {} },
     overall: { teacher: p.ot || '', self: p.os || '' }, saved: false, sight: p.sr || {}, sightBari: p.sb || undefined,
+    scope: p.sc || undefined, scopeLabel: p.sl || undefined,
   };
 }
 async function encodeShare(m, opts) {
@@ -232,10 +238,13 @@ function render() {
     v === 'setup' ? viewSetup() :
     v === 'sheet' ? viewSheet() :
     v === 'results' ? viewResults() :
-    v === 'history' ? viewHistory() : '';
+    v === 'history' ? viewHistory() :
+    v === 'session' ? viewSession() :
+    v === 'summary' ? viewSummary() : '';
   renderTopbar();
-  if (v === 'history') drawHistoryChart();
-  if (v === 'sheet') fsPaintPreviews(main);
+  if (v === 'history') { drawHistoryChart(); histPaintUsage(); }
+  if (v === 'sheet') { fsPaintPreviews(main); recPaint(main); }
+  if (v === 'results') recPaintResults();
   window.scrollTo(0, 0);
 }
 
@@ -244,7 +253,7 @@ function renderTopbar() {
   if ((S.view === 'sheet' || S.view === 'results') && S.mock) {
     const r = scoreForm(FORM, sc(S.view === 'results' ? resultsWho() : S.who));
     tb.innerHTML = `<div class="tb-student">${esc(S.mock.student.name || 'Student')}</div>
-      <div class="tb-meta">${esc(FORM.instrumentLabel)} · ${LEVELS[S.mock.level].grades} · ${S.mock.round === 'district' ? 'First Round' : 'Final Round'}</div>`;
+      <div class="tb-meta">${esc(FORM.instrumentLabel)} · ${LEVELS[S.mock.level].grades} · ${S.mock.round === 'district' ? 'First Round' : 'Final Round'}${FORM.scope ? ' · Quick check' : ''}</div>`;
     $('#tb-total').innerHTML = S.view === 'sheet' ? `<span class="tb-score" id="live-total">${fmt(r.total, 1)}</span><span class="tb-max">/ ${fmt(r.max, 2)}</span>` : '';
   } else {
     tb.innerHTML = `<div class="tb-brand">All-State Mock Audition</div>`;
@@ -267,6 +276,8 @@ const GRADE_INFO = {
 const ICONS = {
   score: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M8.5 11l2 2 4-4M8.5 17h7"/></svg>',
   share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 18H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg>',
+  group: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c2.8 0 5 2.2 5 5"/></svg>',
+  quick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>',
   track: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/><circle cx="19" cy="8" r="1.5" fill="currentColor"/></svg>',
 };
 function miniSheet() {
@@ -298,7 +309,14 @@ function viewHome() {
 
   /* pick up where you left off: unfinished draft + most recent students */
   const cont = [];
-  if (draft && draft.level && LEVELS[draft.level] && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
+  const ss = sessActive();
+  if (ss) {
+    const nDone = ss.students.filter((st) => { const h = sessMockFor(st); return h && Object.values(h.scores.teacher || {}).some((v) => v != null); }).length;
+    cont.push(`<button class="cont resume" data-act="ssresume"><span class="cont-k">Continue audition day</span>
+      <span class="cont-n">${esc(sessTypeLabel(ss))} · ${esc(LEVELS[ss.level].short)}</span>
+      <span class="cont-v">${nDone} of ${ss.students.length} scored · next: ${esc((ss.students[ss.idx] || {}).name || '')}</span></button>`);
+  }
+  if (draft && !draft.session && draft.level && LEVELS[draft.level] && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
     const f = buildForm(draft.level, draft.round, draft.inst, draft.variant);
     const r = scoreForm(f, draft.scores.teacher);
     cont.push(`<button class="cont resume" data-act="resume"><span class="cont-k">Resume unfinished mock</span>
@@ -309,9 +327,10 @@ function viewHome() {
   h.forEach((m) => { const k = studentKey(m); if (!latest[k] || m.updated > latest[k].updated) latest[k] = m; });
   Object.entries(latest).sort((a, b) => b[1].updated - a[1].updated).slice(0, cont.length ? 3 : 4).forEach(([k, m]) => {
     const sm = m.summary || summarize(m);
-    cont.push(`<button class="cont" data-act="hopenStudent" data-v="${esc(k)}"><span class="cont-k">Recent student</span>
+    const dl = daysUntil(goalOf(k).date);
+    cont.push(`<button class="cont" data-act="hopenStudent" data-v="${esc(k)}"><span class="cont-k">Recent student${dl != null && dl >= 0 ? ` · ${dl} day${dl === 1 ? '' : 's'} to go` : ''}</span>
       <span class="cont-n">${esc(m.student.name || 'Unnamed')}</span>
-      <span class="cont-v">${fmt(sm.total, 1)} / ${fmt(sm.max, 0)} · ${esc(instName(m.inst))} · ${roundName(m.round)}${m.date ? ' · ' + esc(fmtDate(m.date).replace(/, \d{4}$/, '')) : ''}</span></button>`);
+      <span class="cont-v">${fmt(sm.total, 1)} / ${fmt(sm.max, 0)}${sm.scope ? ' ' + esc(sm.scope) : ''} · ${esc(instName(m.inst))} · ${roundName(m.round)}${m.date ? ' · ' + esc(fmtDate(m.date).replace(/, \d{4}$/, '')) : ''}</span></button>`);
   });
 
   return `
@@ -341,6 +360,13 @@ function viewHome() {
           <ul>${GRADE_INFO[L.id].map((x) => `<li><span>${x}</span></li>`).join('')}</ul>
           <span class="go">Choose instrument →</span>
         </button>`).join('')}
+    </div>
+  </section>
+  <section class="home-sec">
+    <h2 class="sec-label">More ways to practice</h2>
+    <div class="ways">
+      <button class="way" data-act="session">${ICONS.group}<div><h3>Audition day</h3><p>Score a whole section back to back from a pasted roster, with the same sight-reading etude for everyone. You get a ranked summary to print or download.</p></div></button>
+      <div class="way static">${ICONS.quick}<div><h3>Quick checks</h3><p>No time for a full mock? After you pick an instrument, choose just scales, chromatic, the etude, or sight reading. Every check adds to the student’s progress chart.</p></div></div>
     </div>
   </section>
   <section class="home-sec">
@@ -387,13 +413,23 @@ function viewRound() {
       <ul>${roundSummary(p.level, round, p.inst).map((x) => `<li>${x}</li>`).join('')}</ul>
       ${round === 'district' && p.inst !== 'percussion' ? `<span class="pick-s">State recommendation line: ${fmt(buildForm(p.level, 'district', p.inst, p.variant).cut)}</span>` : ''}
     </button>`;
+  const quick = (round, title) => {
+    const units = quickUnits(buildForm(p.level, round, p.inst, round === 'district' ? (p.variant || (d && d.defaultVariant) || null) : null));
+    return `<div class="qrow"><span class="qrow-l">${title}</span>${units.map((u) => `<button class="chip-btn" data-act="qround" data-round="${round}" data-v="${esc(u.id)}">${esc(u.label)}</button>`).join('')}</div>`;
+  };
   return `${backBtn('inst')}${steps(3)}
   <h2 class="pick-h">${L.short} ${inst.name} — which round?</h2>
   ${variant}
   <div class="cards two">
     ${card('district', 'First Round', 'District audition')}
     ${card('state', 'Final Round', 'State audition')}
-  </div>`;
+  </div>
+  <section class="quick-pick">
+    <h3 class="sec-label">Or a quick check: just one part</h3>
+    ${quick('district', 'First Round')}
+    ${quick('state', 'Final Round')}
+    <p class="muted small">Quick checks are scored like the real sheet and feed the student’s section trends in history. They don’t count toward the full-audition score chart.</p>
+  </section>`;
 }
 
 /* ---------- setup ---------- */
@@ -453,10 +489,12 @@ function viewSheet() {
     return gh + `<section class="sec" id="sec-${sec.id}">${sectionInner(sec)}</section>`;
   }).join('');
   return `
+  ${sessBar()}
   <div class="sheet-head">
     <div class="sheet-id"><strong>${esc(FORM.title)}</strong><span>${esc(FORM.subtitle)} · ${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''}${FORM.division ? ' · Division preference line on form' : ''}</span></div>
     <div class="seg who">${['teacher', 'self'].map((w) => `<button class="${S.who === w ? 'on' : ''}" data-act="who" data-v="${w}">${w === 'teacher' ? 'Teacher scoring' : 'Student self-score'}</button>`).join('')}</div>
   </div>
+  ${FORM.scope ? `<div class="banner quick-banner"><b>Quick check: ${esc(FORM.scopeLabel)}.</b> Only this part of the sheet is scored (${fmt(FORM.max, 2)} points).</div>` : ''}
   ${FORM.notices.map((n) => `<div class="banner warn">${esc(n)}</div>`).join('')}
   ${banner}
   ${secs}
@@ -478,7 +516,7 @@ function sectionInner(sec) {
   const quick = quickFor(sec, FORM);
   const tools = [];
   if (sec.timeLimit) tools.push(`<button class="chip-btn" data-act="timer" data-v="${sec.timeLimit}">⏱ Time limit ${mmss(sec.timeLimit * 1000)}</button>`);
-  if (sec.tempo) tools.push(`<button class="chip-btn" data-act="metro" data-v="${sec.tempo}">♩ = ${sec.tempo}</button>`);
+  if (sec.tempo) tools.push(`<button class="chip-btn" data-act="metro" data-v="${sec.tempo}" aria-label="Metronome at ${sec.tempo}">${fsNoteIcon(false)} = ${sec.tempo}</button>`);
   if (sec.kind === 'windScales' || sec.kind === 'malletScales') {
     tools.push(`<button class="chip-btn" data-act="allperfect" data-v="${sec.id}">Start from perfect</button>`);
     if (sec.kind === 'malletScales' && r.done < r.cells) tools.push(`<button class="chip-btn" data-act="blankzero" data-v="${sec.id}" title="Every blank box in this section becomes ✗ (0 points)">Mark blanks ✗</button>`);
@@ -490,7 +528,8 @@ function sectionInner(sec) {
     </div>
     <div class="progress" title="${r.done} of ${r.cells} scored"><i style="width:${prog}%"></i></div>
     ${sec.help ? `<p class="help">${esc(sec.help)}</p>` : ''}
-        ${tools.length ? `<div class="sec-tools">${tools.join('')}</div>` : ''}
+    ${tools.length ? `<div class="sec-tools">${tools.join('')}</div>` : ''}
+    ${recSectionRow(sec)}
     ${sec.sightReading ? fsPanel(sec) : ''}
     <div class="sec-body">${body}</div>
     <details class="cmt-wrap" ${cmt ? 'open' : ''}><summary>Comments${cmt ? ' ✎' : ''}</summary>
@@ -552,7 +591,7 @@ function refreshSection(secId) {
   const open = $('.cmt-wrap', el)?.open;
   el.innerHTML = sectionInner(sec);
   if (open) $('.cmt-wrap', el).open = true;
-  fsPaintPreviews(el);
+  fsPaintPreviews(el); recPaint(el);
   const r = scoreForm(FORM, sc());
   const lt = $('#live-total'); if (lt) lt.textContent = fmt(r.total, 1);
 }
@@ -579,7 +618,7 @@ function analyze(form, s) {
   const sp = part(form.sections.filter((x) => x.sightReading));
   const pp = part(form.sections.filter((x) => !x.sightReading && x.kind === 'rubric' && !x.catKey));
   const srGap = sp != null && pp != null && pp - sp >= 12 ? { sp, pp } : null;
-  return { cats, strengths, focus, misses, srGap, plan: practicePlan(focus, srGap, misses) };
+  return { cats, strengths, focus, misses, srGap, plan: practicePlan(focus, srGap, misses, form.inst) };
 }
 function resultsWho() { return hasScores('teacher') ? 'teacher' : 'self'; }
 function viewResults() {
@@ -592,17 +631,18 @@ function viewResults() {
   const cutBlock = FORM.cut ? cutGauge(r.total, FORM.cut, r.max) : '';
 
   return `
-  ${ro ? `<div class="banner">Shared mock audition results (read-only). Nothing here is stored online; everything is inside the link.</div>` : backBtn('sheet')}
+  ${ro ? `<div class="banner">Shared mock audition results (read-only). Nothing here is stored online; everything is inside the link.</div>` : sessBar() + backBtn('sheet')}
   <section class="res-head">
     <div>
       <div class="res-name">${esc(m.student.name || 'Student')}</div>
       <div class="res-meta">${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''} · ${esc(LEVELS[m.level].short)} (${LEVELS[m.level].grades}) · ${m.round === 'district' ? 'First Round (District)' : 'Final Round (State)'}<br>
-      ${m.date ? fmtDate(m.date) : ''}${m.judge ? ' · Judge: ' + esc(m.judge) : ''}${who === 'self' ? ' · <em>Student self-assessment</em>' : ''}</div>
+      ${FORM.scope ? `<b class="quick-tag">Quick check: ${esc(FORM.scopeLabel)}</b><br>` : ''}${m.date ? fmtDate(m.date) : ''}${m.judge ? ' · Judge: ' + esc(m.judge) : ''}${who === 'self' ? ' · <em>Student self-assessment</em>' : ''}</div>
     </div>
     <div class="res-total"><span class="big">${fmt(r.total, 2)}</span><span class="of">/ ${fmt(r.max, 0)}</span><span class="pc">${fmt(pct(r.total, r.max), 0)}%</span></div>
   </section>
   ${unscored ? blankBanner(s, ro) : ''}
   ${cutBlock}
+  ${ro ? '' : goalResultLine(m, r.total)}
   <div class="res-actions">
     <button class="btn primary" data-act="print">Print / Save PDF</button>
     ${ro ? '' : '<button class="btn" data-act="share">Share link</button>'}
@@ -629,7 +669,7 @@ function viewResults() {
     </section>
     <section class="panel focus">
       <h3>Focus next</h3>
-      ${focus.length ? focus.map((c) => catLine(c)).join('') : '<p class="muted">Nothing below 90%. Keep polishing and run the full audition often.</p>'}
+      ${focus.length ? focus.map((c) => catLine(c, tipsFor(c.key, m.inst)[0])).join('') : '<p class="muted">Nothing below 90%. Keep polishing and run the full audition often.</p>'}
       ${srGap ? `<p class="insight">Sight reading (${fmt(srGap.sp, 0)}%) is well behind prepared music (${fmt(srGap.pp, 0)}%). A daily sight-reading habit will gain the most points.</p>` : ''}
     </section>
   </div>
@@ -641,6 +681,7 @@ function viewResults() {
   </section>
 
   ${fsResultsBlock()}
+  ${ro ? '' : recResultsBlock()}
   ${hasScores('self') && hasScores('teacher') ? compareBlock() : ''}
   ${commentsBlock(who)}
   ${ro ? '' : `<p class="muted small center">${m.saved ? 'Saved to this device’s student history.' : ''}</p>`}`;
@@ -670,17 +711,24 @@ function barRow(label, got, max) {
   const p = Math.max(0, Math.min(100, pct(got, max)));
   return `<div class="bar"><div class="bar-l"><span>${esc(label)}</span><b>${fmt(got, 2)} / ${fmt(max, 2)}</b></div><div class="bar-t"><i style="width:${p}%"></i></div></div>`;
 }
-function catLine(c) {
+function catLine(c, tip) {
   const C = CATS[c.key] || CATS.general;
   return `<div class="cat"><div class="cat-h"><b>${C.name}</b><span>${fmt(c.pct, 0)}%</span></div>
-    ${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).length ? `<div class="cat-ctx">${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).map(esc).join(' · ')}</div>` : ''}</div>`;
+    ${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).length ? `<div class="cat-ctx">${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).map(esc).join(' · ')}</div>` : ''}
+    ${tip ? `<div class="cat-tip">${esc(tip)}</div>` : ''}</div>`;
 }
-function practicePlan(focus, srGap, misses) {
-  const plan = [{ min: 5, t: 'Warm-up and long tones', d: 'Start every session with a full, centered sound across the range.' }];
+const WARMUP = {
+  perc: { t: 'Warm-up on a pad', d: 'Start with 5 minutes of rudiments (singles, doubles, paradiddles) slow to fast with a metronome.' },
+  default: { t: 'Warm-up and long tones', d: 'Start every session with a full, centered sound across the range.' },
+};
+function practicePlan(focus, srGap, misses, inst) {
+  const w = WARMUP[INST_FAMILY[inst]] || WARMUP.default;
+  const plan = [{ min: 5, t: w.t, d: w.d }];
   focus.forEach((c, i) => {
     const C = CATS[c.key] || CATS.general;
-    let d = C.tips[0];
-    if ((c.key === 'scales' || c.key === 'malletscales') && misses.length) d = `Start with ${misses.slice(0, 3).map((x) => x.key).join(', ')}. ` + C.tips[0];
+    const tip = tipsFor(c.key, inst)[0];
+    let d = tip;
+    if ((c.key === 'scales' || c.key === 'malletscales') && misses.length) d = `Start with ${misses.slice(0, 3).map((x) => x.key).join(', ')}. ` + tip;
     plan.push({ min: i === 0 ? 10 : 8, t: C.name, d });
   });
   if (srGap) plan.push({ min: 5, t: 'Sight reading', d: PATTERN_TIPS.sightReading.tips[1] });
@@ -732,12 +780,34 @@ function commentsBlock(who) {
 }
 
 /* ---------- history ---------- */
+/* Each student × (round, level, instrument) has a chart. Series: 'overall' = full mocks' totals (with the recommendation
+   line and the student's goal), or one quick-check unit = that part's % from full mocks AND quick checks. */
+function histSeriesOptions(combo) {
+  const [r, l, i] = combo.split('|');
+  const f = buildForm(l, r, i, null);
+  return [{ id: 'overall', label: 'Full audition' }].concat(quickUnits(f).map((u) => ({ id: u.id, label: u.label, secs: u.secs })));
+}
+function histPoints(mocks, series, combo) {
+  const sorted = mocks.slice().sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.created - b.created);
+  if (series === 'overall') {
+    return sorted.filter((m) => !m.scope).map((m) => { const sm = m.summary || summarize(m); return { m, v: sm.total, max: sm.max, cut: sm.cut, who: sm.who }; });
+  }
+  const opt = histSeriesOptions(combo).find((o) => o.id === series);
+  if (!opt) return [];
+  return sorted.map((m) => {
+    const sm = m.summary || summarize(m), secs = sm.secs || {};
+    if (!opt.secs.every((id) => secs[id])) return null;
+    const got = opt.secs.reduce((a, id) => a + secs[id].t, 0), max = opt.secs.reduce((a, id) => a + secs[id].m, 0);
+    return { m, v: pct(got, max), max: 100, pctMode: true, who: sm.who, quick: !!m.scope };
+  }).filter(Boolean);
+}
 function viewHistory() {
   const h = getHistory();
   const groups = {};
   h.forEach((m) => { (groups[studentKey(m)] = groups[studentKey(m)] || []).push(m); });
   const keys = Object.keys(groups).sort();
-  const io = `<div class="hist-io"><button class="btn sm" data-act="export">Export backup</button><label class="btn sm ghost">Import backup<input type="file" accept=".json,application/json" id="import" hidden></label></div>`;
+  const io = `<div class="hist-io"><button class="btn sm" data-act="export">Export backup</button><label class="btn sm ghost">Import backup<input type="file" accept=".json,application/json" id="import" hidden></label>
+    <span class="rec-usage muted small" id="rec-usage"></span></div>`;
   if (!h.length) {
     return `${backBtn('home')}<h2 class="pick-h">Student history</h2>
       <p class="muted">No saved mocks yet. Every mock you finish is saved here, on this device, when you open its results.</p>${io}`;
@@ -747,50 +817,70 @@ function viewHistory() {
   const combos = [...new Set(mine.map((m) => `${m.round}|${m.level}|${m.inst}`))];
   if (!S.histFilter || !combos.includes(S.histFilter)) S.histFilter = combos[combos.length - 1];
   const comboLabel = (c) => { const [r, l, i] = c.split('|'); return `${INSTRUMENTS.find((x) => x.id === i).name} · ${LEVELS[l].short} · ${r === 'district' ? 'First Round' : 'Final Round'}`; };
+  const inCombo = mine.filter((m) => `${m.round}|${m.level}|${m.inst}` === S.histFilter);
+  const opts = histSeriesOptions(S.histFilter).filter((o) => histPoints(inCombo, o.id, S.histFilter).length);
+  if (!S.histSeries || !opts.some((o) => o.id === S.histSeries)) S.histSeries = opts.length ? opts[0].id : 'overall';
+  const [cr, cl, ci] = S.histFilter.split('|');
+  const cf = buildForm(cl, cr, ci, null);
   return `${backBtn('home')}<h2 class="pick-h">Student history</h2>
   ${Date.now() - store.get(LS.exported, 0) > 21 * 864e5 ? exportNag() : ''}
   <div class="hist">
     <aside class="hist-list">${keys.map((k) => {
       const g = groups[k]; const last = g.slice().sort((a, b) => b.updated - a.updated)[0];
-      return `<button class="hist-st ${k === S.histKey ? 'on' : ''}" data-act="hstudent" data-v="${esc(k)}"><b>${esc(last.student.name || 'Unnamed')}</b><span>${g.length} mock${g.length > 1 ? 's' : ''}</span></button>`;
+      const dl = daysUntil(goalOf(k).date);
+      return `<button class="hist-st ${k === S.histKey ? 'on' : ''}" data-act="hstudent" data-v="${esc(k)}"><b>${esc(last.student.name || 'Unnamed')}</b><span>${g.length} mock${g.length > 1 ? 's' : ''}${dl != null && dl >= 0 ? ` · ${dl}d to go` : ''}</span></button>`;
     }).join('')}</aside>
     <div class="hist-main">
       ${combos.length > 1 ? `<div class="seg wrap">${combos.map((c) => `<button class="${c === S.histFilter ? 'on' : ''}" data-act="hfilter" data-v="${c}">${comboLabel(c)}</button>`).join('')}</div>` : `<div class="combo">${comboLabel(S.histFilter)}</div>`}
+      ${goalCard(S.histKey, inCombo, cf.cut, cf.max)}
+      ${opts.length > 1 ? `<div class="series"><span class="muted small">Chart:</span>${opts.map((o) => `<button class="chip-btn ${o.id === S.histSeries ? 'on' : ''}" data-act="hseries" data-v="${esc(o.id)}">${esc(o.label)}${o.id === 'overall' ? '' : ' %'}</button>`).join('')}</div>` : ''}
       <div class="chart-wrap"><div id="hchart"></div><div id="htip" class="htip" hidden></div></div>
       <table class="htable"><thead><tr><th>Date</th><th>Mock</th><th class="num">Score</th><th></th></tr></thead><tbody>
       ${mine.slice().reverse().map((m) => {
         const sm = m.summary || summarize(m);
-        return `<tr><td>${fmtDate(m.date)}</td><td>${m.round === 'district' ? 'First' : 'Final'} · ${esc(INSTRUMENTS.find((x) => x.id === m.inst).name)}${sm.who === 'self' ? ' <em>(self)</em>' : ''}</td>
-          <td class="num">${fmt(sm.total, 2)} / ${fmt(sm.max, 0)}${sm.cut ? `<small class="${sm.total >= sm.cut ? 'pos' : 'neg'}">${sm.total >= sm.cut ? '+' : ''}${fmt(sm.total - sm.cut, 1)} vs line</small>` : ''}</td>
+        return `<tr><td>${fmtDate(m.date)}</td><td>${m.round === 'district' ? 'First' : 'Final'} · ${esc(INSTRUMENTS.find((x) => x.id === m.inst).name)}${sm.scope ? ` · <span class="quick-tag">${esc(sm.scope)}</span>` : ''}${sm.who === 'self' ? ' <em>(self)</em>' : ''}${m.session ? ' <span class="muted small">· audition day</span>' : ''}</td>
+          <td class="num">${fmt(sm.total, 2)} / ${fmt(sm.max, sm.scope ? 2 : 0)}${sm.cut ? `<small class="${sm.total >= sm.cut ? 'pos' : 'neg'}">${sm.total >= sm.cut ? '+' : ''}${fmt(sm.total - sm.cut, 1)} vs line</small>` : sm.scope ? `<small>${fmt(pct(sm.total, sm.max), 0)}%</small>` : ''}</td>
           <td class="acts"><button class="btn sm" data-act="hopen" data-v="${m.id}">Open</button><button class="btn sm ghost" data-act="hdel" data-v="${m.id}" aria-label="Delete">✕</button></td></tr>`;
       }).join('')}
       </tbody></table>
     </div>
   </div>${io}`;
 }
+async function histPaintUsage() {
+  const el = $('#rec-usage'); if (!el) return;
+  const u = await recUsage();
+  if (!el.isConnected) return;
+  el.innerHTML = u.n ? `${u.n} recording${u.n > 1 ? 's' : ''} on this device (${fmt(u.bytes / 1048576, 1)} MB) <button class="btn sm ghost" data-act="recclear">Delete all recordings</button>` : '';
+}
 function drawHistoryChart() {
   const el = $('#hchart'); if (!el) return;
-  const h = getHistory().filter((m) => studentKey(m) === S.histKey && `${m.round}|${m.level}|${m.inst}` === S.histFilter)
-    .sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.created - b.created);
-  const pts = h.map((m) => ({ m, s: m.summary || summarize(m) }));
-  if (!pts.length) { el.innerHTML = ''; return; }
-  const W = 640, H = 220, P = { l: 40, r: 16, t: 16, b: 34 };
-  const max = pts[0].s.max; const cut = pts[0].s.cut;
+  const mocks = getHistory().filter((m) => studentKey(m) === S.histKey && `${m.round}|${m.level}|${m.inst}` === S.histFilter);
+  const pts = histPoints(mocks, S.histSeries || 'overall', S.histFilter);
+  if (!pts.length) { el.innerHTML = `<p class="muted small chart-empty">${S.histSeries === 'overall' ? 'No full mocks yet for this instrument and round. Quick checks show up under the part they checked.' : 'Nothing scored for this part yet.'}</p>`; return; }
+  const pctMode = !!pts[0].pctMode;
+  const W = 640, H = 230, P = { l: 40, r: 16, t: 18, b: 34 };
+  const max = pctMode ? 100 : pts[0].max, cut = pctMode ? null : pts[0].cut;
+  const g = pctMode ? null : goalOf(S.histKey).target;
   const x = (i) => pts.length === 1 ? (P.l + W - P.r) / 2 : P.l + (i * (W - P.l - P.r)) / (pts.length - 1);
   const y = (v) => P.t + (1 - v / max) * (H - P.t - P.b);
-  const grid = [0, 0.25, 0.5, 0.75, 1].map((f) => `<line x1="${P.l}" x2="${W - P.r}" y1="${y(f * max)}" y2="${y(f * max)}" class="g"/><text x="${P.l - 6}" y="${y(f * max) + 4}" class="ax" text-anchor="end">${fmt(f * max, 0)}</text>`).join('');
-  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p.s.total)}`).join(' ');
-  const cutL = cut ? `<line x1="${P.l}" x2="${W - P.r}" y1="${y(cut)}" y2="${y(cut)}" class="cutl"/><text x="${W - P.r}" y="${y(cut) - 5}" class="ax cutt" text-anchor="end">Recommendation line ${fmt(cut)}</text>` : '';
+  const grid = [0, 0.25, 0.5, 0.75, 1].map((f) => `<line x1="${P.l}" x2="${W - P.r}" y1="${y(f * max)}" y2="${y(f * max)}" class="g"/><text x="${P.l - 6}" y="${y(f * max) + 4}" class="ax" text-anchor="end">${fmt(f * max, 0)}${pctMode ? '%' : ''}</text>`).join('');
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p.v)}`).join(' ');
+  /* both reference labels sit at the left edge (goal above its line, recommendation line below its line when they're close),
+     so the latest score's label on the right never collides with them */
+  const close = g != null && cut && Math.abs(y(g) - y(cut)) < 16;
+  const cutL = cut ? `<line x1="${P.l}" x2="${W - P.r}" y1="${y(cut)}" y2="${y(cut)}" class="cutl"/><text x="${P.l + 4}" y="${close && g > cut ? y(cut) + 13 : y(cut) - 5}" class="ax cutt">Recommendation line ${fmt(cut)}</text>` : '';
+  const goalL = g != null && g !== cut ? `<line x1="${P.l}" x2="${W - P.r}" y1="${y(g)}" y2="${y(g)}" class="goall"/><text x="${P.l + 4}" y="${close && g < cut ? y(g) + 13 : y(g) - 5}" class="ax goalt">Goal ${fmt(g)}</text>` : '';
   const xl = pts.map((p, i) => `<text x="${x(i)}" y="${H - 12}" class="ax" text-anchor="middle">${esc(fmtDate(p.m.date).replace(/, \d{4}$/, ''))}</text>`).join('');
-  const dots = pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.s.total)}" r="5" class="dot"/><circle cx="${x(i)}" cy="${y(p.s.total)}" r="16" class="hit" data-i="${i}"/>`).join('');
+  const dots = pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.v)}" r="5" class="dot ${p.quick ? 'quick' : ''}"/><circle cx="${x(i)}" cy="${y(p.v)}" r="16" class="hit" data-i="${i}"/>`).join('');
   const last = pts[pts.length - 1];
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Score history chart">${grid}${cutL}<path d="${line}" class="ln"/>${dots}${xl}
-    <text x="${x(pts.length - 1)}" y="${y(last.s.total) - 12}" class="lbl" text-anchor="${pts.length > 1 ? 'end' : 'middle'}">${fmt(last.s.total, 1)}</text></svg>`;
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Score history chart">${grid}${cutL}${goalL}<path d="${line}" class="ln"/>${dots}${xl}
+    <text x="${x(pts.length - 1)}" y="${y(last.v) - 12}" class="lbl" text-anchor="${pts.length > 1 ? 'end' : 'middle'}">${fmt(last.v, 1)}${pctMode ? '%' : ''}</text></svg>
+    ${pctMode && pts.some((p) => p.quick) ? '<p class="muted small chart-note">Hollow dots are quick checks; filled dots are full mocks.</p>' : ''}`;
   const tip = $('#htip');
   $$('.hit', el).forEach((c) => {
     const show = () => {
       const p = pts[+c.dataset.i]; const b = el.getBoundingClientRect(); const cb = c.getBoundingClientRect();
-      tip.innerHTML = `<b>${fmt(p.s.total, 2)} / ${fmt(p.s.max, 0)}</b><span>${fmtDate(p.m.date)}${p.s.who === 'self' ? ' · self' : ''}</span>`;
+      tip.innerHTML = `<b>${pctMode ? fmt(p.v, 1) + '%' : fmt(p.v, 2) + ' / ' + fmt(p.max, 0)}</b><span>${fmtDate(p.m.date)}${p.quick ? ' · quick check' : ''}${p.who === 'self' ? ' · self' : ''}</span>`;
       tip.hidden = false; tip.style.left = (cb.left - b.left + cb.width / 2) + 'px'; tip.style.top = (cb.top - b.top - 8) + 'px';
     };
     c.addEventListener('pointerenter', show); c.addEventListener('click', show);
@@ -910,25 +1000,25 @@ function buildPrint(who) {
   const comments = FORM.sections.filter((sec) => m.comments[who][sec.id]).map((sec) => `<li><b>${esc(sec.title)}:</b> ${esc(m.comments[who][sec.id])}</li>`).join('');
   $('#print').innerHTML = `
   <div class="p-page">
-    <div class="p-mock">MOCK AUDITION — practice only${who === 'self' ? ' · student self-assessment' : ''}</div>
+    <div class="p-mock">${FORM.scope ? 'QUICK CHECK: ' + esc(FORM.scopeLabel).toUpperCase() : 'MOCK AUDITION'} — practice only${who === 'self' ? ' · student self-assessment' : ''}</div>
     <div class="p-title">${esc(FORM.title)}</div>
     <div class="p-sub">${esc(FORM.subtitle)}</div>
     ${FORM.division ? '<div class="p-div">Division Preference: Band | Orchestra | None</div>' : ''}
     <table class="p-info"><tr><td>Student: <b>${esc(m.student.name)}</b></td><td>School: <b>${esc(m.student.school)}</b></td><td>Date: <b>${esc(fmtDate(m.date))}</b></td></tr>
       <tr><td>Grade: <b>${esc(m.student.grade)}</b></td><td>Instrument: <b>${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''}</b></td><td>Judge: <b>${esc(m.judge)}</b></td></tr></table>
     ${body}
-    <div class="p-total">AUDITION TOTAL: <b>${fmt(r.total, 2)}</b> / ${fmt(r.max, 0)}${FORM.cut ? `<span>Min. total score needed for state-level audition recommendation: ${FORM.cut.toFixed(4)}</span>` : ''}</div>
+    <div class="p-total">${FORM.scope ? 'QUICK CHECK TOTAL' : 'AUDITION TOTAL'}: <b>${fmt(r.total, 2)}</b> / ${fmt(r.max, 0)}${FORM.cut ? `<span>Min. total score needed for state-level audition recommendation: ${FORM.cut.toFixed(4)}</span>` : ''}</div>
   </div>
   <div class="p-page p-break">
     <div class="p-title">Mock Audition Feedback — ${esc(m.student.name || 'Student')}</div>
-    <div class="p-sub">${esc(FORM.instrumentLabel)} · ${esc(LEVELS[m.level].short)} (${LEVELS[m.level].grades}) · ${m.round === 'district' ? 'First Round' : 'Final Round'} · ${esc(fmtDate(m.date))}</div>
+    <div class="p-sub">${esc(FORM.instrumentLabel)} · ${esc(LEVELS[m.level].short)} (${LEVELS[m.level].grades}) · ${m.round === 'district' ? 'First Round' : 'Final Round'}${FORM.scope ? ' · Quick check: ' + esc(FORM.scopeLabel) : ''} · ${esc(fmtDate(m.date))}</div>
     <div class="p-big">${fmt(r.total, 2)} / ${fmt(r.max, 0)} ${FORM.cut ? `<span>(${r.total >= FORM.cut ? fmt(r.total - FORM.cut, 2) + ' above' : fmt(FORM.cut - r.total, 2) + ' below'} the recommendation line of ${fmt(FORM.cut)})</span>` : ''}</div>
     <div class="p-cols"><div><h4>Strengths</h4><ul>${strengths.map((c) => `<li>${CATS[c.key].name} — ${fmt(c.pct, 0)}%</li>`).join('') || '<li>—</li>'}</ul></div>
       <div><h4>Focus next</h4><ul>${focus.map((c) => `<li>${CATS[c.key].name} — ${fmt(c.pct, 0)}%</li>`).join('') || '<li>—</li>'}</ul></div></div>
     ${srGap ? `<p><b>Sight reading (${fmt(srGap.sp, 0)}%) is well behind prepared music (${fmt(srGap.pp, 0)}%).</b> A daily sight-reading habit will gain the most points.</p>` : ''}
     ${misses.length ? `<h4>Scale spots to fix</h4><p>${misses.map((x) => `<b>${esc(x.key)}</b>: ${x.miss.map(esc).join(', ')}`).join(' &nbsp;·&nbsp; ')}</p>` : ''}
     <h4>Practice plan for this week</h4><ol>${plan.map((p) => `<li><b>${p.min} min — ${esc(p.t)}.</b> ${esc(p.d)}</li>`).join('')}</ol>
-    ${focus.map((c) => `<h4>${CATS[c.key].name}: practice ideas</h4><ul>${CATS[c.key].tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`).join('')}
+    ${focus.map((c) => `<h4>${CATS[c.key].name}: practice ideas</h4><ul>${tipsFor(c.key, m.inst).slice(0, 4).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`).join('')}
     ${m.overall[who] || comments ? `<h4>${who === 'self' ? 'Student reflection' : 'Judge comments'}</h4>${m.overall[who] ? `<p>${esc(m.overall[who])}</p>` : ''}${comments ? `<ul>${comments}</ul>` : ''}` : ''}
     <div class="p-foot">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms. Not affiliated with GMEA.</div>
   </div>${fsPrintPages()}`;
@@ -989,7 +1079,11 @@ function openTools(focus) {
 /* ============================================================
    EVENTS
    ============================================================ */
-function go(view) { if (FSS.secId) fsCloseStand(); S.view = view; render(); }
+function go(view) {
+  if (FSS.secId) fsCloseStand();
+  if (REC.mr && view !== 'sheet') recStop();          // leaving the sheet saves a recording in progress
+  S.view = view; render();
+}
 function readSetup() {
   const m = S.mock;
   m.student.name = $('#f-name').value.trim(); m.student.school = $('#f-school').value.trim();
@@ -1002,13 +1096,25 @@ document.addEventListener('click', async (e) => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act, v = b.dataset.v;
   if (a.startsWith('fs') && fsAction(a, v)) return;
+  if (a.startsWith('rec') && recAction(a, v)) return;
+  if ((a === 'session' || a.startsWith('ss')) && sessAction(a, v)) return;
   switch (a) {
     case 'go': if (v === 'sheet' && S.readOnly) return; go(v); break;
     case 'level': S.pick = { level: v, inst: null, round: null, variant: null }; go('inst'); break;
     case 'inst': S.pick.inst = v; S.pick.variant = null; go('round'); break;
     case 'variant': S.pick.variant = v; render(); break;
+    case 'qround': {
+      const round = b.dataset.round;
+      S.pick.round = round;
+      const d = S.pick.level === 'ms' && MS_DISTRICT[S.pick.inst];
+      if (round === 'district' && d && d.variants && !S.pick.variant) S.pick.variant = d.defaultVariant;
+      if (round !== 'district') S.pick.variant = null;
+      const f = buildForm(S.pick.level, round, S.pick.inst, S.pick.variant);
+      S.pick.scope = unitSecs(f, v); S.pick.scopeLabel = unitLabel(f, v);
+      setMock(newMock()); go('setup'); break;
+    }
     case 'round': {
-      S.pick.round = v;
+      S.pick.round = v; S.pick.scope = null; S.pick.scopeLabel = null;
       const d = S.pick.level === 'ms' && MS_DISTRICT[S.pick.inst];
       if (v === 'district' && d && d.variants && !S.pick.variant) S.pick.variant = d.defaultVariant;
       if (v !== 'district') S.pick.variant = null;
@@ -1084,7 +1190,7 @@ document.addEventListener('click', async (e) => {
       go('results'); break;
     }
     case 'again': {
-      const m = S.mock; S.pick = { level: m.level, inst: m.inst, round: m.round, variant: m.variant };
+      const m = S.mock; S.pick = { level: m.level, inst: m.inst, round: m.round, variant: m.variant, scope: m.scope, scopeLabel: m.scopeLabel };
       const nm = newMock(); nm.student = { ...m.student }; nm.judge = m.judge; nm.flow = m.flow;
       setMock(nm); store.set(LS.draft, nm); go('setup'); break;
     }
@@ -1093,12 +1199,19 @@ document.addEventListener('click', async (e) => {
     case 'copy': { const i = $('#sh-url'); i.select(); try { await navigator.clipboard.writeText(i.value); } catch (er) { document.execCommand('copy'); } toast('Link copied'); break; }
     case 'close': closeModal(); break;
     case 'export': exportHistory(); render(); break;
-    case 'hstudent': S.histKey = v; S.histFilter = null; render(); break;
-    case 'hfilter': S.histFilter = v; render(); break;
+    case 'hstudent': S.histKey = v; S.histFilter = null; S.histSeries = null; render(); break;
+    case 'hfilter': S.histFilter = v; S.histSeries = null; render(); break;
+    case 'hseries': S.histSeries = v; render(); break;
+    case 'goalall': {
+      const g = goalOf(S.histKey);
+      if (!g.date) { toast('Set an audition day first'); break; }
+      const p = store.get(LS.prefs, {}); p.auditionDate = g.date; store.set(LS.prefs, p);
+      toast(`Audition day ${fmtDate(g.date)} set for every student without their own`); render(); break;
+    }
     case 'hopen': { const m = getHistory().find((x) => x.id === v); if (m) { const c = JSON.parse(JSON.stringify(m)); delete c.summary; setMock(c); S.readOnly = false; S.who = 'teacher'; go('results'); } break; }
     case 'hdel': {
       if (b.dataset.confirm !== '1') { b.dataset.confirm = '1'; b.textContent = 'Delete?'; b.classList.add('danger'); setTimeout(() => { if (b.isConnected) { b.dataset.confirm = ''; b.textContent = '✕'; b.classList.remove('danger'); } }, 3000); return; }
-      store.set(LS.hist, getHistory().filter((x) => x.id !== v)); toast('Deleted'); render(); break;
+      store.set(LS.hist, getHistory().filter((x) => x.id !== v)); recDeleteMock(v); toast('Deleted'); render(); break;
     }
     case 'theme': {
       const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -1119,6 +1232,7 @@ document.addEventListener('click', async (e) => {
 document.addEventListener('input', (e) => {
   const t = e.target;
   if (t.matches('input[type=range][data-k]')) { sc()[t.dataset.k] = +t.value; touch(); const it = t.closest('.item, .mcol'); const vl = it && $('.val', it); if (vl) vl.innerHTML = `${fmt(+t.value)} <small>/ ${t.max}</small>`; t.closest('.slider').classList.remove('unset'); }
+  if (t.matches('[data-ss]') && t.type !== 'checkbox' && t.tagName !== 'SELECT') { sessInput(t); return; }
   if (t.matches('textarea.cmt')) {
     if (t.dataset.overall) S.mock.overall[S.who] = t.value; else S.mock.comments[S.who][t.dataset.sec] = t.value;
     touch();
@@ -1131,6 +1245,13 @@ document.addEventListener('submit', (e) => {
 document.addEventListener('change', (e) => {
   const t = e.target;
   if (fsChange(t)) return;
+  if (sessInput(t)) return;
+  if (t.matches('[data-goal]')) {
+    const k = t.dataset.goal;
+    if (k === 'date') setGoal(S.histKey, { date: t.value });
+    else setGoal(S.histKey, { target: t.value === '' ? null : Math.max(0, +t.value) });
+    render(); return;
+  }
   if (t.matches('input[type=range][data-k]')) refreshSection(t.dataset.k.split('.')[0]);
   if (t.matches('input[name=flow]')) { $$('.radio').forEach((r) => r.classList.toggle('on', r.contains(t))); }
   if (t.id === 'import' && t.files[0]) importHistory(t.files[0]);
@@ -1144,6 +1265,10 @@ window.addEventListener('afterprint', () => { $('#print').innerHTML = ''; });
 /* ---------- boot ---------- */
 (async function boot() {
   const th = store.get(LS.theme, null); if (th) document.documentElement.dataset.theme = th;
+  /* offline: the service worker caches the app after the first visit (https or localhost only) */
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    navigator.serviceWorker.register('sw.js').catch(() => { /* offline mode unavailable; the app still works online */ });
+  }
   if (location.hash.startsWith('#view=')) {
     try {
       const m = await decodeShare(location.hash.slice(6));

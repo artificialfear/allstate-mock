@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.0.0 — 2026-11-11
+- **Record the student.**
+  - Every section of the judge sheet has a ● Record button.
+  - The music stand can record the sight reading automatically from "Play!" (● Record the student).
+  - Recordings play back on the sheet and on results, with a Download button. They stay on this device: they're not in share links or backups, and deleting a mock deletes its recordings.
+- **Quick checks.**
+  - Score just one part of an audition: scales, chromatic, the etude, or sight reading (plus each percussion instrument).
+  - Pick one on the round screen. A quick check is scored like the real sheet and saved to history.
+  - History charts can show each part's % over time, using both quick checks and full mocks.
+- **Audition day (group mode).**
+  - Paste a roster (a line can name a different instrument), pick the round and what you're checking, and score students back to back with ◀ / jump list / Next ▶.
+  - Everyone can get the same sight-reading etude.
+  - The summary ranks the group with each student's distance from the recommendation line and top focus area. Print it or download a CSV.
+- **Goals and countdown.**
+  - Each student gets an audition day and a target score (default: the recommendation line).
+  - History shows days to go, the gap to the target, and On pace / Behind pace, from the trend of their full mocks. The goal appears on the chart.
+  - "Use this date for everyone" sets one audition day for the whole class.
+- **Instrument-specific practice tips** for flute, double reeds, clarinets, saxophones, trumpet, horn, low brass, and percussion. They appear in Focus next, the practice plan, and the printout.
+- **Works offline and installs like an app.** After the first visit, it opens with no internet connection. Add it to the Home Screen or install it from the browser.
+
 ## 1.5.0 — 2026-11-10
 - **The sight-reading instructions now play Mat's own recording** (8.6 s) instead of the device's voice, so every device hears the same thing. The 8 ticks start the moment it ends.
 - The recording says "30 seconds," so it plays when study time is 30 s (the default). At 60 s or with no study time, the device's voice reads the matching script instead.

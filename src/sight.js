@@ -10,7 +10,7 @@
    Loaded before app.js (app.js's boot render uses these); uses app.js's S, FORM, store, esc, $, toast at call time.
    ============================================================ */
 const FS = window.Arcade.FSEtudes;
-const FS_DEFAULTS = { level: 5, key: 'mix', bars: 6, studyS: 30, click: false, speak: true };
+const FS_DEFAULTS = { level: 5, key: 'mix', bars: 6, studyS: 30, click: false, speak: true, rec: false };
 const FS_HS_NOTE = 'First Sight writes middle-school district-level etudes (concert F, B♭, E♭, A♭). They make good reading practice, but real 9–12 sight reading is harder.';
 const FS_RULES = { tempoStep: 4, tempoMin: 40, tempoOver: 16, leadS: 0.25,
   gain: { p: 0.42, mp: 0.58, mf: 0.75, f: 1 }, accent: 1.3, length: { normal: 0.9, stac: 0.45, ten: 1, slur: 1 },
@@ -216,7 +216,7 @@ function fsOpenStand(secId, { practice = false } = {}) {
   fsStopRun(); fsStopStudy();
   const p = fsPrefs();
   Object.assign(FSS, fsBuild(code, info), { secId, info, practice, played: false, hearArmed: false, click: practice ? true : !!p.click, studyS: p.studyS,
-    speak: !!p.speak });
+    speak: !!p.speak, rec: !!p.rec && !practice && recCan() });
   if (FSS.speak && !practice) {
     if (FSS.studyS === FS_REC.studyS) fsLoadRec();                               // fetch + decode Mat's recording ahead of the tap
     try { speechSynthesis.getVoices(); } catch (e) { /* voices load in the background */ }
@@ -226,6 +226,7 @@ function fsOpenStand(secId, { practice = false } = {}) {
   el.innerHTML = `
     <div class="stand-top">
       <div class="stand-t"><b>${esc(practice ? 'Practice' : sec.title)}</b><span>${esc(info.label)}${practice ? ' · ' + esc(fsDescribe(FSS.et, info)) : ''}</span></div>
+      <span class="fs-rec-live" id="fs-rec-live" hidden></span>
       <span class="fs-code light">${esc(FSS.et.code)}</span>
       <button class="btn sm on-navy" data-act="fsclose">${practice ? 'Close ✕' : 'Done — back to scoring ✕'}</button>
     </div>
@@ -257,6 +258,7 @@ function fsOpenStand(secId, { practice = false } = {}) {
       <div class="stand-opts">
         <span class="fs-tempo-ctl"><button class="btn sm" data-act="fstempo" data-v="-4" aria-label="Slower">−</button><span id="fs-bpm"></span><button class="btn sm" data-act="fstempo" data-v="4" aria-label="Faster">+</button></span>
         <label class="fs-tg"><input type="checkbox" id="fs-click" ${FSS.click ? 'checked' : ''}> Click while playing</label>
+        ${practice || !recCan() ? '' : `<label class="fs-tg"><input type="checkbox" id="fs-rec" ${FSS.rec ? 'checked' : ''}> ● Record the student</label>`}
         ${practice ? '' : '<button class="btn sm" data-act="fsrestart">↺ Start over</button>'}
         <label class="fs-tg">Study time <select id="fs-studys">${[0, 30, 60].map((s) => `<option value="${s}" ${FSS.studyS === s ? 'selected' : ''}>${s ? s + ' s' : 'Off'}</option>`).join('')}</select></label>
       </div>
@@ -424,7 +426,12 @@ function fsAudPerform() {
   $('#fs-ticks2').hidden = true;
   fsSay('Play! When the student finishes: ▶ Hear it to compare, ↺ Start over, or Done to score it.');
   fsDrawButtons();
+  if (FSS.rec) {   // record the performance; stops itself after the etude's length + 8 s (or on Done / Hear it / Start over)
+    const lenS = FSS.et.totalTicks * (60 / FSS.bpm / FSS.et.beatTicks);
+    recStart(FSS.secId, { autoStopS: Math.ceil(lenS + 8) });
+  }
 }
+function fsRecStop() { if (REC.mr && REC.secId === FSS.secId) recStop(); }
 function fsDrawRows() {
   const box = $('#fs-rows'); if (!box) return;
   FSS.rows = fsEngrave(FSS.et, FSS.real, Math.max(260, box.clientWidth || 800), 'st-');
@@ -445,6 +452,7 @@ function fsDrawButtons() {
 }
 const fsSay = (t) => { const s = $('#fs-say'); if (s) s.textContent = t; };
 function fsCloseStand() {
+  fsRecStop();
   fsStopRun(); fsStopStudy(); fsTickStop(); fsSpeakStop();
   FSS.phase = 'free';
   try { window.Arcade.Winds.stopAll(); } catch (e) { /* no audio yet */ }
@@ -609,7 +617,7 @@ function fsAction(a, v) {
     case 'fsready': fsEndStudy(); return true;
     case 'fsaud': fsAudStart(); return true;
     case 'fsrestart': { const id = FSS.secId; fsCloseStand(); fsOpenStand(id); return true; }
-    case 'fsplay': if (FSS.run && FSS.run.kind === 'play') fsStopRun(); else { if (FSS.phase === 'perform') FSS.phase = 'free'; fsStart('play'); } return true;
+    case 'fsplay': if (FSS.run && FSS.run.kind === 'play') fsStopRun(); else { fsRecStop(); if (FSS.phase === 'perform') FSS.phase = 'free'; fsStart('play'); } return true;
     case 'fshear':
       if (FSS.run && FSS.run.kind === 'hear') { fsStopRun(); return true; }
       if (!FSS.played && !FSS.hearArmed) {
@@ -617,7 +625,7 @@ function fsAction(a, v) {
         fsSay('Hear it after the student has played: it shows how the etude goes. Tap ▶ Hear it again to play it now.');
         return true;
       }
-      fsStart('hear'); return true;
+      fsRecStop(); fsStart('hear'); return true;
     case 'fstempo': {
       if (FSS.run || FSS.tick || ['speaking', 'tempo1', 'study', 'tempo2'].includes(FSS.phase)) return true;
       FSS.bpm = Math.max(FS_RULES.tempoMin, Math.min(FSS.et.tempo + FS_RULES.tempoOver, FSS.bpm + +v));
@@ -637,6 +645,12 @@ function fsChange(t) {
     return true;
   }
   if (t.id === 'fs-click') { FSS.click = t.checked; if (!FSS.practice) fsSavePrefs({ click: t.checked }); fsDrawButtons(); return true; }
+  if (t.id === 'fs-rec') {
+    FSS.rec = t.checked; fsSavePrefs({ rec: t.checked });
+    if (t.checked) recMic().then((st) => st.getTracks().forEach((x) => x.stop()))   // ask for the microphone now, not mid-audition
+      .catch(() => { t.checked = false; FSS.rec = false; fsSavePrefs({ rec: false }); toast('Microphone blocked. Allow it for this site to record.'); });
+    return true;
+  }
   if (t.id === 'fs-speak') { FSS.speak = t.checked; fsSavePrefs({ speak: t.checked }); fsDrawCover(); return true; }
   if (t.id === 'fs-studys') {
     FSS.studyS = +t.value; fsSavePrefs({ studyS: FSS.studyS });

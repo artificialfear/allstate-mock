@@ -6,6 +6,11 @@
 <title>All-State Mock Audition</title>
 <meta name="description" content="Score practice All-State Band auditions on the GMEA district and state judge sheets, then print or share the results with students.">
 <meta name="theme-color" content="#1f2a44">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mock Audition">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f2a44'/%3E%3Cpath d='M18 46V20l14 8 14-8v26' stroke='%23c9a227' stroke-width='6' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
 @font-face { font-family: "Oswald"; font-weight: 600; font-style: normal; font-display: swap;
@@ -593,6 +598,75 @@ body.stand-open { overflow: hidden; }
   .fs-print .fs-row { break-inside: avoid; margin-bottom: 12px; }
   .fs-print .fs-tempo { font-size: 13pt; }
 }
+
+/* ===================== v2: quick checks, audition day, goals, recording ===================== */
+.chip-btn.on { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+.quick-pick { margin-top: 22px; }
+.qrow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+.qrow-l { font-weight: 700; min-width: 110px; font-size: .92rem; }
+.qrow .chip-btn { min-height: 40px; padding: 6px 14px; }
+.quick-banner { background: var(--gold-soft); border-color: color-mix(in srgb, var(--gold) 50%, transparent); }
+.quick-tag { color: var(--gold-ink); font-weight: 700; }
+.ways { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.way { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; grid-template-columns: 44px 1fr; gap: 12px; align-items: start; box-shadow: var(--shadow); }
+button.way:hover { border-color: var(--gold); }
+.way svg { width: 44px; height: 44px; padding: 9px; border-radius: 12px; background: var(--navy); color: var(--gold); }
+.way h3 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: .04em; }
+.way p { margin: 4px 0 0; color: var(--ink-2); font-size: .9rem; }
+@media (max-width: 860px) { .ways { grid-template-columns: 1fr; } }
+
+/* audition day */
+.sess-form .fld > span { margin-bottom: 4px; }
+.sess-form .fld > .seg { align-self: flex-start; }
+@media (max-width: 720px) { .sess-bar { position: static; } .sess-nav { width: 100%; } .sess-nav select { flex: 1; max-width: none; } }
+.chip-btn .fs-q { height: 1.1em; vertical-align: -0.2em; margin-right: 1px; }
+.sess-form > .fld { margin-bottom: 14px; }
+.sess-form textarea { min-height: 160px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font: inherit; resize: vertical; }
+.check { display: flex; gap: 10px; align-items: center; margin: 12px 0 18px; font-weight: 600; }
+.check input { width: 20px; height: 20px; accent-color: var(--brand); }
+.sess-bar { position: sticky; top: 59px; z-index: 20; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--navy); color: #fff; border-radius: 12px; padding: 10px 14px; margin: 0 0 14px; border-bottom: 3px solid var(--gold); }
+.sess-info { display: flex; flex-direction: column; }
+.sess-k { font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--gold); font-weight: 700; }
+.sess-info b { font-family: var(--display); font-size: 1.15rem; font-weight: 600; letter-spacing: .02em; }
+.sess-nav { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.sess-nav select { min-height: 36px; border-radius: 8px; border: 1px solid rgb(255 255 255 / .3); background: rgb(255 255 255 / .08); color: #fff; padding: 4px 8px; max-width: 200px; }
+.sess-nav select option { color: #000; }
+.sess-nav .btn[disabled] { opacity: .35; }
+.sess-table td small { display: block; color: var(--ink-3); font-size: .75rem; }
+.sess-table tr.unscored td { color: var(--ink-3); }
+.sess-table-wrap { overflow-x: auto; padding: 8px; }
+
+/* goals */
+.goal-card { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 12px; padding: 12px 14px; margin: 10px 0; }
+.goal-fields { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+.goal-fields .fld { flex: 1 1 150px; }
+.goal-fields .fld input { min-height: 40px; }
+.goal-line { margin: 10px 0 0; }
+.pace { margin-top: 6px; font-size: .92rem; padding: 6px 10px; border-radius: 8px; background: var(--surface-2); }
+.pace.ok { background: var(--good-soft); color: var(--good); }
+.pace.behind { background: var(--warn-soft); color: var(--warn); }
+.goal-res { margin: -4px 0 12px; font-weight: 600; }
+.series { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 8px 0 0; }
+#hchart .goall { stroke: var(--gold); stroke-width: 1.5; stroke-dasharray: 2 4; }
+#hchart .goalt { fill: var(--gold-ink); font-weight: 700; }
+#hchart .dot.quick { fill: var(--surface); stroke: var(--tch); stroke-width: 2.5; }
+.chart-empty, .chart-note { margin: 6px 4px; }
+.cat-tip { font-size: .86rem; color: var(--ink-2); margin-top: 4px; padding-left: 10px; border-left: 2px solid var(--gold); }
+
+/* recording */
+.rec-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: -2px 0 10px; }
+.rec-btn { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, var(--line)); }
+.rec-btn.on { background: var(--bad); color: #fff; border-color: var(--bad); animation: recpulse 1.4s ease-in-out infinite; }
+@keyframes recpulse { 50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--bad) 30%, transparent); } }
+.rec-slot { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.rec-slot audio { height: 36px; max-width: 280px; }
+.rec-res { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 0; border-top: 1px dashed var(--line); }
+.rec-res:first-of-type { border-top: 0; }
+.fs-rec-live { color: #fff; background: var(--bad); border-radius: 999px; padding: 3px 10px; font-weight: 700; font-size: .85rem; animation: recpulse 1.4s ease-in-out infinite; }
+body.recording #btn-tools::after { content: ""; }
+.hist-io { align-items: center; }
+@media print { .rec-row, .sess-bar { display: none !important; } .p-summary td { font-size: 9.5pt; } }
 
 </style>
 </head>
@@ -5678,6 +5752,47 @@ function roundSummary(level, round, inst) {
     : ['Etude #1 (30)', 'Etude #2 (30)', 'Sight reading #1 (20)', 'Sight reading #2 (20)'];
 }
 
+/* ---------- quick checks: part of an audition ----------
+   A quick check is a mock with `scope` = the section ids it covers. The same five TYPES work for every form,
+   so a group (audition-day) session can run "Scales" for clarinets and percussion alike. Percussion also gets
+   one unit per instrument (snare / mallets / timpani / xylophone). */
+const QUICK_TYPES = ['scales', 'chromatic', 'etude', 'sight'];
+function unitSecs(form, type) {
+  const S_ = form.sections;
+  if (type.startsWith('g:')) return S_.filter((s) => s.group === type.slice(2)).map((s) => s.id);
+  if (type === 'scales') return S_.filter((s) => s.kind === 'windScales' || s.kind === 'malletScales').map((s) => s.id);
+  if (type === 'chromatic') return S_.filter((s) => s.catKey === 'chromatic').map((s) => s.id);
+  if (type === 'etude') return S_.filter((s) => s.kind === 'rubric' && !s.sightReading && !s.catKey).map((s) => s.id);
+  if (type === 'sight') return S_.filter((s) => s.sightReading).map((s) => s.id);
+  return [];
+}
+function unitLabel(form, type) {
+  if (type.startsWith('g:')) return type.slice(2);
+  if (type === 'scales') return form.inst === 'percussion' ? 'Mallet scales' : 'Major scales';
+  if (type === 'chromatic') return 'Chromatic scale';
+  if (type === 'sight') return 'Sight reading';
+  if (type === 'etude') {
+    if (form.inst === 'percussion') return 'Etudes';
+    if (form.round === 'district') return 'Lyrical etude';
+    return form.level === 'ms' ? 'Prepared selection' : 'Etudes';
+  }
+  return type;
+}
+function quickUnits(form) {
+  const types = QUICK_TYPES.slice();
+  if (form.inst === 'percussion') [...new Set(form.sections.map((s) => s.group))].forEach((g) => types.push('g:' + g));
+  return types.map((t) => ({ id: t, label: unitLabel(form, t), secs: unitSecs(form, t) })).filter((u) => u.secs.length);
+}
+/** the judge sheet a mock uses: the full form, or only its quick-check sections */
+function formFor(m) {
+  const f = buildForm(m.level, m.round, m.inst, m.variant);
+  if (!m.scope || !m.scope.length) return f;
+  const sections = f.sections.filter((s) => m.scope.includes(s.id));
+  if (!sections.length) return f;
+  return Object.assign({}, f, { sections, max: sections.reduce((a, s) => a + s.max, 0), cut: null, fullMax: f.max,
+    scope: m.scope, scopeLabel: m.scopeLabel || sections.map((s) => s.title).join(' + ') });
+}
+
 /* ============================================================
    Feedback library: maps judge-sheet categories to student-facing
    names, practice drills, and quick-tap judge comments.
@@ -5798,6 +5913,97 @@ const CALIBRATION = [
 ];
 
 /* ============================================================
+   INSTRUMENT-SPECIFIC PRACTICE TIPS
+   Each instrument family can add tips for a feedback category (CATS keys in feedback.js). tipsFor() puts the
+   family's tips first, then the general ones, so every practice plan item is about THIS instrument.
+   Brass tips say "partial", never "lip" (Mat's teaching rule). Mat reviews this file before each season.
+   ============================================================ */
+const INST_FAMILY = {
+  flute: 'flute', oboe: 'reed', bassoon: 'reed', clarinet: 'clar', bassclar: 'clar', contraclar: 'clar',
+  altosax: 'sax', tenorsax: 'sax', barisax: 'sax', trumpet: 'trumpet', horn: 'horn',
+  trombone: 'lowbrass', basstrombone: 'lowbrass', baritone: 'lowbrass', tuba: 'lowbrass', percussion: 'perc',
+};
+const INST_TIPS = {
+  flute: {
+    tone: ['Play harmonics: finger low C and blow faster to sound the next partials (C, G, C, E). Then play those notes with their normal fingerings and match the harmonic sound.',
+           'Long tones in all three octaves with a tuner. Keep the lip opening small and relaxed; speed up the air for the high octave instead of pinching.'],
+    technique: ['Keep your right pinky down on the D♯ key for almost every note. It steadies the flute and keeps the notes in tune.',
+                'Pick your B♭ fingering on purpose: thumb B♭ in flat keys, 1-and-1 or the lever when a B natural is close by. Mark it in the music.'],
+    dynamics: ['Flutes go flat when soft and sharp when loud. Do crescendo–decrescendo long tones with a tuner. Aim the air a little higher (jaw forward) for soft notes and lower for loud ones.'],
+    artic: ['Tongue just behind the top teeth ("too") and keep the air moving between notes, so short notes still ring.'],
+    scales: ['Do the high octave slowly with a tuner first. Faster air, not more pressure, makes the top notes speak.'],
+    chromatic: ['Use 1-and-1 or the lever B♭ (not thumb B♭) in the chromatic so your thumb never slides mid-scale.'],
+  },
+  reed: {
+    tone: ['Check your reed before you practice: it should crow (two octaves, oboe) or buzz evenly (bassoon). Rotate three good reeds so you are never stuck on one.',
+           'Long tones with a round, cushioned embouchure. Biting makes the sound thin and sharp; support with air instead.'],
+    technique: ['Mark the special fingerings in your music (oboe: forked F or left F and the half-hole; bassoon: the flick keys and the whisper key) and practice those spots slowly.'],
+    artic: ['Tongue lightly on the tip of the reed and keep the air going. Don’t let the embouchure bite between notes.'],
+    dynamics: ['Practice soft entrances on long tones: start the air first, then the sound. Soft playing is where reed players lose the most points.'],
+    scales: ['Slur each scale slowly and listen for the notes that crack or jump in pitch; those are your reed- or fingering-check notes.'],
+  },
+  clar: {
+    tone: ['Firm, flat chin and corners in. Keep the tongue high ("eee") and the air fast so the upper (clarion) notes sound full, not thin.',
+           'Long tones over the break with a tuner. The upper notes should sound as full as the low ones.'],
+    technique: ['Crossing the break: keep your right-hand fingers down on the throat tones (G♯, A, B♭) and move only the left hand.',
+                'Plan your pinky keys (left or right) for B, C, C♯ and E♭ so you never slide one pinky from key to key. Mark L or R in the music.'],
+    scales: ['Slur over the break slowly, two notes at a time, until the crossing is silent. Then add the full scale.'],
+    chromatic: ['Use the side keys for the throat B♭ only where your teacher shows you, and choose your pinky keys before you play.'],
+    artic: ['Tongue touches the reed tip lightly ("tee") and the air never stops. Practice on one note before the etude.'],
+  },
+  sax: {
+    tone: ['Play the mouthpiece alone and match its pitch (alto: concert A, tenor: concert G, bari: concert D) to set your air and voicing.',
+           'For low notes: open the throat, use a little less mouthpiece pressure, and more air, so low C and B♭ come out soft and without a honk.'],
+    technique: ['Pick one B♭ fingering on purpose: bis or 1-and-1 in flat keys, side B♭ in chromatic passages. Mark it and play it the same way every time.',
+                'Keep fingers close to the pearls and the palm keys under the left hand, so fast passages stay even.'],
+    dynamics: ['High notes go sharp when soft. Practice soft high long tones with a tuner and relax the jaw slightly instead of biting.'],
+    artic: ['Tongue the tip of the reed lightly ("dah") and keep the air steady, so notes don’t bump.'],
+    chromatic: ['Use side B♭ and side C (or side F♯) in the chromatic. Practice the palm-key notes at the top slowly.'],
+  },
+  trumpet: {
+    tone: ['Buzz the opening phrase of your etude on the mouthpiece, then play it. Aim for the same centered buzz.',
+           'Partial slurs every day on all seven valve combinations (0, 2, 1, 12, 23, 13, 123). They center each note and build range.'],
+    technique: ['Press the valves all the way down and fast; slow valves cause smeared notes. Practice tricky valve changes slowly with a metronome.'],
+    scales: ['Before every high note, hear the pitch in your head so you land on the right partial instead of cracking to the one next to it.'],
+    dynamics: ['Low D and C♯ (1-3 and 1-2-3) are very sharp. Kick out the third-valve slide on those notes.'],
+    artic: ['Tongue with "tah" for regular notes and "dah" for legato, with steady air behind every note.'],
+  },
+  horn: {
+    tone: ['Right hand cupped with fingers together and the palm against the far side of the bell. It shapes your sound and your pitch.',
+           'Partial slurs every day. On horn the partials are close together up high, so slur slowly and listen.'],
+    technique: ['High notes sit on partials that are very close together. Sing or buzz the pitch before you play it so you land on the right one.',
+                'On a double horn, use the B♭ side (thumb) in the upper register the way your teacher shows you, and mark it in the music.'],
+    scales: ['Play each scale slowly with a drone or tuner. Most horn misses are the wrong partial, not the wrong fingering.'],
+    dynamics: ['Practice soft entrances in the middle register. Start the air before the tongue, so the note speaks on time.'],
+  },
+  lowbrass: {
+    tone: ['Breathe low and relaxed and keep the throat open. Buzz long tones on the mouthpiece, then play them on the instrument with the same feel.',
+           'Partial slurs every day (trombone: in each position; baritone and tuba: on each valve combination) to center your sound.'],
+    technique: ['Trombone: move the slide at the last moment and fast, and use a soft "dah" tongue for legato. Baritone and tuba: keep the valves fast and fully down.',
+                'Trombone: use alternate positions (like 4th-position D or 6th-position F) to avoid long slide jumps in fast passages.'],
+    dynamics: ['Valve combinations 1-3 and 1-2-3 run sharp. Bring those notes down with your air and embouchure, or use the 4th valve if your instrument has one.'],
+    scales: ['Slur every scale slowly first. Listen for the partial changes, then add the tongue and the tempo.'],
+    artic: ['Use more air, not more tongue, on low notes, so short notes still have a full sound.'],
+  },
+  perc: {
+    rudiments: ['Practice the etude’s rudiments slow–fast–slow on a pad with a metronome. Let the stick rebound and keep both hands at the same height.'],
+    rolls: ['Snare: keep a double-stroke or buzz roll even by counting the subdivision. Timpani: slower, even single strokes; let the drum ring between strokes.'],
+    malletscales: ['Strike the center of the bar (or the edge of the raised bars), keep wrists loose, and look one note ahead. Say the note names while you practice.'],
+    tuning: ['Hum the pitch into the drum (or tap it lightly) and adjust the pedal. Check with a tuner afterward, not before.'],
+    technique: ['Play from the wrists with relaxed fingers. Tight grips cause uneven sound on every instrument.'],
+    tone: ['Snare: play in the center to slightly off-center for the best sound. Mallets: hit the bar center. Timpani: play a hand’s width in from the edge.'],
+    pulse: ['Practice with a metronome, then with the click on beats 2 and 4 only, so you keep the time yourself.'],
+  },
+};
+/** tips for a category: this instrument's first, then the general ones (no repeats) */
+function tipsFor(catKey, inst) {
+  const fam = INST_FAMILY[inst];
+  const own = (fam && INST_TIPS[fam] && INST_TIPS[fam][catKey]) || [];
+  const gen = (CATS[catKey] || CATS.general).tips;
+  return own.concat(gen.filter((t) => !own.includes(t)));
+}
+
+/* ============================================================
    SIGHT READING: First Sight etudes inside the mock audition.
    The generator, notation, voices and click are Band Arcade's First Sight engine (vendor/first-sight/, copied
    unchanged; src/fs-shim.js gives it a sound output). This file is the mock tool's glue:
@@ -5809,7 +6015,7 @@ const CALIBRATION = [
    Loaded before app.js (app.js's boot render uses these); uses app.js's S, FORM, store, esc, $, toast at call time.
    ============================================================ */
 const FS = window.Arcade.FSEtudes;
-const FS_DEFAULTS = { level: 5, key: 'mix', bars: 6, studyS: 30, click: false, speak: true };
+const FS_DEFAULTS = { level: 5, key: 'mix', bars: 6, studyS: 30, click: false, speak: true, rec: false };
 const FS_HS_NOTE = 'First Sight writes middle-school district-level etudes (concert F, B♭, E♭, A♭). They make good reading practice, but real 9–12 sight reading is harder.';
 const FS_RULES = { tempoStep: 4, tempoMin: 40, tempoOver: 16, leadS: 0.25,
   gain: { p: 0.42, mp: 0.58, mf: 0.75, f: 1 }, accent: 1.3, length: { normal: 0.9, stac: 0.45, ten: 1, slur: 1 },
@@ -6015,7 +6221,7 @@ function fsOpenStand(secId, { practice = false } = {}) {
   fsStopRun(); fsStopStudy();
   const p = fsPrefs();
   Object.assign(FSS, fsBuild(code, info), { secId, info, practice, played: false, hearArmed: false, click: practice ? true : !!p.click, studyS: p.studyS,
-    speak: !!p.speak });
+    speak: !!p.speak, rec: !!p.rec && !practice && recCan() });
   if (FSS.speak && !practice) {
     if (FSS.studyS === FS_REC.studyS) fsLoadRec();                               // fetch + decode Mat's recording ahead of the tap
     try { speechSynthesis.getVoices(); } catch (e) { /* voices load in the background */ }
@@ -6025,6 +6231,7 @@ function fsOpenStand(secId, { practice = false } = {}) {
   el.innerHTML = `
     <div class="stand-top">
       <div class="stand-t"><b>${esc(practice ? 'Practice' : sec.title)}</b><span>${esc(info.label)}${practice ? ' · ' + esc(fsDescribe(FSS.et, info)) : ''}</span></div>
+      <span class="fs-rec-live" id="fs-rec-live" hidden></span>
       <span class="fs-code light">${esc(FSS.et.code)}</span>
       <button class="btn sm on-navy" data-act="fsclose">${practice ? 'Close ✕' : 'Done — back to scoring ✕'}</button>
     </div>
@@ -6056,6 +6263,7 @@ function fsOpenStand(secId, { practice = false } = {}) {
       <div class="stand-opts">
         <span class="fs-tempo-ctl"><button class="btn sm" data-act="fstempo" data-v="-4" aria-label="Slower">−</button><span id="fs-bpm"></span><button class="btn sm" data-act="fstempo" data-v="4" aria-label="Faster">+</button></span>
         <label class="fs-tg"><input type="checkbox" id="fs-click" ${FSS.click ? 'checked' : ''}> Click while playing</label>
+        ${practice || !recCan() ? '' : `<label class="fs-tg"><input type="checkbox" id="fs-rec" ${FSS.rec ? 'checked' : ''}> ● Record the student</label>`}
         ${practice ? '' : '<button class="btn sm" data-act="fsrestart">↺ Start over</button>'}
         <label class="fs-tg">Study time <select id="fs-studys">${[0, 30, 60].map((s) => `<option value="${s}" ${FSS.studyS === s ? 'selected' : ''}>${s ? s + ' s' : 'Off'}</option>`).join('')}</select></label>
       </div>
@@ -6223,7 +6431,12 @@ function fsAudPerform() {
   $('#fs-ticks2').hidden = true;
   fsSay('Play! When the student finishes: ▶ Hear it to compare, ↺ Start over, or Done to score it.');
   fsDrawButtons();
+  if (FSS.rec) {   // record the performance; stops itself after the etude's length + 8 s (or on Done / Hear it / Start over)
+    const lenS = FSS.et.totalTicks * (60 / FSS.bpm / FSS.et.beatTicks);
+    recStart(FSS.secId, { autoStopS: Math.ceil(lenS + 8) });
+  }
 }
+function fsRecStop() { if (REC.mr && REC.secId === FSS.secId) recStop(); }
 function fsDrawRows() {
   const box = $('#fs-rows'); if (!box) return;
   FSS.rows = fsEngrave(FSS.et, FSS.real, Math.max(260, box.clientWidth || 800), 'st-');
@@ -6244,6 +6457,7 @@ function fsDrawButtons() {
 }
 const fsSay = (t) => { const s = $('#fs-say'); if (s) s.textContent = t; };
 function fsCloseStand() {
+  fsRecStop();
   fsStopRun(); fsStopStudy(); fsTickStop(); fsSpeakStop();
   FSS.phase = 'free';
   try { window.Arcade.Winds.stopAll(); } catch (e) { /* no audio yet */ }
@@ -6408,7 +6622,7 @@ function fsAction(a, v) {
     case 'fsready': fsEndStudy(); return true;
     case 'fsaud': fsAudStart(); return true;
     case 'fsrestart': { const id = FSS.secId; fsCloseStand(); fsOpenStand(id); return true; }
-    case 'fsplay': if (FSS.run && FSS.run.kind === 'play') fsStopRun(); else { if (FSS.phase === 'perform') FSS.phase = 'free'; fsStart('play'); } return true;
+    case 'fsplay': if (FSS.run && FSS.run.kind === 'play') fsStopRun(); else { fsRecStop(); if (FSS.phase === 'perform') FSS.phase = 'free'; fsStart('play'); } return true;
     case 'fshear':
       if (FSS.run && FSS.run.kind === 'hear') { fsStopRun(); return true; }
       if (!FSS.played && !FSS.hearArmed) {
@@ -6416,7 +6630,7 @@ function fsAction(a, v) {
         fsSay('Hear it after the student has played: it shows how the etude goes. Tap ▶ Hear it again to play it now.');
         return true;
       }
-      fsStart('hear'); return true;
+      fsRecStop(); fsStart('hear'); return true;
     case 'fstempo': {
       if (FSS.run || FSS.tick || ['speaking', 'tempo1', 'study', 'tempo2'].includes(FSS.phase)) return true;
       FSS.bpm = Math.max(FS_RULES.tempoMin, Math.min(FSS.et.tempo + FS_RULES.tempoOver, FSS.bpm + +v));
@@ -6436,6 +6650,12 @@ function fsChange(t) {
     return true;
   }
   if (t.id === 'fs-click') { FSS.click = t.checked; if (!FSS.practice) fsSavePrefs({ click: t.checked }); fsDrawButtons(); return true; }
+  if (t.id === 'fs-rec') {
+    FSS.rec = t.checked; fsSavePrefs({ rec: t.checked });
+    if (t.checked) recMic().then((st) => st.getTracks().forEach((x) => x.stop()))   // ask for the microphone now, not mid-audition
+      .catch(() => { t.checked = false; FSS.rec = false; fsSavePrefs({ rec: false }); toast('Microphone blocked. Allow it for this site to record.'); });
+    return true;
+  }
   if (t.id === 'fs-speak') { FSS.speak = t.checked; fsSavePrefs({ speak: t.checked }); fsDrawCover(); return true; }
   if (t.id === 'fs-studys') {
     FSS.studyS = +t.value; fsSavePrefs({ studyS: FSS.studyS });
@@ -6462,9 +6682,495 @@ document.addEventListener('visibilitychange', () => {
 });
 
 /* ============================================================
+   RECORDING THE STUDENT
+   ● Record on any section of the judge sheet, and (optionally) automatically on the music stand from "Play!".
+   One recording per mock + section, kept in this browser's IndexedDB ('asm-media' → 'rec', key "mockId|secId"):
+   too big for share links or the JSON backup, so the results page offers a Download button for each.
+   Deleting a mock from history deletes its recordings. Nothing is uploaded.
+   ============================================================ */
+const REC_DB = 'asm-media', REC_STORE = 'rec';
+const REC = { mr: null, stream: null, chunks: [], key: null, secId: null, t0: 0, iv: 0, auto: 0, mime: '' };
+let recDbP = null;
+function recDb() {
+  if (recDbP) return recDbP;
+  recDbP = new Promise((res, rej) => {
+    if (!window.indexedDB) { rej(new Error('no idb')); return; }
+    const r = indexedDB.open(REC_DB, 1);
+    r.onupgradeneeded = () => r.result.createObjectStore(REC_STORE);
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+  recDbP.catch(() => { recDbP = null; });
+  return recDbP;
+}
+function recTx(mode, fn) {
+  return recDb().then((db) => new Promise((res, rej) => {
+    const tx = db.transaction(REC_STORE, mode), st = tx.objectStore(REC_STORE);
+    const out = fn(st);
+    tx.oncomplete = () => res(out && 'result' in out ? out.result : undefined);
+    tx.onerror = () => rej(tx.error);
+  }));
+}
+const recGet = (key) => recTx('readonly', (st) => st.get(key)).catch(() => null);
+const recPut = (key, val) => recTx('readwrite', (st) => st.put(val, key));
+const recDel = (key) => recTx('readwrite', (st) => st.delete(key)).catch(() => {});
+function recAll() {
+  return recDb().then((db) => new Promise((res) => {
+    const out = [], tx = db.transaction(REC_STORE, 'readonly');
+    tx.objectStore(REC_STORE).openCursor().onsuccess = (e) => { const c = e.target.result; if (c) { out.push({ key: c.key, val: c.value }); c.continue(); } };
+    tx.oncomplete = () => res(out);
+    tx.onerror = () => res(out);
+  })).catch(() => []);
+}
+async function recDeleteMock(mockId) {
+  const all = await recAll();
+  await Promise.all(all.filter((r) => String(r.key).startsWith(mockId + '|')).map((r) => recDel(r.key)));
+}
+const recCan = () => !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+function recMime() {
+  const c = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/aac', 'audio/webm', 'audio/ogg;codecs=opus'];
+  for (const t of c) { try { if (MediaRecorder.isTypeSupported(t)) return t; } catch (e) { /* ignore */ } }
+  return '';
+}
+const recExt = (mime) => (/mp4|aac/.test(mime) ? 'm4a' : /ogg/.test(mime) ? 'ogg' : 'webm');
+
+/** ask for the microphone (music settings: no echo cancelling, noise suppression or auto-gain) */
+async function recMic() {
+  return navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+}
+async function recStart(secId, { autoStopS = 0 } = {}) {
+  if (!recCan()) { toast('Recording isn’t supported in this browser'); return false; }
+  if (REC.mr) await recStop();
+  let stream;
+  try { stream = await recMic(); } catch (e) { toast('Microphone blocked. Allow the microphone for this site in the browser settings.'); return false; }
+  const mime = recMime();
+  let mr;
+  try { mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); } catch (e) { stream.getTracks().forEach((t) => t.stop()); toast('Recording couldn’t start'); return false; }
+  Object.assign(REC, { mr, stream, chunks: [], key: `${S.mock.id}|${secId}`, secId, mockId: S.mock.id, t0: Date.now(), mime: mr.mimeType || mime });
+  mr.ondataavailable = (e) => { if (e.data && e.data.size) REC.chunks.push(e.data); };
+  mr.start(1000);
+  clearInterval(REC.iv);
+  REC.iv = setInterval(recPaintLive, 500);
+  clearTimeout(REC.auto);
+  if (autoStopS) REC.auto = setTimeout(() => recStop(), autoStopS * 1000);
+  recPaintLive(); recRefresh(secId);
+  return true;
+}
+/** stop and save; resolves when the recording is stored */
+function recStop() {
+  const { mr } = REC;
+  if (!mr) return Promise.resolve();
+  clearInterval(REC.iv); clearTimeout(REC.auto);
+  return new Promise((res) => {
+    const key = REC.key, secId = REC.secId, mime = REC.mime, dur = (Date.now() - REC.t0) / 1000, stream = REC.stream;
+    mr.onstop = async () => {
+      stream.getTracks().forEach((t) => t.stop());
+      const blob = new Blob(REC.chunks, { type: mime || 'audio/webm' });
+      Object.assign(REC, { mr: null, stream: null, chunks: [], key: null, secId: null });
+      if (blob.size > 0) {
+        try { await recPut(key, { blob, mime: blob.type, dur, created: Date.now() }); toast('Recording saved on this device'); }
+        catch (e) { toast('Couldn’t save the recording (storage is full or blocked)'); }
+      }
+      recPaintLive(); recRefresh(secId);
+      res();
+    };
+    try { mr.stop(); } catch (e) { res(); }
+  });
+}
+const recIsOn = (secId) => !!REC.mr && REC.secId === secId && REC.mockId === (S.mock && S.mock.id);
+
+/* ---------- UI ---------- */
+/** the record button + player row inside a judge-sheet section */
+function recSectionRow(sec) {
+  if (!recCan() || S.readOnly) return '';
+  const on = recIsOn(sec.id);
+  return `<div class="rec-row" data-rec-row="${sec.id}">
+    <button class="chip-btn rec-btn ${on ? 'on' : ''}" data-act="${on ? 'recstop' : 'recstart'}" data-v="${sec.id}">${on ? '■ Stop recording <span class="rec-time" data-rec-time></span>' : '● Record'}</button>
+    <span class="rec-slot" data-rec-key="${esc(S.mock.id + '|' + sec.id)}"></span>
+  </div>`;
+}
+/** fill every [data-rec-key] slot under root with a player (if a recording exists) */
+async function recPaint(root = document) {
+  const slots = $$('[data-rec-key]', root);
+  for (const el of slots) {
+    const r = await recGet(el.dataset.recKey);
+    if (!el.isConnected) continue;
+    if (!r || !r.blob) { el.innerHTML = el.dataset.empty || ''; continue; }
+    const url = URL.createObjectURL(r.blob);
+    el.innerHTML = `<audio controls preload="metadata" src="${url}"></audio>
+      ${el.dataset.download ? `<a class="btn sm" href="${url}" download="${esc(el.dataset.download)}.${recExt(r.mime)}">Download</a>` : ''}
+      ${S.readOnly ? '' : `<button class="btn sm ghost rec-del" data-act="recdel" data-v="${esc(el.dataset.recKey)}" aria-label="Delete recording">✕</button>`}`;
+  }
+}
+function recRefresh(secId) { const row = $(`[data-rec-row="${secId}"]`); if (row) { row.outerHTML = recSectionRow(FORM.sections.find((s) => s.id === secId)); recPaint($(`[data-rec-row="${secId}"]`) || document); } }
+function recPaintLive() {
+  const s = REC.mr ? mmss(Date.now() - REC.t0) : '';
+  $$('[data-rec-time]').forEach((el) => { el.textContent = s; });
+  document.body.classList.toggle('recording', !!REC.mr);
+  const sr = $('#fs-rec-live'); if (sr) { sr.hidden = !REC.mr; sr.textContent = REC.mr ? `● REC ${s}` : ''; }
+}
+/** the results-page panel: every recording for this mock */
+function recResultsBlock() {
+  if (!recCan() && !window.indexedDB) return '';
+  const m = S.mock, base = `${(m.student.name || 'Student').replace(/[^\w\- ]+/g, '')} - ${m.date || ''}`;
+  return `<section class="panel rec-panel" data-rec-panel hidden>
+    <h3>Recordings</h3>
+    ${FORM.sections.map((sec) => `<div class="rec-res" data-rec-res><b>${esc(sec.title)}</b>
+      <span class="rec-slot" data-rec-key="${esc(m.id + '|' + sec.id)}" data-download="${esc(base + ' - ' + sec.title.replace(/[^\w\- #]+/g, ''))}"></span></div>`).join('')}
+    <p class="muted small">Saved only on this device; share links and backups don’t include audio. Use Download to send one to the student.</p>
+  </section>`;
+}
+async function recPaintResults() {
+  const panel = $('[data-rec-panel]'); if (!panel) return;
+  await recPaint(panel);
+  let any = false;
+  $$('[data-rec-res]', panel).forEach((row) => { const has = !!$('audio', row); row.hidden = !has; any = any || has; });
+  panel.hidden = !any;
+}
+async function recUsage() {
+  const all = await recAll();
+  return { n: all.length, bytes: all.reduce((a, r) => a + ((r.val && r.val.blob && r.val.blob.size) || 0), 0) };
+}
+function recAction(a, v) {
+  switch (a) {
+    case 'recstart': recStart(v); return true;
+    case 'recstop': recStop(); return true;
+    case 'recdel': recDel(v).then(() => { const sid = v.split('|')[1]; if (S.view === 'results') recPaintResults(); else recRefresh(sid); toast('Recording deleted'); }); return true;
+    case 'recclear': recAll().then((all) => Promise.all(all.map((r) => recDel(r.key)))).then(() => { toast('All recordings deleted'); render(); }); return true;
+  }
+  return false;
+}
+
+/* ============================================================
+   GOALS: an audition date + target score per student, days left, the gap, and whether they're on pace.
+   Stored on this device: localStorage 'asm.goals.v1' = { [studentKey]: { date, target } }.
+   A default audition date (prefs.auditionDate) covers every student without their own date, since a whole
+   class usually auditions the same day. The default target is the instrument's recommendation line.
+   "On pace" fits a straight line through the student's FULL mocks (score vs. date) and projects it to audition day.
+   ============================================================ */
+const LS_GOALS = 'asm.goals.v1';
+function goalOf(key) {
+  const g = (store.get(LS_GOALS, {}) || {})[key] || {};
+  const def = store.get(LS.prefs, {}).auditionDate || '';
+  return { date: g.date || def, ownDate: !!g.date, target: g.target != null && g.target !== '' ? +g.target : null };
+}
+function setGoal(key, patch) {
+  const all = store.get(LS_GOALS, {}) || {};
+  all[key] = Object.assign({}, all[key] || {}, patch);
+  store.set(LS_GOALS, all);
+}
+function daysUntil(iso) {
+  if (!iso) return null;
+  const [y, m, d] = iso.split('-').map(Number);
+  const t = new Date(y, m - 1, d), now = new Date(); now.setHours(0, 0, 0, 0);
+  return Math.round((t - now) / 864e5);
+}
+const dayNum = (iso) => { const [y, m, d] = iso.split('-').map(Number); return Date.UTC(y, m - 1, d) / 864e5; };
+/** pace for a student's full mocks of one combo: { n, latest, target, gap, days, slopeWeek, projected, onPace } */
+function goalStatus(key, mocks, cut) {
+  const g = goalOf(key);
+  const target = g.target != null ? g.target : cut;
+  const full = mocks.filter((m) => !m.scope && m.date).map((m) => ({ d: m.date, t: (m.summary || summarize(m)).total }))
+    .sort((a, b) => a.d.localeCompare(b.d));
+  const out = { goal: g, target, days: daysUntil(g.date), n: full.length, latest: full.length ? full[full.length - 1].t : null };
+  if (out.latest != null && target != null) out.gap = target - out.latest;
+  const xs = [...new Set(full.map((p) => p.d))];
+  if (full.length >= 2 && xs.length >= 2) {
+    const X = full.map((p) => dayNum(p.d)), Y = full.map((p) => p.t);
+    const mx = X.reduce((a, b) => a + b, 0) / X.length, my = Y.reduce((a, b) => a + b, 0) / Y.length;
+    const sxx = X.reduce((a, x) => a + (x - mx) ** 2, 0), sxy = X.reduce((a, x, i) => a + (x - mx) * (Y[i] - my), 0);
+    const slope = sxx ? sxy / sxx : 0;
+    out.slopeWeek = slope * 7;
+    if (g.date && target != null) {
+      out.projected = my + slope * (dayNum(g.date) - mx);
+      out.onPace = out.projected >= target;
+    }
+  }
+  return out;
+}
+/** the goal card on a student's history page */
+function goalCard(key, mocks, cut, max) {
+  const st = goalStatus(key, mocks, cut);
+  const g = st.goal;
+  const line = [];
+  if (st.days != null) line.push(st.days > 1 ? `<b>${st.days} days</b> to audition day` : st.days === 1 ? '<b>Tomorrow</b> is audition day' : st.days === 0 ? '<b>Audition day is today</b>' : 'Audition day has passed');
+  if (st.latest != null) line.push(`latest full mock <b>${fmt(st.latest, 1)}</b>`);
+  if (st.gap != null) line.push(st.gap > 0 ? `<b>${fmt(st.gap, 1)} points</b> to the target` : '<b>at or above the target</b>');
+  let pace = '';
+  if (st.slopeWeek != null) {
+    const trend = `${st.slopeWeek >= 0 ? '+' : ''}${fmt(st.slopeWeek, 1)} points a week`;
+    if (st.projected != null) {
+      pace = `<div class="pace ${st.onPace ? 'ok' : 'behind'}"><b>${st.onPace ? 'On pace' : 'Behind pace'}</b> · trend ${trend} · projected ${fmt(Math.min(max, Math.max(0, st.projected)), 1)} on audition day${st.onPace ? '' : `, short of ${fmt(st.target, 1)}`}</div>`;
+    } else pace = `<div class="pace">Trend ${trend}. Set an audition date to see if they’re on pace.</div>`;
+  } else if (st.n === 1) pace = '<div class="pace">Run another full mock on a later day to see the trend.</div>';
+  return `<div class="goal-card">
+    <div class="goal-fields">
+      <label class="fld"><span>Audition day</span><input type="date" data-goal="date" value="${esc(g.date)}"></label>
+      <label class="fld"><span>Target score</span><input type="number" inputmode="decimal" min="0" max="${max}" step="0.5" data-goal="target" value="${g.target != null ? g.target : ''}" placeholder="${cut != null ? fmt(cut) + ' (line)' : 'none'}"></label>
+      <button class="btn sm ghost" data-act="goalall" title="Use this audition day for every student without their own">Use this date for everyone</button>
+    </div>
+    ${line.length ? `<p class="goal-line">${line.join(' · ')}</p>` : '<p class="goal-line muted">Set the audition day and a target to track the countdown.</p>'}
+    ${pace}
+  </div>`;
+}
+/** one line for the results page (full mocks of a student who has a goal or date) */
+function goalResultLine(m, total) {
+  if (m.scope) return '';
+  const key = studentKey(m), g = goalOf(key);
+  const f = buildForm(m.level, m.round, m.inst, m.variant);
+  const target = g.target != null ? g.target : null;
+  const d = daysUntil(g.date);
+  if (target == null && d == null) return '';
+  const bits = [];
+  if (d != null && d >= 0) bits.push(`${d} day${d === 1 ? '' : 's'} until audition day`);
+  if (target != null && target !== f.cut) bits.push(total >= target ? `${fmt(total - target, 2)} above the goal of ${fmt(target)}` : `${fmt(target - total, 2)} below the goal of ${fmt(target)}`);
+  return bits.length ? `<p class="goal-res">🎯 ${bits.join(' · ')}</p>` : '';
+}
+
+/* ============================================================
+   AUDITION DAY: score a whole group back to back.
+   Setup (view 'session'): grade band, round, what to check (full audition or a quick check type), a pasted roster
+   (one student per line; ", Instrument" overrides the default instrument), and whether everyone gets the same
+   sight-reading etude (like a real audition room).
+   Running: the judge sheet shows a queue bar (◀ Prev · jump list · Next ▶). Each student is a normal mock tagged
+   m.session = session id, saved to history when scored. Summary (view 'summary'): ranked table, print, CSV.
+   localStorage 'asm.session.v1' holds the one active session.
+   ============================================================ */
+const LS_SESSION = 'asm.session.v1';
+const sessGet = () => store.get(LS_SESSION, null);
+const sessSet = (s) => store.set(LS_SESSION, s);
+function sessActive() { const s = sessGet(); return s && !s.ended ? s : null; }
+const SESS_TYPES = [['full', 'Full audition'], ['scales', 'Scales'], ['chromatic', 'Chromatic'], ['etude', 'Etude'], ['sight', 'Sight reading']];
+function sessTypeLabel(ss) {
+  if (ss.type === 'full') return 'Full audition';
+  return unitLabel(buildForm(ss.level, ss.round, 'clarinet', null), ss.type);
+}
+function sessTypesFor(level, round) {
+  const f = buildForm(level, round, 'clarinet', null);
+  return SESS_TYPES.filter(([t]) => t === 'full' || unitSecs(f, t).length);
+}
+/* ---------- roster parsing ---------- */
+const INST_ALIASES = { fl: 'flute', flute: 'flute', ob: 'oboe', oboe: 'oboe', bsn: 'bassoon', bassoon: 'bassoon', cl: 'clarinet', clar: 'clarinet', clarinet: 'clarinet',
+  'bass cl': 'bassclar', 'bass clar': 'bassclar', 'bass clarinet': 'bassclar', bcl: 'bassclar', contra: 'contraclar', 'contra clarinet': 'contraclar',
+  alto: 'altosax', 'alto sax': 'altosax', 'alto saxophone': 'altosax', as: 'altosax', tenor: 'tenorsax', 'tenor sax': 'tenorsax', 'tenor saxophone': 'tenorsax', ts: 'tenorsax',
+  bari: 'barisax', 'bari sax': 'barisax', 'baritone sax': 'barisax', 'baritone saxophone': 'barisax', tpt: 'trumpet', trumpet: 'trumpet', cornet: 'trumpet',
+  hn: 'horn', horn: 'horn', 'french horn': 'horn', tbn: 'trombone', trombone: 'trombone', 'bass trombone': 'basstrombone', 'bass tbn': 'basstrombone',
+  bar: 'baritone', baritone: 'baritone', euph: 'baritone', euphonium: 'baritone', tuba: 'tuba', perc: 'percussion', percussion: 'percussion', drums: 'percussion' };
+function parseRoster(text, defInst, level) {
+  return text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).map((line) => {
+    const parts = line.split(/\s*[,\t]\s*/);
+    let inst = defInst;
+    if (parts.length > 1) {
+      const k = parts.slice(1).join(' ').toLowerCase().replace(/[^a-z ]/g, '').trim();
+      if (INST_ALIASES[k]) inst = INST_ALIASES[k];
+    }
+    if (inst === 'basstrombone' && level === 'ms') inst = 'trombone';
+    return { name: parts[0], inst, mockId: null };
+  });
+}
+
+/* ---------- setup view ---------- */
+function sessDraft() {
+  if (!S.sessDraft) {
+    const p = store.get(LS.prefs, {});
+    S.sessDraft = { level: 'ms', round: 'district', type: 'full', inst: 'clarinet', roster: '', share: true, judge: p.judge || '', date: todayISO() };
+  }
+  return S.sessDraft;
+}
+function viewSession() {
+  const d = sessDraft(), L = LEVELS[d.level];
+  const types = sessTypesFor(d.level, d.round);
+  if (!types.some(([t]) => t === d.type)) d.type = 'full';
+  const insts = INSTRUMENTS.filter((i) => !(i.hsOnly && d.level === 'ms'));
+  const n = d.roster.split(/\r?\n/).filter((l) => l.trim()).length;
+  const seg = (act, cur, list) => `<div class="seg wrap">${list.map(([v, l]) => `<button class="${v === cur ? 'on' : ''}" data-act="${act}" data-v="${v}">${l}</button>`).join('')}</div>`;
+  return `${backBtn('home')}
+  <h2 class="pick-h">Audition day: run a group</h2>
+  <p class="muted">Score a whole section back to back, the way a real audition room runs. Each student is saved to history, and you get a ranked summary at the end.</p>
+  <div class="formcard sess-form">
+    <div class="fld"><span>Grade band</span>${seg('sslevel', d.level, Object.values(LEVELS).map((x) => [x.id, `${x.short} (${x.grades})`]))}</div>
+    <div class="fld"><span>Round</span>${seg('ssround', d.round, [['district', 'First Round'], ['state', 'Final Round']])}</div>
+    <div class="fld"><span>What are you checking?</span>${seg('sstype', d.type, types.map(([t, l]) => [t, t === 'full' ? l : unitLabel(buildForm(d.level, d.round, 'clarinet', null), t)]))}</div>
+    <div class="grid2">
+      <label class="fld"><span>Instrument (unless a line says otherwise)</span><select data-ss="inst">${insts.map((i) => `<option value="${i.id}" ${i.id === d.inst ? 'selected' : ''}>${i.name}</option>`).join('')}</select></label>
+      <label class="fld"><span>Date</span><input type="date" data-ss="date" value="${esc(d.date)}"></label>
+      <label class="fld wide"><span>Judge / teacher</span><input data-ss="judge" value="${esc(d.judge)}"></label>
+      <label class="fld wide"><span>Students — one per line${n ? ` (${n})` : ''}</span>
+        <textarea data-ss="roster" rows="8" placeholder="Jordan Rivers&#10;Avery Stone&#10;Sam Lee, Trumpet">${esc(d.roster)}</textarea>
+        <small class="muted">Add a comma and an instrument to change one student’s instrument: <i>Sam Lee, Alto Sax</i>.</small></label>
+    </div>
+    ${d.type === 'full' || d.type === 'sight' ? `<label class="check"><input type="checkbox" data-ss="share" ${d.share ? 'checked' : ''}> Everyone gets the same sight-reading etude (like a real audition room)</label>` : ''}
+    <button class="btn primary big" data-act="ssstart">Start audition day →</button>
+  </div>`;
+}
+function sessStart() {
+  const d = sessDraft();
+  const students = parseRoster(d.roster, d.inst, d.level);
+  if (!students.length) { toast('Add at least one student'); return; }
+  const prefs = store.get(LS.prefs, {}); prefs.judge = d.judge; store.set(LS.prefs, prefs);
+  sessSet({ id: uid(), created: Date.now(), level: d.level, round: d.round, type: d.type, share: d.type === 'full' || d.type === 'sight' ? d.share : false,
+    codes: {}, judge: d.judge, date: d.date, students, idx: 0 });
+  sessOpen(0);
+}
+/** open student i of the active session on the judge sheet */
+function sessOpen(i) {
+  const ss = sessActive(); if (!ss) return;
+  i = Math.max(0, Math.min(ss.students.length - 1, i));
+  ss.idx = i;
+  const st = ss.students[i];
+  let m = null;
+  if (st.mockId) {
+    const h = getHistory().find((x) => x.id === st.mockId) || (store.get(LS.draft, {}) || {}).id === st.mockId && store.get(LS.draft, null);
+    if (h) { m = JSON.parse(JSON.stringify(h)); delete m.summary; }
+  }
+  if (!m) {
+    S.pick = { level: ss.level, inst: st.inst, round: ss.round, variant: null };
+    const dv = ss.level === 'ms' && ss.round === 'district' && MS_DISTRICT[st.inst];
+    if (dv && dv.variants) S.pick.variant = dv.defaultVariant;
+    m = newMock();
+    Object.assign(m, { session: ss.id, judge: ss.judge, date: ss.date });
+    m.student.name = st.name;
+    if (ss.type !== 'full') {
+      const f = buildForm(m.level, m.round, m.inst, m.variant);
+      const secs = unitSecs(f, ss.type);
+      if (secs.length) { m.scope = secs; m.scopeLabel = unitLabel(f, ss.type); }
+    }
+    st.mockId = m.id;
+  }
+  sessSet(ss);
+  if (ss.share) Object.entries(ss.codes || {}).forEach(([sid, code]) => { if (!m.sight[sid]) m.sight[sid] = code; });
+  setMock(m); S.who = 'teacher'; S.readOnly = false;
+  go('sheet');
+}
+/** keep the shared etude codes in step with the current student's mock */
+function sessSync() {
+  const ss = sessActive(); const m = S.mock;
+  if (!ss || !m || m.session !== ss.id || !ss.share) return;
+  const codes = Object.assign({}, ss.codes || {});
+  let changed = false;
+  Object.entries(m.sight || {}).forEach(([sid, code]) => { if (codes[sid] !== code) { codes[sid] = code; changed = true; } });
+  if (changed) { ss.codes = codes; sessSet(ss); }
+}
+function sessSaveCurrent() {
+  const m = S.mock; if (!m || !m.session) return;
+  if (hasScores('teacher') || hasScores('self')) saveToHistory(m, true);
+  else store.set(LS.draft, m);
+}
+function sessMockFor(st) { return st.mockId ? getHistory().find((x) => x.id === st.mockId) : null; }
+
+/** the queue bar on the judge sheet / results for a session mock */
+function sessBar() {
+  const ss = sessActive(); const m = S.mock;
+  if (!ss || !m || m.session !== ss.id) return '';
+  const i = ss.idx, n = ss.students.length, next = ss.students[i + 1];
+  const done = (st) => { const h = sessMockFor(st); return h && (h.summary || summarize(h)).total != null && Object.values(h.scores.teacher || {}).some((v) => v != null); };
+  return `<div class="sess-bar">
+    <div class="sess-info"><span class="sess-k">Audition day · ${esc(sessTypeLabel(ss))}</span><b>Student ${i + 1} of ${n}</b></div>
+    <div class="sess-nav">
+      <button class="btn sm on-navy" data-act="ssprev" ${i === 0 ? 'disabled' : ''} aria-label="Previous student">◀</button>
+      <select data-sess-jump aria-label="Jump to a student">${ss.students.map((st, k) => `<option value="${k}" ${k === i ? 'selected' : ''}>${k + 1}. ${esc(st.name)}${done(st) ? ' ✓' : ''}</option>`).join('')}</select>
+      ${next ? `<button class="btn sm gold" data-act="ssnext">Next: ${esc(next.name.split(/\s+/)[0])} ▶</button>` : '<button class="btn sm gold" data-act="sssummary">Finish: summary ▶</button>'}
+      ${next ? '<button class="btn sm on-navy" data-act="sssummary">Summary</button>' : ''}
+    </div>
+  </div>`;
+}
+
+/* ---------- summary ---------- */
+function sessRows(ss) {
+  return ss.students.map((st, k) => {
+    const h = sessMockFor(st);
+    if (!h || !Object.values(h.scores.teacher || {}).concat(Object.values(h.scores.self || {})).some((v) => v != null)) return { k, st, scored: false };
+    const f = formFor(h), who = Object.values(h.scores.teacher || {}).some((v) => v != null) ? 'teacher' : 'self';
+    const r = scoreForm(f, h.scores[who]), an = analyze(f, h.scores[who]);
+    const focus = an.focus[0] ? (CATS[an.focus[0].key] || CATS.general).name : '';
+    return { k, st, scored: true, total: r.total, max: r.max, pct: pct(r.total, r.max), cut: f.cut, focus, blanks: r.cells - r.done, inst: f.instrumentLabel };
+  });
+}
+function viewSummary() {
+  const ss = sessGet();
+  if (!ss) return `${backBtn('home')}<p class="muted">No audition day in progress.</p>`;
+  const rows = sessRows(ss);
+  const scored = rows.filter((r) => r.scored).sort((a, b) => b.pct - a.pct), rest = rows.filter((r) => !r.scored);
+  const L = LEVELS[ss.level];
+  return `${ss.ended ? backBtn('home') : '<button class="back" data-act="ssback">← Back to scoring</button>'}
+  <h2 class="pick-h">Audition day summary</h2>
+  <p class="muted">${esc(L.short)} (${L.grades}) · ${ss.round === 'district' ? 'First Round' : 'Final Round'} · ${esc(sessTypeLabel(ss))} · ${esc(fmtDate(ss.date))}${ss.judge ? ' · ' + esc(ss.judge) : ''} — ${scored.length} of ${rows.length} scored</p>
+  <div class="res-actions">
+    <button class="btn primary" data-act="ssprint">Print summary</button>
+    <button class="btn" data-act="sscsv">Download CSV</button>
+    ${ss.ended ? '' : '<button class="btn ghost" data-act="ssend">End audition day</button>'}
+  </div>
+  <div class="panel sess-table-wrap">
+  <table class="htable sess-table"><thead><tr><th>#</th><th>Student</th><th>Instrument</th><th class="num">Score</th><th class="num">vs line</th><th>Focus next</th><th></th></tr></thead><tbody>
+    ${scored.map((r, n) => `<tr><td>${n + 1}</td><td><b>${esc(r.st.name)}</b>${r.blanks ? ` <small class="neg">${r.blanks} blank</small>` : ''}</td><td>${esc(r.inst)}</td>
+      <td class="num">${fmt(r.total, 2)} / ${fmt(r.max, 0)}<small>${fmt(r.pct, 0)}%</small></td>
+      <td class="num">${r.cut ? `<span class="${r.total >= r.cut ? 'pos' : 'neg'}">${r.total >= r.cut ? '+' : ''}${fmt(r.total - r.cut, 1)}</span>` : '—'}</td>
+      <td>${esc(r.focus)}</td><td class="acts"><button class="btn sm" data-act="ssopen" data-v="${r.k}">Open</button></td></tr>`).join('')}
+    ${rest.map((r) => `<tr class="unscored"><td>—</td><td>${esc(r.st.name)}</td><td>${esc((INSTRUMENTS.find((i) => i.id === r.st.inst) || {}).name || '')}</td><td class="num muted">not scored</td><td></td><td></td>
+      <td class="acts">${ss.ended ? '' : `<button class="btn sm" data-act="ssopen" data-v="${r.k}">Score</button>`}</td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+function sessCSV() {
+  const ss = sessGet(); if (!ss) return;
+  const q = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const lines = [['Rank', 'Student', 'Instrument', 'Score', 'Max', 'Percent', 'vs recommendation line', 'Focus next'].map(q).join(',')];
+  const rows = sessRows(ss), scored = rows.filter((r) => r.scored).sort((a, b) => b.pct - a.pct);
+  scored.forEach((r, n) => lines.push([n + 1, r.st.name, r.inst, fmt(r.total, 2), fmt(r.max, 2), fmt(r.pct, 1), r.cut ? fmt(r.total - r.cut, 2) : '', r.focus].map(q).join(',')));
+  rows.filter((r) => !r.scored).forEach((r) => lines.push(['', r.st.name, (INSTRUMENTS.find((i) => i.id === r.st.inst) || {}).name, 'not scored', '', '', '', ''].map(q).join(',')));
+  const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `audition-day-${ss.date || todayISO()}.csv`; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+function sessPrint() {
+  const ss = sessGet(); if (!ss) return;
+  const rows = sessRows(ss), scored = rows.filter((r) => r.scored).sort((a, b) => b.pct - a.pct), L = LEVELS[ss.level];
+  $('#print').innerHTML = `<div class="p-page">
+    <div class="p-mock">MOCK AUDITION — practice only</div>
+    <div class="p-title">Audition Day Summary</div>
+    <div class="p-sub" style="font-weight:400">${esc(L.short)} (${L.grades}) · ${ss.round === 'district' ? 'First Round' : 'Final Round'} · ${esc(sessTypeLabel(ss))} · ${esc(fmtDate(ss.date))}${ss.judge ? ' · Judge: ' + esc(ss.judge) : ''}</div>
+    <table class="p-scales p-summary"><thead><tr><th>#</th><th>Student</th><th>Instrument</th><th>Score</th><th>%</th><th>vs line</th><th>Focus next</th></tr></thead><tbody>
+    ${scored.map((r, n) => `<tr><td>${n + 1}</td><td style="text-align:left">${esc(r.st.name)}</td><td>${esc(r.inst)}</td><td>${fmt(r.total, 2)} / ${fmt(r.max, 0)}</td><td>${fmt(r.pct, 0)}%</td><td>${r.cut ? (r.total >= r.cut ? '+' : '') + fmt(r.total - r.cut, 1) : '—'}</td><td style="text-align:left">${esc(r.focus)}</td></tr>`).join('')}
+    ${rows.filter((r) => !r.scored).map((r) => `<tr><td>—</td><td style="text-align:left">${esc(r.st.name)}</td><td colspan="5">not scored</td></tr>`).join('')}
+    </tbody></table>
+    <div class="p-foot">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms. Not affiliated with GMEA.</div>
+  </div>`;
+  setTimeout(() => window.print(), 50);
+}
+function sessAction(a, v) {
+  switch (a) {
+    case 'session': S.sessDraft = null; go('session'); return true;
+    case 'sslevel': sessDraft().level = v; render(); return true;
+    case 'ssround': sessDraft().round = v; render(); return true;
+    case 'sstype': sessDraft().type = v; render(); return true;
+    case 'ssstart': sessStart(); return true;
+    case 'ssnext': { sessSaveCurrent(); const ss = sessActive(); if (ss) sessOpen(ss.idx + 1); return true; }
+    case 'ssprev': { sessSaveCurrent(); const ss = sessActive(); if (ss) sessOpen(ss.idx - 1); return true; }
+    case 'sssummary': sessSaveCurrent(); go('summary'); return true;
+    case 'ssback': { const ss = sessActive(); if (ss) sessOpen(ss.idx); return true; }
+    case 'ssopen': sessOpen(+v); return true;
+    case 'ssresume': { const ss = sessActive(); if (ss) sessOpen(ss.idx); return true; }
+    case 'ssprint': sessPrint(); return true;
+    case 'sscsv': sessCSV(); return true;
+    case 'ssend': { const ss = sessGet(); if (ss) { ss.ended = true; sessSet(ss); } toast('Audition day ended. Everyone’s mocks are in Student history.'); render(); return true; }
+  }
+  return false;
+}
+function sessInput(t) {
+  if (t.matches('[data-ss]')) {
+    const d = sessDraft(), k = t.dataset.ss;
+    d[k] = t.type === 'checkbox' ? t.checked : t.value;
+    if (k === 'roster') { const lab = t.closest('.fld'); const n = t.value.split(/\r?\n/).filter((l) => l.trim()).length; const sp = lab && lab.querySelector('span'); if (sp) sp.textContent = `Students — one per line${n ? ` (${n})` : ''}`; }
+    return true;
+  }
+  if (t.matches('[data-sess-jump]')) { sessSaveCurrent(); sessOpen(+t.value); return true; }
+  return false;
+}
+
+/* ============================================================
    All-State Mock Audition — app
    ============================================================ */
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '2.0.0';
 const LS = { draft: 'asm.draft.v1', hist: 'asm.history.v1', theme: 'asm.theme', prefs: 'asm.prefs.v1', exported: 'asm.lastExport' };
 
 /* ---------- utils ---------- */
@@ -6490,7 +7196,7 @@ function toast(msg) {
 /* ---------- state ---------- */
 const S = { view: 'home', pick: { level: null, inst: null, round: null, variant: null }, mock: null, who: 'teacher', readOnly: false, histKey: null, histFilter: null, sheetTab: 'judge' };
 let FORM = null;
-function setMock(m) { if (!m.sight) m.sight = {}; S.mock = m; FORM = buildForm(m.level, m.round, m.inst, m.variant); }
+function setMock(m) { if (!m.sight) m.sight = {}; S.mock = m; FORM = formFor(m); }
 function sc(who = S.who) { return S.mock.scores[who]; }
 
 /* ---------- scoring ---------- */
@@ -6611,6 +7317,7 @@ function newMock() {
     student: { name: '', school: prefs.school || '', grade: '' }, judge: prefs.judge || '', date: todayISO(),
     flow: 'teacher', scores: { teacher: {}, self: {} }, comments: { teacher: {}, self: {} },
     overall: { teacher: '', self: '' }, saved: false, sight: {},
+    scope: p.scope || undefined, scopeLabel: p.scopeLabel || undefined,
   };
 }
 let draftTimer = null;
@@ -6621,14 +7328,18 @@ function touch() {
   draftTimer = setTimeout(() => {
     store.set(LS.draft, S.mock);
     if (S.mock.saved) saveToHistory(S.mock, true);
+    sessSync();
   }, 250);
 }
 function getHistory() { return store.get(LS.hist, []); }
 function summarize(m) {
-  const f = buildForm(m.level, m.round, m.inst, m.variant);
+  const f = formFor(m);
   const who = Object.values(m.scores.teacher || {}).some((v) => v != null) ? 'teacher' : 'self';
   const r = scoreForm(f, m.scores[who]);
-  return { total: r.total, max: r.max, who, cut: f.cut };
+  /* per-section totals (scored sections only) feed the section-trend charts in history */
+  const secs = {};
+  r.sections.forEach((x) => { if (x.done) secs[x.sec.id] = { t: Math.round(x.total * 1000) / 1000, m: x.max }; });
+  return { total: r.total, max: r.max, who, cut: f.cut, secs, scope: m.scope ? (m.scopeLabel || 'Quick check') : null };
 }
 function saveToHistory(m, quiet) {
   const h = getHistory(); m.saved = true;
@@ -6656,7 +7367,7 @@ function packMock(m, opts) {
     n: opts.firstName ? (m.student.name || '').trim().split(/\s+/)[0] : m.student.name, sch: m.student.school, g: m.student.grade,
     j: m.judge, d: m.date, t: strip(m.scores.teacher), s: opts.self ? strip(m.scores.self) : {},
     ct: strip(m.comments.teacher), cs: opts.self ? strip(m.comments.self) : {}, ot: m.overall.teacher, os: opts.self ? m.overall.self : '',
-    sr: strip(m.sight), sb: m.sightBari || undefined,
+    sr: strip(m.sight), sb: m.sightBari || undefined, sc: m.scope || undefined, sl: m.scopeLabel || undefined,
   };
 }
 function unpackMock(p) {
@@ -6665,6 +7376,7 @@ function unpackMock(p) {
     student: { name: p.n || '', school: p.sch || '', grade: p.g || '' }, judge: p.j || '', date: p.d || '',
     flow: 'teacher', scores: { teacher: p.t || {}, self: p.s || {} }, comments: { teacher: p.ct || {}, self: p.cs || {} },
     overall: { teacher: p.ot || '', self: p.os || '' }, saved: false, sight: p.sr || {}, sightBari: p.sb || undefined,
+    scope: p.sc || undefined, scopeLabel: p.sl || undefined,
   };
 }
 async function encodeShare(m, opts) {
@@ -6695,10 +7407,13 @@ function render() {
     v === 'setup' ? viewSetup() :
     v === 'sheet' ? viewSheet() :
     v === 'results' ? viewResults() :
-    v === 'history' ? viewHistory() : '';
+    v === 'history' ? viewHistory() :
+    v === 'session' ? viewSession() :
+    v === 'summary' ? viewSummary() : '';
   renderTopbar();
-  if (v === 'history') drawHistoryChart();
-  if (v === 'sheet') fsPaintPreviews(main);
+  if (v === 'history') { drawHistoryChart(); histPaintUsage(); }
+  if (v === 'sheet') { fsPaintPreviews(main); recPaint(main); }
+  if (v === 'results') recPaintResults();
   window.scrollTo(0, 0);
 }
 
@@ -6707,7 +7422,7 @@ function renderTopbar() {
   if ((S.view === 'sheet' || S.view === 'results') && S.mock) {
     const r = scoreForm(FORM, sc(S.view === 'results' ? resultsWho() : S.who));
     tb.innerHTML = `<div class="tb-student">${esc(S.mock.student.name || 'Student')}</div>
-      <div class="tb-meta">${esc(FORM.instrumentLabel)} · ${LEVELS[S.mock.level].grades} · ${S.mock.round === 'district' ? 'First Round' : 'Final Round'}</div>`;
+      <div class="tb-meta">${esc(FORM.instrumentLabel)} · ${LEVELS[S.mock.level].grades} · ${S.mock.round === 'district' ? 'First Round' : 'Final Round'}${FORM.scope ? ' · Quick check' : ''}</div>`;
     $('#tb-total').innerHTML = S.view === 'sheet' ? `<span class="tb-score" id="live-total">${fmt(r.total, 1)}</span><span class="tb-max">/ ${fmt(r.max, 2)}</span>` : '';
   } else {
     tb.innerHTML = `<div class="tb-brand">All-State Mock Audition</div>`;
@@ -6730,6 +7445,8 @@ const GRADE_INFO = {
 const ICONS = {
   score: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3M8.5 11l2 2 4-4M8.5 17h7"/></svg>',
   share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3h10v6M7 18H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="7" y="14" width="10" height="7"/></svg>',
+  group: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.5c2.8 0 5 2.2 5 5"/></svg>',
+  quick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>',
   track: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/><circle cx="19" cy="8" r="1.5" fill="currentColor"/></svg>',
 };
 function miniSheet() {
@@ -6761,7 +7478,14 @@ function viewHome() {
 
   /* pick up where you left off: unfinished draft + most recent students */
   const cont = [];
-  if (draft && draft.level && LEVELS[draft.level] && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
+  const ss = sessActive();
+  if (ss) {
+    const nDone = ss.students.filter((st) => { const h = sessMockFor(st); return h && Object.values(h.scores.teacher || {}).some((v) => v != null); }).length;
+    cont.push(`<button class="cont resume" data-act="ssresume"><span class="cont-k">Continue audition day</span>
+      <span class="cont-n">${esc(sessTypeLabel(ss))} · ${esc(LEVELS[ss.level].short)}</span>
+      <span class="cont-v">${nDone} of ${ss.students.length} scored · next: ${esc((ss.students[ss.idx] || {}).name || '')}</span></button>`);
+  }
+  if (draft && !draft.session && draft.level && LEVELS[draft.level] && !draft.saved && Object.values(draft.scores.teacher).concat(Object.values(draft.scores.self)).some((v) => v != null)) {
     const f = buildForm(draft.level, draft.round, draft.inst, draft.variant);
     const r = scoreForm(f, draft.scores.teacher);
     cont.push(`<button class="cont resume" data-act="resume"><span class="cont-k">Resume unfinished mock</span>
@@ -6772,9 +7496,10 @@ function viewHome() {
   h.forEach((m) => { const k = studentKey(m); if (!latest[k] || m.updated > latest[k].updated) latest[k] = m; });
   Object.entries(latest).sort((a, b) => b[1].updated - a[1].updated).slice(0, cont.length ? 3 : 4).forEach(([k, m]) => {
     const sm = m.summary || summarize(m);
-    cont.push(`<button class="cont" data-act="hopenStudent" data-v="${esc(k)}"><span class="cont-k">Recent student</span>
+    const dl = daysUntil(goalOf(k).date);
+    cont.push(`<button class="cont" data-act="hopenStudent" data-v="${esc(k)}"><span class="cont-k">Recent student${dl != null && dl >= 0 ? ` · ${dl} day${dl === 1 ? '' : 's'} to go` : ''}</span>
       <span class="cont-n">${esc(m.student.name || 'Unnamed')}</span>
-      <span class="cont-v">${fmt(sm.total, 1)} / ${fmt(sm.max, 0)} · ${esc(instName(m.inst))} · ${roundName(m.round)}${m.date ? ' · ' + esc(fmtDate(m.date).replace(/, \d{4}$/, '')) : ''}</span></button>`);
+      <span class="cont-v">${fmt(sm.total, 1)} / ${fmt(sm.max, 0)}${sm.scope ? ' ' + esc(sm.scope) : ''} · ${esc(instName(m.inst))} · ${roundName(m.round)}${m.date ? ' · ' + esc(fmtDate(m.date).replace(/, \d{4}$/, '')) : ''}</span></button>`);
   });
 
   return `
@@ -6804,6 +7529,13 @@ function viewHome() {
           <ul>${GRADE_INFO[L.id].map((x) => `<li><span>${x}</span></li>`).join('')}</ul>
           <span class="go">Choose instrument →</span>
         </button>`).join('')}
+    </div>
+  </section>
+  <section class="home-sec">
+    <h2 class="sec-label">More ways to practice</h2>
+    <div class="ways">
+      <button class="way" data-act="session">${ICONS.group}<div><h3>Audition day</h3><p>Score a whole section back to back from a pasted roster, with the same sight-reading etude for everyone. You get a ranked summary to print or download.</p></div></button>
+      <div class="way static">${ICONS.quick}<div><h3>Quick checks</h3><p>No time for a full mock? After you pick an instrument, choose just scales, chromatic, the etude, or sight reading. Every check adds to the student’s progress chart.</p></div></div>
     </div>
   </section>
   <section class="home-sec">
@@ -6850,13 +7582,23 @@ function viewRound() {
       <ul>${roundSummary(p.level, round, p.inst).map((x) => `<li>${x}</li>`).join('')}</ul>
       ${round === 'district' && p.inst !== 'percussion' ? `<span class="pick-s">State recommendation line: ${fmt(buildForm(p.level, 'district', p.inst, p.variant).cut)}</span>` : ''}
     </button>`;
+  const quick = (round, title) => {
+    const units = quickUnits(buildForm(p.level, round, p.inst, round === 'district' ? (p.variant || (d && d.defaultVariant) || null) : null));
+    return `<div class="qrow"><span class="qrow-l">${title}</span>${units.map((u) => `<button class="chip-btn" data-act="qround" data-round="${round}" data-v="${esc(u.id)}">${esc(u.label)}</button>`).join('')}</div>`;
+  };
   return `${backBtn('inst')}${steps(3)}
   <h2 class="pick-h">${L.short} ${inst.name} — which round?</h2>
   ${variant}
   <div class="cards two">
     ${card('district', 'First Round', 'District audition')}
     ${card('state', 'Final Round', 'State audition')}
-  </div>`;
+  </div>
+  <section class="quick-pick">
+    <h3 class="sec-label">Or a quick check: just one part</h3>
+    ${quick('district', 'First Round')}
+    ${quick('state', 'Final Round')}
+    <p class="muted small">Quick checks are scored like the real sheet and feed the student’s section trends in history. They don’t count toward the full-audition score chart.</p>
+  </section>`;
 }
 
 /* ---------- setup ---------- */
@@ -6916,10 +7658,12 @@ function viewSheet() {
     return gh + `<section class="sec" id="sec-${sec.id}">${sectionInner(sec)}</section>`;
   }).join('');
   return `
+  ${sessBar()}
   <div class="sheet-head">
     <div class="sheet-id"><strong>${esc(FORM.title)}</strong><span>${esc(FORM.subtitle)} · ${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''}${FORM.division ? ' · Division preference line on form' : ''}</span></div>
     <div class="seg who">${['teacher', 'self'].map((w) => `<button class="${S.who === w ? 'on' : ''}" data-act="who" data-v="${w}">${w === 'teacher' ? 'Teacher scoring' : 'Student self-score'}</button>`).join('')}</div>
   </div>
+  ${FORM.scope ? `<div class="banner quick-banner"><b>Quick check: ${esc(FORM.scopeLabel)}.</b> Only this part of the sheet is scored (${fmt(FORM.max, 2)} points).</div>` : ''}
   ${FORM.notices.map((n) => `<div class="banner warn">${esc(n)}</div>`).join('')}
   ${banner}
   ${secs}
@@ -6941,7 +7685,7 @@ function sectionInner(sec) {
   const quick = quickFor(sec, FORM);
   const tools = [];
   if (sec.timeLimit) tools.push(`<button class="chip-btn" data-act="timer" data-v="${sec.timeLimit}">⏱ Time limit ${mmss(sec.timeLimit * 1000)}</button>`);
-  if (sec.tempo) tools.push(`<button class="chip-btn" data-act="metro" data-v="${sec.tempo}">♩ = ${sec.tempo}</button>`);
+  if (sec.tempo) tools.push(`<button class="chip-btn" data-act="metro" data-v="${sec.tempo}" aria-label="Metronome at ${sec.tempo}">${fsNoteIcon(false)} = ${sec.tempo}</button>`);
   if (sec.kind === 'windScales' || sec.kind === 'malletScales') {
     tools.push(`<button class="chip-btn" data-act="allperfect" data-v="${sec.id}">Start from perfect</button>`);
     if (sec.kind === 'malletScales' && r.done < r.cells) tools.push(`<button class="chip-btn" data-act="blankzero" data-v="${sec.id}" title="Every blank box in this section becomes ✗ (0 points)">Mark blanks ✗</button>`);
@@ -6953,7 +7697,8 @@ function sectionInner(sec) {
     </div>
     <div class="progress" title="${r.done} of ${r.cells} scored"><i style="width:${prog}%"></i></div>
     ${sec.help ? `<p class="help">${esc(sec.help)}</p>` : ''}
-        ${tools.length ? `<div class="sec-tools">${tools.join('')}</div>` : ''}
+    ${tools.length ? `<div class="sec-tools">${tools.join('')}</div>` : ''}
+    ${recSectionRow(sec)}
     ${sec.sightReading ? fsPanel(sec) : ''}
     <div class="sec-body">${body}</div>
     <details class="cmt-wrap" ${cmt ? 'open' : ''}><summary>Comments${cmt ? ' ✎' : ''}</summary>
@@ -7015,7 +7760,7 @@ function refreshSection(secId) {
   const open = $('.cmt-wrap', el)?.open;
   el.innerHTML = sectionInner(sec);
   if (open) $('.cmt-wrap', el).open = true;
-  fsPaintPreviews(el);
+  fsPaintPreviews(el); recPaint(el);
   const r = scoreForm(FORM, sc());
   const lt = $('#live-total'); if (lt) lt.textContent = fmt(r.total, 1);
 }
@@ -7042,7 +7787,7 @@ function analyze(form, s) {
   const sp = part(form.sections.filter((x) => x.sightReading));
   const pp = part(form.sections.filter((x) => !x.sightReading && x.kind === 'rubric' && !x.catKey));
   const srGap = sp != null && pp != null && pp - sp >= 12 ? { sp, pp } : null;
-  return { cats, strengths, focus, misses, srGap, plan: practicePlan(focus, srGap, misses) };
+  return { cats, strengths, focus, misses, srGap, plan: practicePlan(focus, srGap, misses, form.inst) };
 }
 function resultsWho() { return hasScores('teacher') ? 'teacher' : 'self'; }
 function viewResults() {
@@ -7055,17 +7800,18 @@ function viewResults() {
   const cutBlock = FORM.cut ? cutGauge(r.total, FORM.cut, r.max) : '';
 
   return `
-  ${ro ? `<div class="banner">Shared mock audition results (read-only). Nothing here is stored online; everything is inside the link.</div>` : backBtn('sheet')}
+  ${ro ? `<div class="banner">Shared mock audition results (read-only). Nothing here is stored online; everything is inside the link.</div>` : sessBar() + backBtn('sheet')}
   <section class="res-head">
     <div>
       <div class="res-name">${esc(m.student.name || 'Student')}</div>
       <div class="res-meta">${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''} · ${esc(LEVELS[m.level].short)} (${LEVELS[m.level].grades}) · ${m.round === 'district' ? 'First Round (District)' : 'Final Round (State)'}<br>
-      ${m.date ? fmtDate(m.date) : ''}${m.judge ? ' · Judge: ' + esc(m.judge) : ''}${who === 'self' ? ' · <em>Student self-assessment</em>' : ''}</div>
+      ${FORM.scope ? `<b class="quick-tag">Quick check: ${esc(FORM.scopeLabel)}</b><br>` : ''}${m.date ? fmtDate(m.date) : ''}${m.judge ? ' · Judge: ' + esc(m.judge) : ''}${who === 'self' ? ' · <em>Student self-assessment</em>' : ''}</div>
     </div>
     <div class="res-total"><span class="big">${fmt(r.total, 2)}</span><span class="of">/ ${fmt(r.max, 0)}</span><span class="pc">${fmt(pct(r.total, r.max), 0)}%</span></div>
   </section>
   ${unscored ? blankBanner(s, ro) : ''}
   ${cutBlock}
+  ${ro ? '' : goalResultLine(m, r.total)}
   <div class="res-actions">
     <button class="btn primary" data-act="print">Print / Save PDF</button>
     ${ro ? '' : '<button class="btn" data-act="share">Share link</button>'}
@@ -7092,7 +7838,7 @@ function viewResults() {
     </section>
     <section class="panel focus">
       <h3>Focus next</h3>
-      ${focus.length ? focus.map((c) => catLine(c)).join('') : '<p class="muted">Nothing below 90%. Keep polishing and run the full audition often.</p>'}
+      ${focus.length ? focus.map((c) => catLine(c, tipsFor(c.key, m.inst)[0])).join('') : '<p class="muted">Nothing below 90%. Keep polishing and run the full audition often.</p>'}
       ${srGap ? `<p class="insight">Sight reading (${fmt(srGap.sp, 0)}%) is well behind prepared music (${fmt(srGap.pp, 0)}%). A daily sight-reading habit will gain the most points.</p>` : ''}
     </section>
   </div>
@@ -7104,6 +7850,7 @@ function viewResults() {
   </section>
 
   ${fsResultsBlock()}
+  ${ro ? '' : recResultsBlock()}
   ${hasScores('self') && hasScores('teacher') ? compareBlock() : ''}
   ${commentsBlock(who)}
   ${ro ? '' : `<p class="muted small center">${m.saved ? 'Saved to this device’s student history.' : ''}</p>`}`;
@@ -7133,17 +7880,24 @@ function barRow(label, got, max) {
   const p = Math.max(0, Math.min(100, pct(got, max)));
   return `<div class="bar"><div class="bar-l"><span>${esc(label)}</span><b>${fmt(got, 2)} / ${fmt(max, 2)}</b></div><div class="bar-t"><i style="width:${p}%"></i></div></div>`;
 }
-function catLine(c) {
+function catLine(c, tip) {
   const C = CATS[c.key] || CATS.general;
   return `<div class="cat"><div class="cat-h"><b>${C.name}</b><span>${fmt(c.pct, 0)}%</span></div>
-    ${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).length ? `<div class="cat-ctx">${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).map(esc).join(' · ')}</div>` : ''}</div>`;
+    ${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).length ? `<div class="cat-ctx">${c.ctx.filter((x) => x.toLowerCase() !== C.name.toLowerCase()).map(esc).join(' · ')}</div>` : ''}
+    ${tip ? `<div class="cat-tip">${esc(tip)}</div>` : ''}</div>`;
 }
-function practicePlan(focus, srGap, misses) {
-  const plan = [{ min: 5, t: 'Warm-up and long tones', d: 'Start every session with a full, centered sound across the range.' }];
+const WARMUP = {
+  perc: { t: 'Warm-up on a pad', d: 'Start with 5 minutes of rudiments (singles, doubles, paradiddles) slow to fast with a metronome.' },
+  default: { t: 'Warm-up and long tones', d: 'Start every session with a full, centered sound across the range.' },
+};
+function practicePlan(focus, srGap, misses, inst) {
+  const w = WARMUP[INST_FAMILY[inst]] || WARMUP.default;
+  const plan = [{ min: 5, t: w.t, d: w.d }];
   focus.forEach((c, i) => {
     const C = CATS[c.key] || CATS.general;
-    let d = C.tips[0];
-    if ((c.key === 'scales' || c.key === 'malletscales') && misses.length) d = `Start with ${misses.slice(0, 3).map((x) => x.key).join(', ')}. ` + C.tips[0];
+    const tip = tipsFor(c.key, inst)[0];
+    let d = tip;
+    if ((c.key === 'scales' || c.key === 'malletscales') && misses.length) d = `Start with ${misses.slice(0, 3).map((x) => x.key).join(', ')}. ` + tip;
     plan.push({ min: i === 0 ? 10 : 8, t: C.name, d });
   });
   if (srGap) plan.push({ min: 5, t: 'Sight reading', d: PATTERN_TIPS.sightReading.tips[1] });
@@ -7195,12 +7949,34 @@ function commentsBlock(who) {
 }
 
 /* ---------- history ---------- */
+/* Each student × (round, level, instrument) has a chart. Series: 'overall' = full mocks' totals (with the recommendation
+   line and the student's goal), or one quick-check unit = that part's % from full mocks AND quick checks. */
+function histSeriesOptions(combo) {
+  const [r, l, i] = combo.split('|');
+  const f = buildForm(l, r, i, null);
+  return [{ id: 'overall', label: 'Full audition' }].concat(quickUnits(f).map((u) => ({ id: u.id, label: u.label, secs: u.secs })));
+}
+function histPoints(mocks, series, combo) {
+  const sorted = mocks.slice().sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.created - b.created);
+  if (series === 'overall') {
+    return sorted.filter((m) => !m.scope).map((m) => { const sm = m.summary || summarize(m); return { m, v: sm.total, max: sm.max, cut: sm.cut, who: sm.who }; });
+  }
+  const opt = histSeriesOptions(combo).find((o) => o.id === series);
+  if (!opt) return [];
+  return sorted.map((m) => {
+    const sm = m.summary || summarize(m), secs = sm.secs || {};
+    if (!opt.secs.every((id) => secs[id])) return null;
+    const got = opt.secs.reduce((a, id) => a + secs[id].t, 0), max = opt.secs.reduce((a, id) => a + secs[id].m, 0);
+    return { m, v: pct(got, max), max: 100, pctMode: true, who: sm.who, quick: !!m.scope };
+  }).filter(Boolean);
+}
 function viewHistory() {
   const h = getHistory();
   const groups = {};
   h.forEach((m) => { (groups[studentKey(m)] = groups[studentKey(m)] || []).push(m); });
   const keys = Object.keys(groups).sort();
-  const io = `<div class="hist-io"><button class="btn sm" data-act="export">Export backup</button><label class="btn sm ghost">Import backup<input type="file" accept=".json,application/json" id="import" hidden></label></div>`;
+  const io = `<div class="hist-io"><button class="btn sm" data-act="export">Export backup</button><label class="btn sm ghost">Import backup<input type="file" accept=".json,application/json" id="import" hidden></label>
+    <span class="rec-usage muted small" id="rec-usage"></span></div>`;
   if (!h.length) {
     return `${backBtn('home')}<h2 class="pick-h">Student history</h2>
       <p class="muted">No saved mocks yet. Every mock you finish is saved here, on this device, when you open its results.</p>${io}`;
@@ -7210,50 +7986,70 @@ function viewHistory() {
   const combos = [...new Set(mine.map((m) => `${m.round}|${m.level}|${m.inst}`))];
   if (!S.histFilter || !combos.includes(S.histFilter)) S.histFilter = combos[combos.length - 1];
   const comboLabel = (c) => { const [r, l, i] = c.split('|'); return `${INSTRUMENTS.find((x) => x.id === i).name} · ${LEVELS[l].short} · ${r === 'district' ? 'First Round' : 'Final Round'}`; };
+  const inCombo = mine.filter((m) => `${m.round}|${m.level}|${m.inst}` === S.histFilter);
+  const opts = histSeriesOptions(S.histFilter).filter((o) => histPoints(inCombo, o.id, S.histFilter).length);
+  if (!S.histSeries || !opts.some((o) => o.id === S.histSeries)) S.histSeries = opts.length ? opts[0].id : 'overall';
+  const [cr, cl, ci] = S.histFilter.split('|');
+  const cf = buildForm(cl, cr, ci, null);
   return `${backBtn('home')}<h2 class="pick-h">Student history</h2>
   ${Date.now() - store.get(LS.exported, 0) > 21 * 864e5 ? exportNag() : ''}
   <div class="hist">
     <aside class="hist-list">${keys.map((k) => {
       const g = groups[k]; const last = g.slice().sort((a, b) => b.updated - a.updated)[0];
-      return `<button class="hist-st ${k === S.histKey ? 'on' : ''}" data-act="hstudent" data-v="${esc(k)}"><b>${esc(last.student.name || 'Unnamed')}</b><span>${g.length} mock${g.length > 1 ? 's' : ''}</span></button>`;
+      const dl = daysUntil(goalOf(k).date);
+      return `<button class="hist-st ${k === S.histKey ? 'on' : ''}" data-act="hstudent" data-v="${esc(k)}"><b>${esc(last.student.name || 'Unnamed')}</b><span>${g.length} mock${g.length > 1 ? 's' : ''}${dl != null && dl >= 0 ? ` · ${dl}d to go` : ''}</span></button>`;
     }).join('')}</aside>
     <div class="hist-main">
       ${combos.length > 1 ? `<div class="seg wrap">${combos.map((c) => `<button class="${c === S.histFilter ? 'on' : ''}" data-act="hfilter" data-v="${c}">${comboLabel(c)}</button>`).join('')}</div>` : `<div class="combo">${comboLabel(S.histFilter)}</div>`}
+      ${goalCard(S.histKey, inCombo, cf.cut, cf.max)}
+      ${opts.length > 1 ? `<div class="series"><span class="muted small">Chart:</span>${opts.map((o) => `<button class="chip-btn ${o.id === S.histSeries ? 'on' : ''}" data-act="hseries" data-v="${esc(o.id)}">${esc(o.label)}${o.id === 'overall' ? '' : ' %'}</button>`).join('')}</div>` : ''}
       <div class="chart-wrap"><div id="hchart"></div><div id="htip" class="htip" hidden></div></div>
       <table class="htable"><thead><tr><th>Date</th><th>Mock</th><th class="num">Score</th><th></th></tr></thead><tbody>
       ${mine.slice().reverse().map((m) => {
         const sm = m.summary || summarize(m);
-        return `<tr><td>${fmtDate(m.date)}</td><td>${m.round === 'district' ? 'First' : 'Final'} · ${esc(INSTRUMENTS.find((x) => x.id === m.inst).name)}${sm.who === 'self' ? ' <em>(self)</em>' : ''}</td>
-          <td class="num">${fmt(sm.total, 2)} / ${fmt(sm.max, 0)}${sm.cut ? `<small class="${sm.total >= sm.cut ? 'pos' : 'neg'}">${sm.total >= sm.cut ? '+' : ''}${fmt(sm.total - sm.cut, 1)} vs line</small>` : ''}</td>
+        return `<tr><td>${fmtDate(m.date)}</td><td>${m.round === 'district' ? 'First' : 'Final'} · ${esc(INSTRUMENTS.find((x) => x.id === m.inst).name)}${sm.scope ? ` · <span class="quick-tag">${esc(sm.scope)}</span>` : ''}${sm.who === 'self' ? ' <em>(self)</em>' : ''}${m.session ? ' <span class="muted small">· audition day</span>' : ''}</td>
+          <td class="num">${fmt(sm.total, 2)} / ${fmt(sm.max, sm.scope ? 2 : 0)}${sm.cut ? `<small class="${sm.total >= sm.cut ? 'pos' : 'neg'}">${sm.total >= sm.cut ? '+' : ''}${fmt(sm.total - sm.cut, 1)} vs line</small>` : sm.scope ? `<small>${fmt(pct(sm.total, sm.max), 0)}%</small>` : ''}</td>
           <td class="acts"><button class="btn sm" data-act="hopen" data-v="${m.id}">Open</button><button class="btn sm ghost" data-act="hdel" data-v="${m.id}" aria-label="Delete">✕</button></td></tr>`;
       }).join('')}
       </tbody></table>
     </div>
   </div>${io}`;
 }
+async function histPaintUsage() {
+  const el = $('#rec-usage'); if (!el) return;
+  const u = await recUsage();
+  if (!el.isConnected) return;
+  el.innerHTML = u.n ? `${u.n} recording${u.n > 1 ? 's' : ''} on this device (${fmt(u.bytes / 1048576, 1)} MB) <button class="btn sm ghost" data-act="recclear">Delete all recordings</button>` : '';
+}
 function drawHistoryChart() {
   const el = $('#hchart'); if (!el) return;
-  const h = getHistory().filter((m) => studentKey(m) === S.histKey && `${m.round}|${m.level}|${m.inst}` === S.histFilter)
-    .sort((a, b) => (a.date || '').localeCompare(b.date || '') || a.created - b.created);
-  const pts = h.map((m) => ({ m, s: m.summary || summarize(m) }));
-  if (!pts.length) { el.innerHTML = ''; return; }
-  const W = 640, H = 220, P = { l: 40, r: 16, t: 16, b: 34 };
-  const max = pts[0].s.max; const cut = pts[0].s.cut;
+  const mocks = getHistory().filter((m) => studentKey(m) === S.histKey && `${m.round}|${m.level}|${m.inst}` === S.histFilter);
+  const pts = histPoints(mocks, S.histSeries || 'overall', S.histFilter);
+  if (!pts.length) { el.innerHTML = `<p class="muted small chart-empty">${S.histSeries === 'overall' ? 'No full mocks yet for this instrument and round. Quick checks show up under the part they checked.' : 'Nothing scored for this part yet.'}</p>`; return; }
+  const pctMode = !!pts[0].pctMode;
+  const W = 640, H = 230, P = { l: 40, r: 16, t: 18, b: 34 };
+  const max = pctMode ? 100 : pts[0].max, cut = pctMode ? null : pts[0].cut;
+  const g = pctMode ? null : goalOf(S.histKey).target;
   const x = (i) => pts.length === 1 ? (P.l + W - P.r) / 2 : P.l + (i * (W - P.l - P.r)) / (pts.length - 1);
   const y = (v) => P.t + (1 - v / max) * (H - P.t - P.b);
-  const grid = [0, 0.25, 0.5, 0.75, 1].map((f) => `<line x1="${P.l}" x2="${W - P.r}" y1="${y(f * max)}" y2="${y(f * max)}" class="g"/><text x="${P.l - 6}" y="${y(f * max) + 4}" class="ax" text-anchor="end">${fmt(f * max, 0)}</text>`).join('');
-  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p.s.total)}`).join(' ');
-  const cutL = cut ? `<line x1="${P.l}" x2="${W - P.r}" y1="${y(cut)}" y2="${y(cut)}" class="cutl"/><text x="${W - P.r}" y="${y(cut) - 5}" class="ax cutt" text-anchor="end">Recommendation line ${fmt(cut)}</text>` : '';
+  const grid = [0, 0.25, 0.5, 0.75, 1].map((f) => `<line x1="${P.l}" x2="${W - P.r}" y1="${y(f * max)}" y2="${y(f * max)}" class="g"/><text x="${P.l - 6}" y="${y(f * max) + 4}" class="ax" text-anchor="end">${fmt(f * max, 0)}${pctMode ? '%' : ''}</text>`).join('');
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p.v)}`).join(' ');
+  /* both reference labels sit at the left edge (goal above its line, recommendation line below its line when they're close),
+     so the latest score's label on the right never collides with them */
+  const close = g != null && cut && Math.abs(y(g) - y(cut)) < 16;
+  const cutL = cut ? `<line x1="${P.l}" x2="${W - P.r}" y1="${y(cut)}" y2="${y(cut)}" class="cutl"/><text x="${P.l + 4}" y="${close && g > cut ? y(cut) + 13 : y(cut) - 5}" class="ax cutt">Recommendation line ${fmt(cut)}</text>` : '';
+  const goalL = g != null && g !== cut ? `<line x1="${P.l}" x2="${W - P.r}" y1="${y(g)}" y2="${y(g)}" class="goall"/><text x="${P.l + 4}" y="${close && g < cut ? y(g) + 13 : y(g) - 5}" class="ax goalt">Goal ${fmt(g)}</text>` : '';
   const xl = pts.map((p, i) => `<text x="${x(i)}" y="${H - 12}" class="ax" text-anchor="middle">${esc(fmtDate(p.m.date).replace(/, \d{4}$/, ''))}</text>`).join('');
-  const dots = pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.s.total)}" r="5" class="dot"/><circle cx="${x(i)}" cy="${y(p.s.total)}" r="16" class="hit" data-i="${i}"/>`).join('');
+  const dots = pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(p.v)}" r="5" class="dot ${p.quick ? 'quick' : ''}"/><circle cx="${x(i)}" cy="${y(p.v)}" r="16" class="hit" data-i="${i}"/>`).join('');
   const last = pts[pts.length - 1];
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Score history chart">${grid}${cutL}<path d="${line}" class="ln"/>${dots}${xl}
-    <text x="${x(pts.length - 1)}" y="${y(last.s.total) - 12}" class="lbl" text-anchor="${pts.length > 1 ? 'end' : 'middle'}">${fmt(last.s.total, 1)}</text></svg>`;
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Score history chart">${grid}${cutL}${goalL}<path d="${line}" class="ln"/>${dots}${xl}
+    <text x="${x(pts.length - 1)}" y="${y(last.v) - 12}" class="lbl" text-anchor="${pts.length > 1 ? 'end' : 'middle'}">${fmt(last.v, 1)}${pctMode ? '%' : ''}</text></svg>
+    ${pctMode && pts.some((p) => p.quick) ? '<p class="muted small chart-note">Hollow dots are quick checks; filled dots are full mocks.</p>' : ''}`;
   const tip = $('#htip');
   $$('.hit', el).forEach((c) => {
     const show = () => {
       const p = pts[+c.dataset.i]; const b = el.getBoundingClientRect(); const cb = c.getBoundingClientRect();
-      tip.innerHTML = `<b>${fmt(p.s.total, 2)} / ${fmt(p.s.max, 0)}</b><span>${fmtDate(p.m.date)}${p.s.who === 'self' ? ' · self' : ''}</span>`;
+      tip.innerHTML = `<b>${pctMode ? fmt(p.v, 1) + '%' : fmt(p.v, 2) + ' / ' + fmt(p.max, 0)}</b><span>${fmtDate(p.m.date)}${p.quick ? ' · quick check' : ''}${p.who === 'self' ? ' · self' : ''}</span>`;
       tip.hidden = false; tip.style.left = (cb.left - b.left + cb.width / 2) + 'px'; tip.style.top = (cb.top - b.top - 8) + 'px';
     };
     c.addEventListener('pointerenter', show); c.addEventListener('click', show);
@@ -7373,25 +8169,25 @@ function buildPrint(who) {
   const comments = FORM.sections.filter((sec) => m.comments[who][sec.id]).map((sec) => `<li><b>${esc(sec.title)}:</b> ${esc(m.comments[who][sec.id])}</li>`).join('');
   $('#print').innerHTML = `
   <div class="p-page">
-    <div class="p-mock">MOCK AUDITION — practice only${who === 'self' ? ' · student self-assessment' : ''}</div>
+    <div class="p-mock">${FORM.scope ? 'QUICK CHECK: ' + esc(FORM.scopeLabel).toUpperCase() : 'MOCK AUDITION'} — practice only${who === 'self' ? ' · student self-assessment' : ''}</div>
     <div class="p-title">${esc(FORM.title)}</div>
     <div class="p-sub">${esc(FORM.subtitle)}</div>
     ${FORM.division ? '<div class="p-div">Division Preference: Band | Orchestra | None</div>' : ''}
     <table class="p-info"><tr><td>Student: <b>${esc(m.student.name)}</b></td><td>School: <b>${esc(m.student.school)}</b></td><td>Date: <b>${esc(fmtDate(m.date))}</b></td></tr>
       <tr><td>Grade: <b>${esc(m.student.grade)}</b></td><td>Instrument: <b>${esc(FORM.instrumentLabel)}${FORM.variantLabel ? ' (' + esc(FORM.variantLabel) + ')' : ''}</b></td><td>Judge: <b>${esc(m.judge)}</b></td></tr></table>
     ${body}
-    <div class="p-total">AUDITION TOTAL: <b>${fmt(r.total, 2)}</b> / ${fmt(r.max, 0)}${FORM.cut ? `<span>Min. total score needed for state-level audition recommendation: ${FORM.cut.toFixed(4)}</span>` : ''}</div>
+    <div class="p-total">${FORM.scope ? 'QUICK CHECK TOTAL' : 'AUDITION TOTAL'}: <b>${fmt(r.total, 2)}</b> / ${fmt(r.max, 0)}${FORM.cut ? `<span>Min. total score needed for state-level audition recommendation: ${FORM.cut.toFixed(4)}</span>` : ''}</div>
   </div>
   <div class="p-page p-break">
     <div class="p-title">Mock Audition Feedback — ${esc(m.student.name || 'Student')}</div>
-    <div class="p-sub">${esc(FORM.instrumentLabel)} · ${esc(LEVELS[m.level].short)} (${LEVELS[m.level].grades}) · ${m.round === 'district' ? 'First Round' : 'Final Round'} · ${esc(fmtDate(m.date))}</div>
+    <div class="p-sub">${esc(FORM.instrumentLabel)} · ${esc(LEVELS[m.level].short)} (${LEVELS[m.level].grades}) · ${m.round === 'district' ? 'First Round' : 'Final Round'}${FORM.scope ? ' · Quick check: ' + esc(FORM.scopeLabel) : ''} · ${esc(fmtDate(m.date))}</div>
     <div class="p-big">${fmt(r.total, 2)} / ${fmt(r.max, 0)} ${FORM.cut ? `<span>(${r.total >= FORM.cut ? fmt(r.total - FORM.cut, 2) + ' above' : fmt(FORM.cut - r.total, 2) + ' below'} the recommendation line of ${fmt(FORM.cut)})</span>` : ''}</div>
     <div class="p-cols"><div><h4>Strengths</h4><ul>${strengths.map((c) => `<li>${CATS[c.key].name} — ${fmt(c.pct, 0)}%</li>`).join('') || '<li>—</li>'}</ul></div>
       <div><h4>Focus next</h4><ul>${focus.map((c) => `<li>${CATS[c.key].name} — ${fmt(c.pct, 0)}%</li>`).join('') || '<li>—</li>'}</ul></div></div>
     ${srGap ? `<p><b>Sight reading (${fmt(srGap.sp, 0)}%) is well behind prepared music (${fmt(srGap.pp, 0)}%).</b> A daily sight-reading habit will gain the most points.</p>` : ''}
     ${misses.length ? `<h4>Scale spots to fix</h4><p>${misses.map((x) => `<b>${esc(x.key)}</b>: ${x.miss.map(esc).join(', ')}`).join(' &nbsp;·&nbsp; ')}</p>` : ''}
     <h4>Practice plan for this week</h4><ol>${plan.map((p) => `<li><b>${p.min} min — ${esc(p.t)}.</b> ${esc(p.d)}</li>`).join('')}</ol>
-    ${focus.map((c) => `<h4>${CATS[c.key].name}: practice ideas</h4><ul>${CATS[c.key].tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`).join('')}
+    ${focus.map((c) => `<h4>${CATS[c.key].name}: practice ideas</h4><ul>${tipsFor(c.key, m.inst).slice(0, 4).map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`).join('')}
     ${m.overall[who] || comments ? `<h4>${who === 'self' ? 'Student reflection' : 'Judge comments'}</h4>${m.overall[who] ? `<p>${esc(m.overall[who])}</p>` : ''}${comments ? `<ul>${comments}</ul>` : ''}` : ''}
     <div class="p-foot">Unofficial practice tool based on the GMEA 2025–26 All-State Band audition forms. Not affiliated with GMEA.</div>
   </div>${fsPrintPages()}`;
@@ -7452,7 +8248,11 @@ function openTools(focus) {
 /* ============================================================
    EVENTS
    ============================================================ */
-function go(view) { if (FSS.secId) fsCloseStand(); S.view = view; render(); }
+function go(view) {
+  if (FSS.secId) fsCloseStand();
+  if (REC.mr && view !== 'sheet') recStop();          // leaving the sheet saves a recording in progress
+  S.view = view; render();
+}
 function readSetup() {
   const m = S.mock;
   m.student.name = $('#f-name').value.trim(); m.student.school = $('#f-school').value.trim();
@@ -7465,13 +8265,25 @@ document.addEventListener('click', async (e) => {
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act, v = b.dataset.v;
   if (a.startsWith('fs') && fsAction(a, v)) return;
+  if (a.startsWith('rec') && recAction(a, v)) return;
+  if ((a === 'session' || a.startsWith('ss')) && sessAction(a, v)) return;
   switch (a) {
     case 'go': if (v === 'sheet' && S.readOnly) return; go(v); break;
     case 'level': S.pick = { level: v, inst: null, round: null, variant: null }; go('inst'); break;
     case 'inst': S.pick.inst = v; S.pick.variant = null; go('round'); break;
     case 'variant': S.pick.variant = v; render(); break;
+    case 'qround': {
+      const round = b.dataset.round;
+      S.pick.round = round;
+      const d = S.pick.level === 'ms' && MS_DISTRICT[S.pick.inst];
+      if (round === 'district' && d && d.variants && !S.pick.variant) S.pick.variant = d.defaultVariant;
+      if (round !== 'district') S.pick.variant = null;
+      const f = buildForm(S.pick.level, round, S.pick.inst, S.pick.variant);
+      S.pick.scope = unitSecs(f, v); S.pick.scopeLabel = unitLabel(f, v);
+      setMock(newMock()); go('setup'); break;
+    }
     case 'round': {
-      S.pick.round = v;
+      S.pick.round = v; S.pick.scope = null; S.pick.scopeLabel = null;
       const d = S.pick.level === 'ms' && MS_DISTRICT[S.pick.inst];
       if (v === 'district' && d && d.variants && !S.pick.variant) S.pick.variant = d.defaultVariant;
       if (v !== 'district') S.pick.variant = null;
@@ -7547,7 +8359,7 @@ document.addEventListener('click', async (e) => {
       go('results'); break;
     }
     case 'again': {
-      const m = S.mock; S.pick = { level: m.level, inst: m.inst, round: m.round, variant: m.variant };
+      const m = S.mock; S.pick = { level: m.level, inst: m.inst, round: m.round, variant: m.variant, scope: m.scope, scopeLabel: m.scopeLabel };
       const nm = newMock(); nm.student = { ...m.student }; nm.judge = m.judge; nm.flow = m.flow;
       setMock(nm); store.set(LS.draft, nm); go('setup'); break;
     }
@@ -7556,12 +8368,19 @@ document.addEventListener('click', async (e) => {
     case 'copy': { const i = $('#sh-url'); i.select(); try { await navigator.clipboard.writeText(i.value); } catch (er) { document.execCommand('copy'); } toast('Link copied'); break; }
     case 'close': closeModal(); break;
     case 'export': exportHistory(); render(); break;
-    case 'hstudent': S.histKey = v; S.histFilter = null; render(); break;
-    case 'hfilter': S.histFilter = v; render(); break;
+    case 'hstudent': S.histKey = v; S.histFilter = null; S.histSeries = null; render(); break;
+    case 'hfilter': S.histFilter = v; S.histSeries = null; render(); break;
+    case 'hseries': S.histSeries = v; render(); break;
+    case 'goalall': {
+      const g = goalOf(S.histKey);
+      if (!g.date) { toast('Set an audition day first'); break; }
+      const p = store.get(LS.prefs, {}); p.auditionDate = g.date; store.set(LS.prefs, p);
+      toast(`Audition day ${fmtDate(g.date)} set for every student without their own`); render(); break;
+    }
     case 'hopen': { const m = getHistory().find((x) => x.id === v); if (m) { const c = JSON.parse(JSON.stringify(m)); delete c.summary; setMock(c); S.readOnly = false; S.who = 'teacher'; go('results'); } break; }
     case 'hdel': {
       if (b.dataset.confirm !== '1') { b.dataset.confirm = '1'; b.textContent = 'Delete?'; b.classList.add('danger'); setTimeout(() => { if (b.isConnected) { b.dataset.confirm = ''; b.textContent = '✕'; b.classList.remove('danger'); } }, 3000); return; }
-      store.set(LS.hist, getHistory().filter((x) => x.id !== v)); toast('Deleted'); render(); break;
+      store.set(LS.hist, getHistory().filter((x) => x.id !== v)); recDeleteMock(v); toast('Deleted'); render(); break;
     }
     case 'theme': {
       const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -7582,6 +8401,7 @@ document.addEventListener('click', async (e) => {
 document.addEventListener('input', (e) => {
   const t = e.target;
   if (t.matches('input[type=range][data-k]')) { sc()[t.dataset.k] = +t.value; touch(); const it = t.closest('.item, .mcol'); const vl = it && $('.val', it); if (vl) vl.innerHTML = `${fmt(+t.value)} <small>/ ${t.max}</small>`; t.closest('.slider').classList.remove('unset'); }
+  if (t.matches('[data-ss]') && t.type !== 'checkbox' && t.tagName !== 'SELECT') { sessInput(t); return; }
   if (t.matches('textarea.cmt')) {
     if (t.dataset.overall) S.mock.overall[S.who] = t.value; else S.mock.comments[S.who][t.dataset.sec] = t.value;
     touch();
@@ -7594,6 +8414,13 @@ document.addEventListener('submit', (e) => {
 document.addEventListener('change', (e) => {
   const t = e.target;
   if (fsChange(t)) return;
+  if (sessInput(t)) return;
+  if (t.matches('[data-goal]')) {
+    const k = t.dataset.goal;
+    if (k === 'date') setGoal(S.histKey, { date: t.value });
+    else setGoal(S.histKey, { target: t.value === '' ? null : Math.max(0, +t.value) });
+    render(); return;
+  }
   if (t.matches('input[type=range][data-k]')) refreshSection(t.dataset.k.split('.')[0]);
   if (t.matches('input[name=flow]')) { $$('.radio').forEach((r) => r.classList.toggle('on', r.contains(t))); }
   if (t.id === 'import' && t.files[0]) importHistory(t.files[0]);
@@ -7607,6 +8434,10 @@ window.addEventListener('afterprint', () => { $('#print').innerHTML = ''; });
 /* ---------- boot ---------- */
 (async function boot() {
   const th = store.get(LS.theme, null); if (th) document.documentElement.dataset.theme = th;
+  /* offline: the service worker caches the app after the first visit (https or localhost only) */
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    navigator.serviceWorker.register('sw.js').catch(() => { /* offline mode unavailable; the app still works online */ });
+  }
   if (location.hash.startsWith('#view=')) {
     try {
       const m = await decodeShare(location.hash.slice(6));

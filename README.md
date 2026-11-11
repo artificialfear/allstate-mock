@@ -11,6 +11,8 @@ A free tool for band directors and private teachers to run mock GMEA All-State B
 
 Sight-reading sections can generate an original etude (from Band Arcade's First Sight) and show it full screen on a music stand with a study timer. The etude's code is saved with the mock so the student can practice it again.
 
+Also: **quick checks** (just scales, chromatic, the etude, or sight reading), **audition day** (score a whole section back to back and get a ranked summary), **goals** (audition date + target with an on-pace check), **recording** the student (saved on your device), and **instrument-specific practice tips**. It works offline and can be installed like an app.
+
 Optional: the student can score themselves first, and the results show their self-assessment beside yours.
 
 Everything stays on your device. There are no accounts, and nothing is uploaded. Student history is saved in your browser, so use **Export backup** to keep it safe or move it to another device.
