@@ -74,6 +74,14 @@ A single-page tool for running mock GMEA All-State Band auditions. The teacher p
     - Percussion: snare sections → snare; mallets/xylophone → bells; timpani → none (a message says so).
   - The panel, the stand (`FSS` state; study / count-in / click / Hear It / tempo, ported from first-sight/game.js), the results block, print pages, and share (`sr`, `sb` in the packed mock).
 - Saved on the mock as `m.sight = {sectionId: code}`. A code (e.g. `5E6-K7QX`) is the same music everywhere, including Band Arcade's First Sight.
+- **Audition sequence (v1.3.0, Mat's spec, mirrors the real GMEA room)** — the stand opened from the sheet runs `FSS.phase`: brief → tempo1 → study → tempo2 → perform.
+  - brief: the music is covered by `#fs-cover` showing the judge script `FS_JUDGE(studyS)`.
+  - tempo1: tapping ▶ Give the tempo plays `FS_TICKS` = 8 clicks (`fsTickRun`, AudioContext-scheduled).
+  - study: on the beat after the 8th tick the cover lifts and the study clock starts. Changing the tempo or study time is locked from tempo1 on.
+  - tempo2: when the clock ends, 8 more ticks.
+  - perform: on the next beat, "Play!". No click or marker.
+  - After that: Hear It / Play it again / ↺ Start over. Practice (from results) skips all of this (`phase 'free'`).
+  - A tab switch during the ticks restarts the sequence.
 - Defaults (`FS_DEFAULTS`, overridable per device in prefs `fs`):
   - Level 5, any key, 6 bars, 30 s study.
   - The click is OFF in a mock; Practice mode turns it on.

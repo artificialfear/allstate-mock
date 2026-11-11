@@ -193,10 +193,22 @@ function fsPrintPages() {
 }
 
 /* ============================================================
-   THE MUSIC STAND (full screen): study → play → hear
+   THE MUSIC STAND (full screen)
+   From the judge sheet it runs THE AUDITION SEQUENCE, like the real GMEA sight-reading room (Mat's spec):
+     1. brief   — the music is covered; the judge reads the instructions aloud and taps ▶ Give the tempo
+     2. tempo1  — 8 ticks at the etude's tempo
+     3. study   — after the 8th tick the music is revealed and the study clock (30 s) starts by itself
+     4. tempo2  — when time is up, 8 more ticks
+     5. perform — on the beat after the 8th tick the student plays (no click, no marker)
+   then Hear It / play again / start over. PRACTICE (from results) keeps the looser study → count-in → play flow.
    ============================================================ */
+const FS_TICKS = 8;
+const FS_JUDGE = (s) => s
+  ? `You will have ${s} seconds to study this music. You may not produce a tone on your instrument during the study time. Here is the tempo:`
+  : 'You may not produce a tone on your instrument until you begin. Here is the tempo:';
 const FSS = { secId: null, et: null, real: null, info: null, rows: [], run: null, studyT: 0, studyLeft: 0, studyOn: false,
-  played: false, hearArmed: false, bpm: 0, practice: false, click: false, studyS: 30 };
+  played: false, hearArmed: false, bpm: 0, practice: false, click: false, studyS: 30,
+  phase: 'free', tick: null };   // phase: brief | tempo1 | study | tempo2 | perform | free (practice / after the sequence)
 function fsOpenStand(secId, { practice = false } = {}) {
   const sec = FORM.sections.find((x) => x.id === secId), info = fsMember(FORM, sec, S.mock);
   const code = S.mock.sight && S.mock.sight[secId];
@@ -212,14 +224,26 @@ function fsOpenStand(secId, { practice = false } = {}) {
       <span class="fs-code light">${esc(FSS.et.code)}</span>
       <button class="btn sm on-navy" data-act="fsclose">${practice ? 'Close ✕' : 'Done — back to scoring ✕'}</button>
     </div>
-    <div class="stand-paper fs-paper"><div class="fs-tempo" id="fs-tempo">${fsTempoMark(FSS.et)}</div><div class="fs-rows" id="fs-rows"></div></div>
+    <div class="stand-paper fs-paper">
+      <div class="fs-tempo" id="fs-tempo">${fsTempoMark(FSS.et)}</div><div class="fs-rows" id="fs-rows"></div>
+      ${practice ? '' : `<div class="stand-cover" id="fs-cover">
+        <div class="cover-in">
+          <div class="cover-k">The judge reads aloud</div>
+          <blockquote id="fs-judge">“${esc(FS_JUDGE(FSS.studyS))}”</blockquote>
+          <div class="fs-ticks" id="fs-ticks1">${fsTickDots()}</div>
+          <button class="btn gold big" id="fs-give" data-act="fsaud">▶ Give the tempo</button>
+          <p class="cover-help" id="fs-cover-help">Read the instructions to the student, then tap. After ${FS_TICKS} ticks the music appears and the study clock starts by itself.</p>
+        </div>
+      </div>`}
+    </div>
     <div class="stand-study" id="fs-study" hidden>
       <div class="fs-study-bar"><i id="fs-fill"></i></div>
-      <p><b id="fs-left">30</b> <span id="fs-word">seconds to study it.</span> Find the key, the time signature, the tricky rhythms and the dynamics.</p>
-      <button class="btn gold" data-act="fsready">I’m ready</button>
+      <p><b id="fs-left">30</b> <span id="fs-word">seconds to study it.</span> ${practice ? 'Find the key, the time signature, the tricky rhythms and the dynamics.' : 'No sound on the instrument yet.'}</p>
+      <button class="btn ${practice ? 'gold' : 'sm'}" data-act="fsready">${practice ? 'I’m ready' : 'Skip ▸'}</button>
     </div>
     <div class="stand-ctl">
       <p class="fs-say" id="fs-say" aria-live="polite"></p>
+      <div class="fs-ticks big" id="fs-ticks2" hidden>${fsTickDots()}</div>
       <div class="stand-btns">
         <button class="btn primary big" id="fs-play" data-act="fsplay">▶ Count me in</button>
         <button class="btn big" id="fs-hear" data-act="fshear">▶ Hear it</button>
@@ -227,13 +251,80 @@ function fsOpenStand(secId, { practice = false } = {}) {
       <div class="stand-opts">
         <span class="fs-tempo-ctl"><button class="btn sm" data-act="fstempo" data-v="-4" aria-label="Slower">−</button><span id="fs-bpm"></span><button class="btn sm" data-act="fstempo" data-v="4" aria-label="Faster">+</button></span>
         <label class="fs-tg"><input type="checkbox" id="fs-click" ${FSS.click ? 'checked' : ''}> Click while playing</label>
+        ${practice ? '' : '<button class="btn sm" data-act="fsrestart">↺ Start over</button>'}
         <label class="fs-tg">Study time <select id="fs-studys">${[0, 30, 60].map((s) => `<option value="${s}" ${FSS.studyS === s ? 'selected' : ''}>${s ? s + ' s' : 'Off'}</option>`).join('')}</select></label>
       </div>
     </div>`;
   el.hidden = false;
   document.body.classList.add('stand-open');
+  FSS.phase = practice ? 'free' : 'brief';
   fsDrawRows(); fsDrawTempo(); fsDrawButtons();
-  fsStartStudy();
+  if (practice) fsStartStudy();
+  else fsSay('');
+}
+const fsTickDots = () => Array.from({ length: FS_TICKS }, (x, i) => `<i>${i + 1}</i>`).join('');
+
+/* ---------- the audition sequence ---------- */
+/** FS_TICKS clicks at the etude's tempo; dots in `box` light up with each tick; done() fires on the beat after the last */
+function fsTickRun(box, done) {
+  fsTickStop();
+  const A = window.Arcade, o = A.Sfx.output(), beatS = 60 / FSS.bpm;
+  const t = { raf: 0, ctx: o ? o.ctx : null, kit: null, bus: null, t0: 0, p0: performance.now(), lit: -1, done: false };
+  if (t.ctx) {
+    if (t.ctx.state !== 'running') t.ctx.resume().catch(() => {});
+    t.bus = t.ctx.createGain(); t.bus.connect(o.out);
+    t.kit = A.MHBacking.create(t.ctx, t.bus);
+    t.t0 = t.ctx.currentTime + FS_RULES.leadS;
+    for (let i = 0; i < FS_TICKS; i++) t.kit.click(t.t0 + i * beatS, FS_RULES.clickDown, false);
+  }
+  const now = () => t.ctx ? t.ctx.currentTime - (t.ctx.outputLatency || t.ctx.baseLatency || 0) - t.t0 : (performance.now() - t.p0) / 1000 - FS_RULES.leadS;
+  const dots = [...box.children];
+  dots.forEach((d) => d.classList.remove('on'));
+  box.hidden = false;
+  const frame = () => {
+    if (FSS.tick !== t) return;
+    const n = now(), k = n < 0 ? -1 : Math.min(FS_TICKS - 1, Math.floor(n / beatS));
+    if (k !== t.lit) {
+      for (let i = t.lit + 1; i <= k; i++) dots[i].classList.add('on');
+      dots.forEach((d, i) => d.classList.toggle('now', i === k && n < FS_TICKS * beatS));
+      t.lit = k;
+    }
+    if (n >= FS_TICKS * beatS) { fsTickStop(true); done(); return; }
+    t.raf = requestAnimationFrame(frame);
+  };
+  FSS.tick = t;
+  t.raf = requestAnimationFrame(frame);
+}
+function fsTickStop(finished) {
+  const t = FSS.tick; if (!t) return;
+  FSS.tick = null;
+  cancelAnimationFrame(t.raf);
+  if (t.kit) setTimeout(() => { try { t.kit.stopAll(); t.bus.disconnect(); } catch (e) { /* ignore */ } }, finished ? 300 : 0);
+}
+function fsAudStart() {
+  if (FSS.phase !== 'brief') return;
+  FSS.phase = 'tempo1';
+  $('#fs-give').hidden = true;
+  $('#fs-cover-help').textContent = 'Here is the tempo…';
+  fsDrawButtons();
+  fsTickRun($('#fs-ticks1'), () => {
+    $('#fs-cover').hidden = true;                 // the music is revealed as the study clock starts
+    if (FSS.studyS) { FSS.phase = 'study'; fsDrawButtons(); fsStartStudy(); }
+    else fsAudPerform();
+  });
+}
+function fsAudTempo2() {
+  FSS.phase = 'tempo2';
+  fsDrawButtons();
+  fsSay('Time. Here is the tempo again…');
+  fsTickRun($('#fs-ticks2'), fsAudPerform);
+}
+function fsAudPerform() {
+  FSS.phase = 'perform';
+  FSS.played = true;
+  $('#fs-ticks2').hidden = true;
+  fsSay('Play! When the student finishes: ▶ Hear it to compare, ↺ Start over, or Done to score it.');
+  fsDrawButtons();
 }
 function fsDrawRows() {
   const box = $('#fs-rows'); if (!box) return;
@@ -248,11 +339,15 @@ function fsDrawButtons() {
   play.textContent = run && run.kind === 'play' ? '■ Stop' : FSS.click ? '▶ Play with the click' : '▶ Count me in';
   hear.textContent = run && run.kind === 'hear' ? '■ Stop' : '▶ Hear it';
   hear.classList.toggle('locked', !FSS.played && !FSS.hearArmed);
-  $('#stand').classList.toggle('running', !!run);
+  const seq = ['brief', 'tempo1', 'study', 'tempo2'].includes(FSS.phase);
+  $('.stand-btns').hidden = seq;                                   // no play / hear buttons during the audition sequence
+  $('#stand').classList.toggle('running', !!run || (seq && FSS.phase !== 'brief'));
+  if (FSS.phase === 'perform') play.textContent = run && run.kind === 'play' ? '■ Stop' : '▶ Play it again';
 }
 const fsSay = (t) => { const s = $('#fs-say'); if (s) s.textContent = t; };
 function fsCloseStand() {
-  fsStopRun(); fsStopStudy();
+  fsStopRun(); fsStopStudy(); fsTickStop();
+  FSS.phase = 'free';
   try { window.Arcade.Winds.stopAll(); } catch (e) { /* no audio yet */ }
   $('#stand').hidden = true; $('#stand').innerHTML = '';
   document.body.classList.remove('stand-open');
@@ -284,6 +379,7 @@ function fsDrawStudy() {
 function fsStopStudy() { clearInterval(FSS.studyT); FSS.studyT = 0; FSS.studyOn = false; const s = $('#fs-study'); if (s) s.hidden = true; }
 function fsEndStudy() {
   fsStopStudy();
+  if (FSS.phase === 'study') { fsAudTempo2(); return; }
   fsSay(FSS.practice || FSS.click ? 'Your turn! Tap ▶ to play along with the click. Keep going, even after a mistake.'
     : 'Your turn! Tap ▶ Count me in for one bar, then play. Keep going, even after a mistake.');
   fsDrawButtons();
@@ -412,7 +508,9 @@ function fsAction(a, v) {
     case 'fspractice': fsOpenStand(v, { practice: true }); return true;
     case 'fsclose': fsCloseStand(); return true;
     case 'fsready': fsEndStudy(); return true;
-    case 'fsplay': if (FSS.run && FSS.run.kind === 'play') fsStopRun(); else fsStart('play'); return true;
+    case 'fsaud': fsAudStart(); return true;
+    case 'fsrestart': { const id = FSS.secId; fsCloseStand(); fsOpenStand(id); return true; }
+    case 'fsplay': if (FSS.run && FSS.run.kind === 'play') fsStopRun(); else { if (FSS.phase === 'perform') FSS.phase = 'free'; fsStart('play'); } return true;
     case 'fshear':
       if (FSS.run && FSS.run.kind === 'hear') { fsStopRun(); return true; }
       if (!FSS.played && !FSS.hearArmed) {
@@ -422,7 +520,7 @@ function fsAction(a, v) {
       }
       fsStart('hear'); return true;
     case 'fstempo': {
-      if (FSS.run) return true;
+      if (FSS.run || FSS.tick || ['tempo1', 'study', 'tempo2'].includes(FSS.phase)) return true;
       FSS.bpm = Math.max(FS_RULES.tempoMin, Math.min(FSS.et.tempo + FS_RULES.tempoOver, FSS.bpm + +v));
       fsDrawTempo(); return true;
     }
@@ -440,7 +538,12 @@ function fsChange(t) {
     return true;
   }
   if (t.id === 'fs-click') { FSS.click = t.checked; if (!FSS.practice) fsSavePrefs({ click: t.checked }); fsDrawButtons(); return true; }
-  if (t.id === 'fs-studys') { FSS.studyS = +t.value; fsSavePrefs({ studyS: FSS.studyS }); if (!FSS.studyS && FSS.studyOn) fsEndStudy(); return true; }
+  if (t.id === 'fs-studys') {
+    FSS.studyS = +t.value; fsSavePrefs({ studyS: FSS.studyS });
+    if (FSS.phase === 'brief' && $('#fs-judge')) $('#fs-judge').textContent = `“${FS_JUDGE(FSS.studyS)}”`;
+    if (!FSS.studyS && FSS.studyOn) fsEndStudy();
+    return true;
+  }
   return false;
 }
 function fsSubmit(form) {
@@ -453,4 +556,8 @@ function fsSubmit(form) {
 window.addEventListener('resize', () => {
   if (FSS.secId && !FSS.run && $('#fs-rows') && Math.abs($('#fs-rows').clientWidth - (FSS.lastW || 0)) >= 20) fsDrawRows();
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden) fsStopRun(); });
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) return;
+  fsStopRun();
+  if (FSS.tick) { fsTickStop(); if (FSS.secId && !FSS.practice) { const id = FSS.secId; fsCloseStand(); fsOpenStand(id); } }  // a tab switch mid-tempo restarts the sequence
+});

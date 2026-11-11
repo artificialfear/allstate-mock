@@ -530,7 +530,21 @@ body.stand-open { overflow: hidden; }
 .stand-t { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .stand-t b { font-family: var(--display); font-weight: 600; font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gold); }
 .stand-t span { font-size: 0.85rem; color: rgb(255 255 255 / 0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stand-paper { flex: 1; overflow: auto; padding: 18px 22px; border-radius: 10px; box-shadow: 0 10px 40px rgb(0 0 0 / .4); }
+.stand-paper { position: relative; flex: 1; overflow: auto; padding: 18px 22px; border-radius: 10px; box-shadow: 0 10px 40px rgb(0 0 0 / .4); }
+/* the audition sequence: the music is covered (face down) until the study clock starts */
+.stand-cover { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: 20px; border-radius: 10px; color: #fff;
+  background: radial-gradient(700px 300px at 50% 0%, rgb(201 162 39 / .16), transparent 70%), var(--navy); overflow: auto; }
+.cover-in { max-width: 720px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.cover-k { font-family: var(--display); text-transform: uppercase; letter-spacing: .16em; color: var(--gold); font-size: .95rem; }
+.stand-cover blockquote { margin: 0; font: 600 clamp(1.3rem, 3.2vw, 2.1rem)/1.35 Georgia, "Times New Roman", serif; }
+.cover-help { margin: 0; color: rgb(255 255 255 / .75); font-size: .95rem; min-height: 1.4em; }
+.fs-ticks { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.fs-ticks i { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font: 600 1rem var(--display); font-style: normal;
+  border: 2px solid rgb(255 255 255 / .35); color: rgb(255 255 255 / .6); transition: background .08s, transform .08s; }
+.fs-ticks i.on { background: var(--gold); border-color: var(--gold); color: #141c30; }
+.fs-ticks i.now { transform: scale(1.18); }
+.fs-ticks.big { grid-area: ticks; justify-content: flex-start; }
+@media (max-width: 520px) { .fs-ticks i { width: 32px; height: 32px; } .fs-ticks { gap: 6px; } }
 .stand-paper .fs-tempo { font-size: 20px; }
 .stand-paper .fs-rows { gap: 14px; max-width: 1400px; margin: 0 auto; }
 .stand-study { display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; align-items: center; }
@@ -538,7 +552,7 @@ body.stand-open { overflow: hidden; }
 .stand-study b { font-family: var(--display); font-size: 1.6rem; color: var(--gold); font-variant-numeric: tabular-nums; }
 .fs-study-bar { grid-column: 1 / -1; height: 8px; border-radius: 4px; background: rgb(255 255 255 / .12); overflow: hidden; }
 .fs-study-bar i { display: block; height: 100%; background: var(--gold); transform-origin: left; transition: transform .2s linear; }
-.stand-ctl { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "say btns" "opts btns"; gap: 6px 14px; align-items: center; }
+.stand-ctl { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "say btns" "ticks btns" "opts btns"; gap: 6px 14px; align-items: center; }
 .fs-say { grid-area: say; margin: 0; min-height: 1.4em; font-size: 1.05rem; }
 .stand-btns { grid-area: btns; display: flex; gap: 8px; }
 .stand-btns .btn { min-width: 170px; }
@@ -555,7 +569,7 @@ body.stand-open { overflow: hidden; }
 .fs-tg input { accent-color: var(--gold); width: 18px; height: 18px; }
 .stand.running .stand-opts { opacity: .5; pointer-events: none; }
 @media (max-width: 720px) {
-  .stand-ctl { grid-template-columns: 1fr; grid-template-areas: "say" "btns" "opts"; }
+  .stand-ctl { grid-template-columns: 1fr; grid-template-areas: "say" "ticks" "btns" "opts"; }
   .stand-btns .btn { flex: 1; min-width: 0; }
   .stand-paper { padding: 10px; }
   .stand-top .fs-code { display: none; }

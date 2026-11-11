@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.0 — 2026-11-10
+- **"Put it on the stand" now runs the real audition sequence:**
+  1. The music is covered, and the judge's instructions show in large type to read aloud: "You will have 30 seconds to study this music. You may not produce a tone on your instrument during the study time. Here is the tempo:"
+  2. **▶ Give the tempo** plays 8 ticks at the etude's tempo.
+  3. After the 8th tick the music is revealed and the 30-second study clock starts by itself.
+  4. When time is up, 8 more ticks play, and the student plays on the next beat.
+- Play/Hear buttons stay hidden during the sequence. Afterward: Hear It, Play it again, or **↺ Start over**.
+- The instructions follow the study-time setting (30 s, 60 s, or off). Tempo and study time can only be changed before the tempo starts.
+- Practice mode (from results) keeps the simpler study → count-in → play flow.
+
 ## 1.2.0 — 2026-11-10
 - **Sight-reading etudes from First Sight (Band Arcade), built into every sight-reading section.**
   - Generate an original etude for the student's instrument. Default is Level 5 · District Ready, 6 bars, any concert key; level, key, and length are adjustable. Or type in an etude code.
