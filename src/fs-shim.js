@@ -11,6 +11,8 @@ window.Arcade = window.Arcade || {};
         if (!ctx) {
           const C = window.AudioContext || window.webkitAudioContext;
           if (!C) return null;
+          // iPad/iPhone: let our audio play even with the ringer switch on silent (Safari 17+)
+          try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* older Safari */ }
           ctx = new C();
           out = ctx.createGain();
           out.gain.value = 0.9;

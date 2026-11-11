@@ -82,6 +82,10 @@ A single-page tool for running mock GMEA All-State Band auditions. The teacher p
   - perform: on the next beat, "Play!". No click or marker.
   - After that: Hear It / Play it again / ↺ Start over. Practice (from results) skips all of this (`phase 'free'`).
   - A tab switch during the instructions or the ticks restarts the sequence.
+  - **Recorded instructions (v1.5.0):** `assets/sight-reading-instructions.mp3` is Mat's recording: 8.6 s mono, three phrases, no lead/tail silence.
+    - It plays through the WebAudio context (`fsLoadRec` preloads it when the stand opens; `fsPlayRec`) whenever study time = `FS_REC.studyS` (30). Otherwise, or if it fails to load, the device voice reads the script.
+    - **Replacing the file:** keep the same name and bump `?v=` in `FS_REC.url`. If the new take says a different number of seconds, change `FS_REC.studyS`.
+    - `fs-shim.js` sets `navigator.audioSession.type = 'playback'` so iOS plays through the silent switch.
   - **Read-aloud (v1.4.0):** with prefs `fs.speak` (default true) the brief phase speaks `FS_JUDGE()` via the Web Speech API (`fsSpeak`, phase `'speaking'`), then goes into tempo1.
     - `fsVoice` prefers natural/neural en-US voices.
     - A safety timer (words / 2.2 + 3 s) covers browsers that never fire `onend`. With no voices, `onerror` fires and the sequence moves on immediately.

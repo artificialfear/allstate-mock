@@ -216,8 +216,11 @@ function fsOpenStand(secId, { practice = false } = {}) {
   fsStopRun(); fsStopStudy();
   const p = fsPrefs();
   Object.assign(FSS, fsBuild(code, info), { secId, info, practice, played: false, hearArmed: false, click: practice ? true : !!p.click, studyS: p.studyS,
-    speak: !!p.speak && fsCanSpeak() });
-  if (FSS.speak) try { speechSynthesis.getVoices(); } catch (e) { /* voices load in the background */ }
+    speak: !!p.speak });
+  if (FSS.speak && !practice) {
+    if (FSS.studyS === FS_REC.studyS) fsLoadRec();                               // fetch + decode Mat's recording ahead of the tap
+    try { speechSynthesis.getVoices(); } catch (e) { /* voices load in the background */ }
+  }
   FSS.bpm = FSS.et.tempo;
   const el = $('#stand');
   el.innerHTML = `
@@ -233,7 +236,7 @@ function fsOpenStand(secId, { practice = false } = {}) {
           <div class="cover-k">The judge reads aloud</div>
           <blockquote id="fs-judge">“${esc(FS_JUDGE(FSS.studyS))}”</blockquote>
           <div class="fs-ticks" id="fs-ticks1">${fsTickDots()}</div>
-          ${fsCanSpeak() ? `<label class="cover-speak"><input type="checkbox" id="fs-speak" ${FSS.speak ? 'checked' : ''}> 🔊 Read the instructions aloud</label>` : ''}
+          <label class="cover-speak"><input type="checkbox" id="fs-speak" ${FSS.speak ? 'checked' : ''}> 🔊 Read the instructions aloud</label>
           <button class="btn gold big" id="fs-give" data-act="fsaud"></button>
           <p class="cover-help" id="fs-cover-help"></p>
         </div>
@@ -313,6 +316,40 @@ function fsVoice() {
     + (/google us|samantha|aria|jenny|ava|allison/i.test(v.name) ? -1 : 0) + (v.localService ? 0 : 0.5);
   return vs.sort((a, b) => rank(a) - rank(b))[0] || null;
 }
+/* THE RECORDED INSTRUCTIONS (Mat's voice, assets/sight-reading-instructions.mp3, 8.6 s): the same audio on every device.
+   It says "30 seconds", so it plays only when study time is 30 s; 60 s / Off fall back to the device's voice (fsSpeak).
+   Bump ?v= when the file is replaced so devices don't keep the old one. */
+const FS_REC = { url: 'assets/sight-reading-instructions.mp3?v=1', studyS: 30 };
+let fsRecBuf = null, fsRecLoading = null;
+function fsLoadRec() {
+  if (fsRecBuf) return Promise.resolve(fsRecBuf);
+  if (fsRecLoading) return fsRecLoading;
+  const o = window.Arcade.Sfx.output();
+  if (!o || !window.fetch) return Promise.resolve(null);
+  fsRecLoading = fetch(FS_REC.url)
+    .then((r) => { if (!r.ok) throw new Error('missing'); return r.arrayBuffer(); })
+    .then((ab) => new Promise((res, rej) => o.ctx.decodeAudioData(ab, res, rej)))
+    .then((b) => (fsRecBuf = b))
+    .catch(() => { fsRecLoading = null; return null; });
+  return fsRecLoading;
+}
+/** play the recording, then done(); false if it isn't available */
+function fsPlayRec(buf, done) {
+  const o = window.Arcade.Sfx.output();
+  if (!buf || !o) return false;
+  const id = ++fsSpeakId;
+  let over = false;
+  const fin = () => { if (over || id !== fsSpeakId) return; over = true; clearTimeout(FSS.speakT); FSS.recSrc = null; FSS.speaking = false; done(); };
+  try {
+    if (o.ctx.state !== 'running') o.ctx.resume().catch(() => {});
+    const src = o.ctx.createBufferSource();
+    src.buffer = buf; src.connect(o.out); src.onended = fin;
+    FSS.recSrc = src; FSS.speaking = true; FSS.voiceUsed = 'recording';
+    src.start(o.ctx.currentTime + 0.05);
+    FSS.speakT = setTimeout(fin, (buf.duration + 1.5) * 1000);               // in case onended never comes
+    return true;
+  } catch (e) { FSS.recSrc = null; return false; }
+}
 let fsSpeakId = 0;
 /** speak `text`, then done(). A safety timer covers browsers that never fire onend (some iPads) or have no voices. */
 function fsSpeak(text, done) {
@@ -325,13 +362,14 @@ function fsSpeak(text, done) {
     if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'en-US';
     u.rate = 0.95; u.pitch = 1; u.volume = 1;
     u.onend = fin; u.onerror = fin;
-    FSS.speaking = true;
+    FSS.speaking = true; FSS.voiceUsed = 'device';
     speechSynthesis.speak(u);
     FSS.speakT = setTimeout(fin, (text.split(/\s+/).length / 2.2 + 3) * 1000);
   } catch (e) { fin(); }
 }
 function fsSpeakStop() {
   fsSpeakId++; clearTimeout(FSS.speakT); FSS.speaking = false;
+  if (FSS.recSrc) { try { FSS.recSrc.onended = null; FSS.recSrc.stop(); } catch (e) { /* ignore */ } FSS.recSrc = null; }
   try { if (fsCanSpeak()) speechSynthesis.cancel(); } catch (e) { /* ignore */ }
 }
 function fsDrawCover() {
@@ -353,7 +391,13 @@ function fsAudStart() {
     $('#fs-cover-help').textContent = 'Listen to the instructions…';
     $('#fs-judge').classList.add('speaking');
     fsDrawButtons();
-    fsSpeak(FS_JUDGE(FSS.studyS), () => { if (FSS.phase !== 'speaking') return; $('#fs-judge').classList.remove('speaking'); fsAudTempo1(); });
+    const next = () => { if (FSS.phase !== 'speaking') return; $('#fs-judge').classList.remove('speaking'); fsAudTempo1(); };
+    if (FSS.studyS === FS_REC.studyS) {
+      fsLoadRec().then((buf) => {
+        if (FSS.phase !== 'speaking') return;
+        if (!fsPlayRec(buf, next)) fsSpeak(FS_JUDGE(FSS.studyS), next);           // recording unavailable → the device's voice
+      });
+    } else fsSpeak(FS_JUDGE(FSS.studyS), next);
     return;
   }
   fsAudTempo1();

@@ -570,7 +570,7 @@ body.stand-open { overflow: hidden; }
 .fs-tg select { background: rgb(255 255 255 / .08); color: #fff; border: 1px solid rgb(255 255 255 / .3); border-radius: 8px; padding: 4px 6px; }
 .fs-tg select option { color: #000; }
 .fs-tg input { accent-color: var(--gold); width: 18px; height: 18px; }
-.stand.running .stand-opts { opacity: .5; pointer-events: none; }
+.stand.running .stand-opts > :not([data-act=fsrestart]) { opacity: .5; pointer-events: none; }  /* settings lock mid-sequence; Start over stays usable */
 @media (max-width: 720px) {
   .stand-ctl { grid-template-columns: 1fr; grid-template-areas: "say" "ticks" "btns" "opts"; }
   .stand-btns .btn { flex: 1; min-width: 0; }

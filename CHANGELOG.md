@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0 — 2026-11-10
+- **The sight-reading instructions now play Mat's own recording** (8.6 s) instead of the device's voice, so every device hears the same thing. The 8 ticks start the moment it ends.
+- The recording says "30 seconds," so it plays when study time is 30 s (the default). At 60 s or with no study time, the device's voice reads the matching script instead.
+- On iPads and iPhones (Safari 17+), the instructions, ticks, and Hear It now play even with the ringer switch on silent.
+- **↺ Start over** works at any point in the sequence (tempo and study time stay locked until you restart).
+
 ## 1.4.0 — 2026-11-10
 - **The judge's instructions can be read aloud.** "🔊 Read the instructions aloud" is on the instruction screen (on by default, remembered per device). Tapping **▶ Read the instructions + give the tempo** speaks the script in the device's own voice. The 8 ticks start right after "Here is the tempo," and the rest of the sequence runs by itself, so a student can run a mock alone.
 - Uses the browser's built-in voice (works offline, nothing new to load). It picks the most natural English voice the device has. If a device has no voice, the sequence goes straight to the ticks.
